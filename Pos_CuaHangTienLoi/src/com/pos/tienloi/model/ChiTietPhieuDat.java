@@ -4,46 +4,72 @@ public class ChiTietPhieuDat {
     private PhieuDatHang phieuDat;
     private SanPham sanPham;
     private int soLuongDat;
+    private double donGiaDat;
 
     public ChiTietPhieuDat() {
     }
 
-    public ChiTietPhieuDat(PhieuDatHang phieuDat, SanPham sanPham, int soLuongDat) {
-        this.phieuDat = phieuDat;
-        this.sanPham = sanPham;
-        this.soLuongDat = soLuongDat;
-    }
 
-    public PhieuDatHang getPhieuDat() {
-        return phieuDat;
+    public ChiTietPhieuDat(PhieuDatHang phieuDat, SanPham sanPham, int soLuongDat, double donGiaDat) {
+		super();
+		this.phieuDat = phieuDat;
+		this.sanPham = sanPham;
+		this.soLuongDat = soLuongDat;
+		this.donGiaDat = donGiaDat;
+	}
+    
+    public double tinhThanhTien() {
+    	return donGiaDat*soLuongDat;
     }
+    
+	public PhieuDatHang getPhieuDat() {
+		return phieuDat;
+	}
 
-    public void setPhieuDat(PhieuDatHang phieuDat) {
-        this.phieuDat = phieuDat;
-    }
 
-    public SanPham getSanPham() {
-        return sanPham;
-    }
+	public void setPhieuDat(PhieuDatHang phieuDat) {
+		this.phieuDat = phieuDat;
+	}
 
-    public void setSanPham(SanPham sanPham) {
-        this.sanPham = sanPham;
-    }
 
-    public int getSoLuongDat() {
-        return soLuongDat;
-    }
+	public SanPham getSanPham() {
+		return sanPham;
+	}
 
-    public void setSoLuongDat(int soLuongDat) {
-        this.soLuongDat = soLuongDat;
-    }
 
-    @Override
-    public String toString() {
-        return "ChiTietPhieuDat{" +
-                "phieuDat=" + phieuDat +
-                ", sanPham=" + sanPham +
-                ", soLuongDat=" + soLuongDat +
-                '}';
-    }
+	public void setSanPham(SanPham sanPham) {
+		this.sanPham = sanPham;
+	}
+
+
+	public int getSoLuongDat() {
+		return soLuongDat;
+	}
+
+
+	public void setSoLuongDat(int soLuongDat) {
+		this.soLuongDat = soLuongDat;
+	}
+
+
+	public double getDonGiaDat() {
+		return donGiaDat;
+	}
+
+
+	public void setDonGiaDat(double donGiaDat) {
+		this.donGiaDat = donGiaDat;
+	}
+
+
+	@Override
+	public String toString() {
+		return "ChiTietPhieuDat [phieuDat=" + phieuDat + ", sanPham=" + sanPham + ", soLuongDat=" + soLuongDat
+				+ ", donGiaDat=" + donGiaDat + "]";
+	}
+	
+	
+
+
+ 
 }
