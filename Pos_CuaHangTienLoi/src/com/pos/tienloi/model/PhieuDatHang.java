@@ -7,6 +7,7 @@ import java.util.List;
 public class PhieuDatHang {
     private String maPhieuDat;
     private Date ngayDat;
+    private double tongTien;
     private TrangThaiPhieuDat trangThai;
     private NhanVien nhanVien;
     private KhachHang khachHang;
@@ -16,23 +17,38 @@ public class PhieuDatHang {
         this.listChiTietPhieu = new ArrayList<>();
     }
 
-    public PhieuDatHang(String maPhieuDat, Date ngayDat, TrangThaiPhieuDat trangThai,
+    public PhieuDatHang(String maPhieuDat, double tongTien, Date ngayDat, TrangThaiPhieuDat trangThai,
                         NhanVien nhanVien, KhachHang khachHang, List<ChiTietPhieuDat> listChiTietPhieu) {
         this.maPhieuDat = maPhieuDat;
         this.ngayDat = ngayDat;
+        this.tongTien = tongTien;
         this.trangThai = trangThai;
         this.nhanVien = nhanVien;
         this.khachHang = khachHang;
         this.listChiTietPhieu = (listChiTietPhieu != null) ? listChiTietPhieu : new ArrayList<>();
     }
 
-    public void themChiTiet(ChiTietPhieuDat chiTietPhieuDat) {
-        if (chiTietPhieuDat != null) {
-            this.listChiTietPhieu.add(chiTietPhieuDat);
+    
+    public double tinhTongTien() {
+        double tong = 0;
+        for (ChiTietPhieuDat ct : listChiTietPhieu) {
+            tong += ct.tinhThanhTien();
         }
+        this.tongTien = tong;
+        return tong;
     }
+    
+    
+   
+    public double getTongTien() {
+		return tongTien;
+	}
 
-    public String getMaPhieuDat() {
+	public void setTongTien(double tongTien) {
+		this.tongTien = tongTien;
+	}
+
+	public String getMaPhieuDat() {
         return maPhieuDat;
     }
 
