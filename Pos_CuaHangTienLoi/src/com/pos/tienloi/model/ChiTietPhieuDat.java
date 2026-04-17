@@ -22,6 +22,7 @@ public class ChiTietPhieuDat {
     	return donGiaDat*soLuongDat;
     }
     
+    
 	public PhieuDatHang getPhieuDat() {
 		return phieuDat;
 	}

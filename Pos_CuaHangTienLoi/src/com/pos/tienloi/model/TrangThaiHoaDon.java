@@ -1,6 +1,6 @@
 package com.pos.tienloi.model;
 
-public enum TrangThai {
+public enum TrangThaiHoaDon {
     Pending,
     Paid,
     Cancelled
