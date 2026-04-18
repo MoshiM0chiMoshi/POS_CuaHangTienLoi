@@ -16,7 +16,7 @@ public class FrmDangNhap extends JFrame {
 	private JPasswordField passwordTxt;
 	private JButton loginBtn;
 	private JLabel title;
-	private JPanel rowA, rowB, rowC, rowHeader;
+	private JPanel rowA, rowB, rowC, rowHeader, rowD;
 
 	public FrmDangNhap() {
 		setTitle("Đăng Nhập - Pos");
