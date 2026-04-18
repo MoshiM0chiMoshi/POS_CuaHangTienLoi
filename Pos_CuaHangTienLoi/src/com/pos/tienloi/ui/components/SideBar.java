@@ -16,13 +16,13 @@ public class SideBar extends JPanel {
 
 		// Tạo logo
 		ImageIcon logoIcon = new ImageIcon(getClass().getResource("/images/logo.png"));
-		Image imgLogo = logoIcon.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+		Image imgLogo = logoIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
 		JLabel logoLabel = new JLabel(new ImageIcon(imgLogo));
 		logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 		add(Box.createVerticalStrut(1)); // khoảng cách trên
 		add(logoLabel);
-		add(Box.createVerticalStrut(5)); // khoảng cách dưới
+		add(Box.createVerticalStrut(1)); // khoảng cách dưới
 
 		add(createButton("Dashboard"));
 		add(Box.createVerticalStrut(16));
@@ -33,7 +33,7 @@ public class SideBar extends JPanel {
 		add(createButton("Hóa Đơn"));
 		add(Box.createVerticalStrut(16));
 		add(createButton("Nhân Viên"));
-		add(Box.createVerticalStrut(150));
+		add(Box.createVerticalStrut(120));
 		add(createButton("Log Out"));
 
 	}
