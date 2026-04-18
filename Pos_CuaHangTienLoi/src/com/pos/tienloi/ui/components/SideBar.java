@@ -5,10 +5,14 @@ import java.awt.*;
 
 public class SideBar extends JPanel {
 
+	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
+	private final Color TEXT_Color = Color.decode("#1F3A5F");
+	private final Color HOVER_COLOR = Color.decode("#4A90E2");
+
 	public SideBar() {
 		setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		setPreferredSize(new Dimension(318, 800));
-		setBackground(new Color(107, 61, 36, 1));
+		setBackground(NORMAL_COLOR);
 
 		// Tạo logo
 		ImageIcon logoIcon = new ImageIcon(getClass().getResource("/images/logo.png"));
@@ -36,23 +40,43 @@ public class SideBar extends JPanel {
 
 	private JButton createButton(String Text) {
 		JButton btn = new JButton(Text);
-		
-	
 
-		
-		
-		btn.setFont(new Font("Segoe UI", Font.BOLD, 16));
-		btn.setForeground(new Color(255, 255, 255, 1));
+		btn.setFont(new Font("Segoe UI", Font.BOLD, 30));
+		btn.setForeground(TEXT_Color);
+		btn.setBackground(NORMAL_COLOR);
+
 		btn.setAlignmentX(Component.CENTER_ALIGNMENT);
 		btn.setMaximumSize(new Dimension(264, 52));
+
 		btn.setFocusPainted(false);
+		btn.setBorderPainted(false);
+		btn.setOpaque(true);
+
+
+
+		// Hover effect
+		btn.addMouseListener(new java.awt.event.MouseAdapter() {
+			public void mouseEntered(java.awt.event.MouseEvent evt) {
+				btn.setBackground(HOVER_COLOR);
+			}
+
+			public void mouseExited(java.awt.event.MouseEvent evt) {
+				btn.setBackground(NORMAL_COLOR);
+			}
+		});
+
 		return btn;
 
 	}
 
 	public static void main(String[] args) {
-		new SideBar().setVisible(true);
+		JFrame frame = new JFrame("Test Sidebar");
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.setSize(350, 800);
 
+		frame.add(new SideBar());
+
+		frame.setVisible(true);
 	}
 
 }
