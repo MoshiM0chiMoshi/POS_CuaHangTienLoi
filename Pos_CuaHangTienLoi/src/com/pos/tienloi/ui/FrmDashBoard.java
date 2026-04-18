@@ -9,9 +9,11 @@ import java.awt.*;
 public class FrmDashBoard extends JFrame {
 	private JPanel northPanel, northLeft, northRight;
 	private JPanel mainPanel, centerPanel, centerNorthPanel, centerMainPanel;
+	private JPanel centerMainLeftPanel, centerMainRightPanel;
 	private JPanel leftJPanel;
 	private JLabel titleNorth;
 	private JTextField search;
+	private JLabel banChayTitle;
 
 	public FrmDashBoard() {
 		setTitle("Pos - Cửa Hàng Tiện Lợi");
@@ -33,7 +35,7 @@ public class FrmDashBoard extends JFrame {
 		// North Panel
 		northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
-		northPanel.setBackground(Color.cyan);
+
 
 		titleNorth = new JLabel("Dashboard");
 		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));
@@ -46,7 +48,6 @@ public class FrmDashBoard extends JFrame {
 		// Center Panel
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
-		centerPanel.setBackground(Color.orange);
 
 		// Bên trong Center Panel - North Panel
 		centerNorthPanel = new JPanel();
@@ -62,11 +63,45 @@ public class FrmDashBoard extends JFrame {
 		
 		// Bên trong Center Panel nhưng chiếm ở dưới - Center Main Panel
 		centerMainPanel = new JPanel();
+		centerMainPanel.setLayout(new BorderLayout(20,20));
+		centerMainPanel.setBorder(
+			    BorderFactory.createEmptyBorder(0, 20, 20, 20)
+			);
+		
+		
+		// Bên trong centerMainPanel -  Panel bên trái
+		centerMainLeftPanel = new JPanel();
+		centerMainLeftPanel.setLayout(new BoxLayout(centerMainLeftPanel, BoxLayout.Y_AXIS));
+		centerMainLeftPanel.setBorder(BorderFactory.createCompoundBorder(
+		        BorderFactory.createLineBorder(new Color(220, 220, 220)),
+		        BorderFactory.createEmptyBorder(15, 20, 15, 15)
+		));
+		centerMainLeftPanel.setBackground(Color.WHITE);
+		
+		banChayTitle = new JLabel("Sản phẩm bán chạy");
+		banChayTitle.setFont(new Font("Segoe UI", Font.BOLD, 25));
+		
+		JLabel mainItem = new JLabel("Cake");
+		mainItem.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		
+		String[] items = {"Cake", "Bread", "Cookie", "Pastry"};
+		
+		centerMainLeftPanel.add(banChayTitle);
+		centerMainLeftPanel.add(Box.createVerticalStrut(15));
+		for(String x : items) {
+			JLabel lbl = new JLabel(x);
+			lbl.setFont(new Font("Segoe UI", Font.BOLD, 18));
+			centerMainLeftPanel.add(lbl);
+			centerMainLeftPanel.add(Box.createVerticalStrut(10));
+		}
+		centerMainLeftPanel.add(Box.createVerticalStrut(15));
+		
 		
 		
 		
 		
 		// add Jpanel
+		centerMainPanel.add(centerMainLeftPanel,BorderLayout.WEST);
 		centerPanel.add(centerNorthPanel, BorderLayout.NORTH);
 		centerPanel.add(centerMainPanel,BorderLayout.CENTER);
 		mainPanel.add(centerPanel);
@@ -96,6 +131,8 @@ public class FrmDashBoard extends JFrame {
 
 		return card;
 	}
+	
+	
 
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> new FrmDashBoard().setVisible(true));
