@@ -6,7 +6,7 @@ import javax.swing.border.*;
 import com.pos.tienloi.ui.components.ImagePanel;
 
 import java.awt.*;
-import java.net.URL;
+
 
 public class FrmDangNhap extends JFrame {
 
@@ -16,7 +16,7 @@ public class FrmDangNhap extends JFrame {
 	private JPasswordField passwordTxt;
 	private JButton loginBtn;
 	private JLabel title;
-	private JPanel rowA, rowB, rowC, rowHeader, rowD;
+	private JPanel rowA, rowB, rowC, rowHeader;
 
 	public FrmDangNhap() {
 		setTitle("Đăng Nhập - Pos");
