@@ -1,0 +1,169 @@
+package com.pos.tienloi.ui;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+
+import com.pos.tienloi.ui.components.PlaceholderTextField;
+import com.pos.tienloi.ui.components.SideBar;
+
+import java.awt.*;
+
+import com.pos.tienloi.ui.components.SideBar;
+
+public class FrmKhachHang extends JFrame {
+	private JPanel northPanel, mainPanel, centerPanel;
+	private JLabel titleNorth;
+	private JButton themBtn;
+	private JSplitPane splitPane;
+	private JPanel headerPanel2Left, headerPanel2Right;
+	private PlaceholderTextField searchNorth;
+	private JTable table;
+	private DefaultTableModel model;
+	private JScrollPane scrollPane;
+
+	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
+	private final Color TEXT_Color = Color.decode("#1F3A5F");
+	private final Color HOVER_COLOR = Color.decode("#4A90E2");
+
+	public FrmKhachHang() {
+		setTitle("Pos - Cửa Hàng Tiện Lợi");
+		setLayout(new BorderLayout());
+		add(new SideBar(), BorderLayout.WEST);
+
+		setSize(1300, 800);
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
+
+		initUI();
+
+	}
+
+	public void initUI() {
+		mainPanel = new JPanel(new BorderLayout());
+		mainPanel.setBackground(Color.white);
+
+		// North Panel
+		// North Panel
+		northPanel = new JPanel();
+		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+
+		// Panel ngang chứa title và logo
+		JPanel headerPanel = new JPanel();
+		headerPanel.setLayout(new BorderLayout());
+		headerPanel.setBackground(Color.WHITE);
+
+		JPanel headerPanel2 = new JPanel();
+		headerPanel2.setLayout(new BorderLayout());
+		headerPanel2Left = new JPanel();
+		headerPanel2Right = new JPanel();
+
+		searchNorth = new PlaceholderTextField("Tìm kiếm khách hàng...");
+		searchNorth.setColumns(30);
+		searchNorth.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+
+		headerPanel2Left.add(searchNorth);
+		searchNorth.setPreferredSize(new Dimension(200, 60));
+		headerPanel2Right = new JPanel(new BorderLayout());
+
+		headerPanel2Right.add(themBtn = new JButton("Thêm Khách Hàng"), BorderLayout.EAST);
+		themBtn.setPreferredSize(new Dimension(200, 60));
+		themBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		themBtn.setForeground(TEXT_Color);
+		themBtn.setBackground(NORMAL_COLOR);
+		themBtn.setFocusPainted(false);
+		themBtn.setOpaque(true);
+
+		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
+
+		splitPane.setResizeWeight(0.1);
+		splitPane.setDividerSize(0);
+		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 5, 0, 20));
+
+		titleNorth = new JLabel("Sản Phẩm");
+		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));
+		titleNorth.setForeground(TEXT_Color);
+
+		ImageIcon userIcon = new ImageIcon(getClass().getResource("/images/User.png"));
+		Image imgUser = userIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		JLabel userLogo = new JLabel(new ImageIcon(imgUser));
+
+		// trái - phải
+		headerPanel.add(titleNorth, BorderLayout.WEST);
+		headerPanel.add(userLogo, BorderLayout.EAST);
+		headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 50));
+		
+
+		// thêm vào northPanel
+		northPanel.add(Box.createVerticalStrut(60));
+		northPanel.add(headerPanel);
+		headerPanel2.add(splitPane);
+		northPanel.add(headerPanel2);
+		
+		// Center Panel
+		centerPanel = new JPanel();
+		centerPanel.setLayout(new BorderLayout());
+		JPanel centerMainPanel = new JPanel();
+
+		String[] cols2 = { "SDT", "Tên", "Số Hóa Đơn", "Điểm tích Lũy", "" };
+		Object[][] data2 = { 
+				{ "012345678", "Tokai Teio", "123", "100" }, 
+				{ "012345678", "Tokai Teio", "123", "100" },
+				{ "012345678", "Tokai Teio", "123", "100" } };
+		centerMainPanel = createTableCard(cols2, data2);
+		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
+		centerMainPanel.setBackground(Color.WHITE);
+
+		// add Panel
+		centerPanel.add(centerMainPanel);
+		mainPanel.add(northPanel, BorderLayout.NORTH);
+		mainPanel.add(centerPanel, BorderLayout.CENTER);
+		add(mainPanel);
+		
+		northPanel.setOpaque(false);
+		headerPanel.setOpaque(false);
+		headerPanel2Left.setOpaque(false);
+		splitPane.setBorder(null);
+		splitPane.setOpaque(false);
+		headerPanel2.setOpaque(false);
+		headerPanel2Right.setOpaque(false);
+
+
+
+	}
+
+	private JPanel createTableCard(String[] columns, Object[][] data) {
+		JPanel card = new JPanel(new BorderLayout(0, 10));
+		card.setBackground(Color.WHITE);
+		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
+		BorderFactory.createEmptyBorder(15, 30, 15, 15)));
+		
+
+		DefaultTableModel model = new DefaultTableModel(data, columns) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				return false;
+			}
+		};
+
+		JTable table = new JTable(model);
+		table.setRowHeight(30);
+		table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+		table.setSelectionBackground(HOVER_COLOR);
+		table.setShowGrid(true);
+		table.setGridColor(new Color(220, 220, 220));
+		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+		table.getTableHeader().setReorderingAllowed(false);
+
+
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		card.add(scrollPane, BorderLayout.CENTER);
+		
+
+		return card;
+	}
+
+	public static void main(String[] args) {
+		SwingUtilities.invokeLater(() -> new FrmKhachHang().setVisible(true));
+	}
+}

@@ -38,6 +38,8 @@ public class SideBar extends JPanel {
 		add(createButton("Nhân Viên"));
 		add(Box.createVerticalStrut(80));
 		add(createButton("Log Out"));
+		
+		
 
 	}
 
@@ -54,6 +56,8 @@ public class SideBar extends JPanel {
 		btn.setFocusPainted(false);
 		btn.setBorderPainted(false);
 		btn.setOpaque(true);
+		
+		
 
 
 
@@ -67,7 +71,8 @@ public class SideBar extends JPanel {
 				btn.setBackground(NORMAL_COLOR);
 			}
 		});
-
+		
+		
 		return btn;
 
 	}
