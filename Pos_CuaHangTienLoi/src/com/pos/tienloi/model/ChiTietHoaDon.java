@@ -52,11 +52,12 @@ public class ChiTietHoaDon {
         this.donGia = donGia;
     }
 
+ // Trong lớp ChiTietHoaDon
     @Override
     public String toString() {
         return "ChiTietHoaDon{" +
-                "sanPham=" + sanPham +
-                ", hoaDon=" + hoaDon +
+                "sanPham=" + sanPham + // Lưu ý: Đảm bảo SanPham cũng không in ngược lại ChiTietHoaDon
+                ", maHoaDon=" + (hoaDon != null ? hoaDon.getMaHoaDon() : "null") +
                 ", soLuong=" + soLuong +
                 ", donGia=" + donGia +
                 '}';

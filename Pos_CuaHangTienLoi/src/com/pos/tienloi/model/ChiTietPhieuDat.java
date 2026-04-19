@@ -65,8 +65,11 @@ public class ChiTietPhieuDat {
 
 	@Override
 	public String toString() {
-		return "ChiTietPhieuDat [phieuDat=" + phieuDat + ", sanPham=" + sanPham + ", soLuongDat=" + soLuongDat
-				+ ", donGiaDat=" + donGiaDat + "]";
+	    return "ChiTietPhieuDat [phieuDat=" + 
+	           (phieuDat != null ? phieuDat.getMaPhieuDat() : "null") +
+	           ", sanPham=" + sanPham +
+	           ", soLuongDat=" + soLuongDat +
+	           ", donGiaDat=" + donGiaDat + "]";
 	}
 	
 	

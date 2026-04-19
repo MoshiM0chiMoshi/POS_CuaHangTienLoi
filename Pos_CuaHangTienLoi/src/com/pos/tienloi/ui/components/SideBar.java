@@ -22,18 +22,19 @@ public class SideBar extends JPanel {
 
 		add(Box.createVerticalStrut(1)); // khoảng cách trên
 		add(logoLabel);
-		add(Box.createVerticalStrut(1)); // khoảng cách dưới
 
 		add(createButton("Dashboard"));
-		add(Box.createVerticalStrut(16));
+		add(Box.createVerticalStrut(10));
 		add(createButton("Khách Hàng"));
-		add(Box.createVerticalStrut(16));
+		add(Box.createVerticalStrut(10));
 		add(createButton("Sản phẩm"));
-		add(Box.createVerticalStrut(16));
+		add(Box.createVerticalStrut(10));
 		add(createButton("Hóa Đơn"));
-		add(Box.createVerticalStrut(16));
+		add(Box.createVerticalStrut(10));
+		add(createButton("Phiếu Đặt Hàng"));
+		add(Box.createVerticalStrut(10));
 		add(createButton("Nhân Viên"));
-		add(Box.createVerticalStrut(120));
+		add(Box.createVerticalStrut(80));
 		add(createButton("Log Out"));
 
 	}

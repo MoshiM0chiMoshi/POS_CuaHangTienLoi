@@ -39,12 +39,6 @@ public class HoaDon {
 		return tong;
 	}
 
-	public void themChiTiet(ChiTietHoaDon chiTietHoaDon) {
-		if (chiTietHoaDon != null) {
-			this.listChiTietHoaDon.add(chiTietHoaDon);
-			tinhTongTien();
-		}
-	}
 
 	public void capNhatTrangThai(TrangThaiHoaDon tr) {
 		if (tr == null) {
