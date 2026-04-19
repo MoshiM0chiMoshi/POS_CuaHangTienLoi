@@ -65,7 +65,7 @@ public class FrmKhachHang extends JFrame {
 		headerPanel2Right = new JPanel(new BorderLayout());
 
 		headerPanel2Right.add(themBtn = new JButton("Thêm Khách Hàng"), BorderLayout.EAST);
-		themBtn.setPreferredSize(new Dimension(200, 60));
+		themBtn.setPreferredSize(new Dimension(200, 55));
 		themBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		themBtn.setForeground(TEXT_Color);
 		themBtn.setBackground(NORMAL_COLOR);
@@ -102,7 +102,9 @@ public class FrmKhachHang extends JFrame {
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		JPanel centerMainPanel = new JPanel();
-
+		centerPanel.setBackground(Color.WHITE);
+		centerMainPanel.setBackground(Color.white);
+		
 		String[] cols2 = { "SDT", "Tên", "Số Hóa Đơn", "Điểm tích Lũy", "" };
 		Object[][] data2 = { 
 				{ "012345678", "Tokai Teio", "123", "100" }, 
@@ -110,7 +112,8 @@ public class FrmKhachHang extends JFrame {
 				{ "012345678", "Tokai Teio", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
-		centerMainPanel.setBackground(Color.WHITE);
+
+
 
 		// add Panel
 		centerPanel.add(centerMainPanel);
@@ -149,12 +152,21 @@ public class FrmKhachHang extends JFrame {
 		table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		table.setSelectionBackground(HOVER_COLOR);
 		table.setShowGrid(true);
-		table.setGridColor(new Color(220, 220, 220));
+		table.setGridColor(TEXT_Color);
+		
+		
+		
+		table.setShowVerticalLines(false);
+		
+		
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
 
 
 		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.getViewport().setBackground(Color.WHITE);
+		scrollPane.setBackground(Color.WHITE);
+		
 		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		card.add(scrollPane, BorderLayout.CENTER);
