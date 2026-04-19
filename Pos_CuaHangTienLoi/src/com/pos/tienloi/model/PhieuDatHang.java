@@ -73,10 +73,6 @@ public class PhieuDatHang {
 		return tongTien;
 	}
 
-	public void setTongTien(double tongTien) {
-		this.tongTien = tongTien;
-	}
-
 	public String getMaPhieuDat() {
 		return maPhieuDat;
 	}

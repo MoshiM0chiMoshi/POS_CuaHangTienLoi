@@ -82,9 +82,6 @@ public class HoaDon {
 		return tongTien;
 	}
 
-	public void setTongTien(double tongTien) {
-		this.tongTien = tongTien;
-	}
 
 	public PTTT getPhuongThuc() {
 		return phuongThuc;
