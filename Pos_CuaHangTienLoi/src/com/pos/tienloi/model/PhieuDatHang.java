@@ -36,6 +36,10 @@ public class PhieuDatHang {
 		this.tongTien = tong;
 		return tong;
 	}
+	
+	 public void capNhatTongTien() {
+	        tinhTongTien();
+	    }
 
 	public void capNhatTrangThai(TrangThaiPhieuDat tr) {
 		if (tr == null) {

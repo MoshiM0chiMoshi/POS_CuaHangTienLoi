@@ -38,6 +38,10 @@ public class HoaDon {
 		this.tongTien = tong;
 		return tong;
 	}
+	
+	 public void capNhatTongTien() {
+	        tinhTongTien();
+	    }
 
 
 	public void capNhatTrangThai(TrangThaiHoaDon tr) {
