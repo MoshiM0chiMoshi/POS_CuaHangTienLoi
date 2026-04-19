@@ -15,6 +15,11 @@ public class FrmDashBoard extends JFrame {
 	private JLabel titleNorth;
 	private JTextField search;
 	private JLabel banChayTitle;
+	
+	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
+	private final Color TEXT_Color = Color.decode("#1F3A5F");
+	private final Color HOVER_COLOR = Color.decode("#4A90E2");
+
 
 	public FrmDashBoard() {
 		setTitle("Pos - Cửa Hàng Tiện Lợi");
@@ -31,7 +36,7 @@ public class FrmDashBoard extends JFrame {
 	public void initUI() {
 		mainPanel = new JPanel();
 		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBackground(Color.white);
+
 
 		// North Panel
 		northPanel = new JPanel();
@@ -41,6 +46,7 @@ public class FrmDashBoard extends JFrame {
 		titleNorth = new JLabel("Dashboard");
 		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));
 		titleNorth.setAlignmentX(Component.LEFT_ALIGNMENT);
+		titleNorth.setForeground(TEXT_Color);
 
 		northPanel.add(Box.createHorizontalStrut(25));
 		northPanel.add(Box.createVerticalStrut(60));
@@ -74,7 +80,7 @@ public class FrmDashBoard extends JFrame {
 		centerMainLeftPanel = new JPanel();
 		centerMainLeftPanel.setLayout(new BoxLayout(centerMainLeftPanel, BoxLayout.Y_AXIS));
 		centerMainLeftPanel.setBorder(BorderFactory.createCompoundBorder(
-		        BorderFactory.createLineBorder(new Color(220, 220, 220)),
+		        BorderFactory.createLineBorder(TEXT_Color),
 		        BorderFactory.createEmptyBorder(15, 20, 15, 15)
 		));
 		centerMainLeftPanel.setBackground(Color.WHITE);
@@ -126,20 +132,29 @@ public class FrmDashBoard extends JFrame {
 		
 		
 		JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT,centerMainLeftPanel,centerMainRightPanel);
-		pane.setResizeWeight(0);
+		pane.setResizeWeight(0.1);
+		pane.setDividerSize(10);
+		pane.setEnabled(false);
 		
-		
-		
+
 		
 		// add Jpanel
 		centerMainRightPanel.add(recentInvoicePanel);
 		centerMainRightPanel.add(Box.createVerticalStrut(10));
 		centerMainRightPanel.add(recentPhieuDat);
-		
 		centerMainPanel.add(pane);
 		
-		//centerMainPanel.add(centerMainLeftPanel,BorderLayout.WEST);
-		//centerMainPanel.add(centerMainRightPanel,BorderLayout.EAST);
+		// màu nền cho các jPanel
+		
+		
+		pane.setBackground(Color.white);
+		mainPanel.setBackground(Color.white); 
+		centerPanel.setBackground(Color.white);
+		northPanel.setOpaque(false);
+		centerNorthPanel.setOpaque(false);
+		
+		centerMainLeftPanel.setBackground(Color.WHITE);
+		
 		
 		centerPanel.add(centerNorthPanel, BorderLayout.NORTH);
 		centerPanel.add(centerMainPanel,BorderLayout.CENTER);
@@ -155,7 +170,7 @@ public class FrmDashBoard extends JFrame {
 		card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 		card.setPreferredSize(new Dimension(0, 200));
 		card.setBackground(new Color(245, 245, 245));
-		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(220, 220, 220)),
+		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
 				BorderFactory.createEmptyBorder(10, 15, 10, 15)));
 
 		JLabel lblTitle = new JLabel(title);
@@ -167,6 +182,7 @@ public class FrmDashBoard extends JFrame {
 		card.add(lblTitle);
 		card.add(Box.createVerticalStrut(5));
 		card.add(lblValue);
+		
 
 		return card;
 	}
@@ -176,7 +192,7 @@ public class FrmDashBoard extends JFrame {
 	    JPanel card = new JPanel(new BorderLayout(0, 10));
 	    card.setBackground(Color.WHITE);
 	    card.setBorder(BorderFactory.createCompoundBorder(
-	            BorderFactory.createLineBorder(new Color(220, 220, 220)),
+	            BorderFactory.createLineBorder(TEXT_Color),
 	            BorderFactory.createEmptyBorder(15, 30, 15, 15)
 	    ));
 
@@ -194,7 +210,7 @@ public class FrmDashBoard extends JFrame {
 	    JTable table = new JTable(model);
 	    table.setRowHeight(30);
 	    table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-	    table.setSelectionBackground(new Color(240, 240, 240));
+	    table.setSelectionBackground(TEXT_Color);
 	    table.setShowGrid(true);
 	    table.setGridColor(new Color(220, 220, 220));
 	    table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
@@ -205,6 +221,7 @@ public class FrmDashBoard extends JFrame {
 	    scrollPane.setBorder(BorderFactory.createEmptyBorder());
 	    card.add(scrollPane, BorderLayout.CENTER);
 	    
+	   
 	   
 	    return card;
 	}
