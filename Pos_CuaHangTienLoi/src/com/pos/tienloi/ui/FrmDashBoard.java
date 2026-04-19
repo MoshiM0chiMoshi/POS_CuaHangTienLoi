@@ -42,15 +42,27 @@ public class FrmDashBoard extends JFrame {
 		northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 
+		// Panel ngang chứa title và logo
+		JPanel headerPanel = new JPanel();
+		headerPanel.setLayout(new BorderLayout());
+		headerPanel.setBackground(Color.WHITE);
 
 		titleNorth = new JLabel("Dashboard");
 		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));
-		titleNorth.setAlignmentX(Component.LEFT_ALIGNMENT);
 		titleNorth.setForeground(TEXT_Color);
 
-		northPanel.add(Box.createHorizontalStrut(25));
+		ImageIcon userIcon = new ImageIcon(getClass().getResource("/images/User.png"));
+		Image imgUser = userIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		JLabel userLogo = new JLabel(new ImageIcon(imgUser));
+
+		// trái - phải
+		headerPanel.add(titleNorth, BorderLayout.WEST);
+		headerPanel.add(userLogo, BorderLayout.EAST);
+		headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 50));
+
+		// thêm vào northPanel
 		northPanel.add(Box.createVerticalStrut(60));
-		northPanel.add(titleNorth);
+		northPanel.add(headerPanel);
 
 		// Center Panel
 		centerPanel = new JPanel();
@@ -210,7 +222,7 @@ public class FrmDashBoard extends JFrame {
 	    JTable table = new JTable(model);
 	    table.setRowHeight(30);
 	    table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-	    table.setSelectionBackground(TEXT_Color);
+	    table.setSelectionBackground(HOVER_COLOR);
 	    table.setShowGrid(true);
 	    table.setGridColor(new Color(220, 220, 220));
 	    table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));

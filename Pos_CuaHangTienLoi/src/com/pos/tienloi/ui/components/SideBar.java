@@ -1,6 +1,8 @@
 package com.pos.tienloi.ui.components;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 
 public class SideBar extends JPanel {
