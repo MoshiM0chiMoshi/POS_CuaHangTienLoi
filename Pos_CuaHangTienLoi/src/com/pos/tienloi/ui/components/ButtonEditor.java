@@ -9,8 +9,9 @@ public class ButtonEditor extends DefaultCellEditor {
     private String label;
     private boolean isPushed;
 
-    public ButtonEditor(JCheckBox checkBox) {
+    public ButtonEditor(JCheckBox checkBox, String label) {
         super(checkBox);
+        this.label = label;
         button = new JButton();
         button.setOpaque(true);
         
@@ -23,7 +24,6 @@ public class ButtonEditor extends DefaultCellEditor {
 
     public Component getTableCellEditorComponent(JTable table, Object value, 
             boolean isSelected, int row, int column) {
-        label = "Edit";
         button.setText(label);
         isPushed = true;
         return button;
