@@ -3,8 +3,12 @@ package com.pos.tienloi.ui;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import com.pos.tienloi.ui.components.ButtonEditor;
+import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 import com.pos.tienloi.ui.components.SideBar;
+
+
 
 import java.awt.*;
 
@@ -143,7 +147,7 @@ public class FrmKhachHang extends JFrame {
 		DefaultTableModel model = new DefaultTableModel(data, columns) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return false;
+				return column == 4;
 			}
 		};
 
@@ -153,10 +157,26 @@ public class FrmKhachHang extends JFrame {
 		table.setSelectionBackground(HOVER_COLOR);
 		table.setShowGrid(true);
 		table.setGridColor(TEXT_Color);
+		table.setShowGrid(false);
+		table.setShowHorizontalLines(true);
+		table.getTableHeader().setBackground(NORMAL_COLOR);
+		table.getTableHeader().setForeground(TEXT_Color);
 		
+		ButtonRenderer btnEdit = new ButtonRenderer();
+		btnEdit.setBackground(NORMAL_COLOR);
+		btnEdit.setForeground(TEXT_Color);
+		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		btnEdit.setFocusPainted(false);
+		btnEdit.setBorder(null);
+		btnEdit.setOpaque(false);
+
 		
+		table.getColumnModel().getColumn(4).setCellRenderer(btnEdit);
+		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox()));
+		table.getColumnModel().getColumn(4).setPreferredWidth(60);
+		table.getColumnModel().getColumn(4).setMaxWidth(100);
+		table.getColumnModel().getColumn(4).setMinWidth(100);
 		
-		table.setShowVerticalLines(false);
 		
 		
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
