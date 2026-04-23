@@ -8,6 +8,7 @@ public class PhieuDatHang {
 	private String maPhieuDat;
 	private Date ngayDat;
 	private double tongTien;
+	private String diaChi;
 	private TrangThaiPhieuDat trangThai;
 	private NhanVien nhanVien;
 	private KhachHang khachHang;
@@ -17,15 +18,17 @@ public class PhieuDatHang {
 		this.listChiTietPhieu = new ArrayList<>();
 	}
 
-	public PhieuDatHang(String maPhieuDat, double tongTien, Date ngayDat, TrangThaiPhieuDat trangThai,
+	public PhieuDatHang(String maPhieuDat, Date ngayDat, double tongTien, String diaChi, TrangThaiPhieuDat trangThai,
 			NhanVien nhanVien, KhachHang khachHang, List<ChiTietPhieuDat> listChiTietPhieu) {
+		super();
 		this.maPhieuDat = maPhieuDat;
 		this.ngayDat = ngayDat;
 		this.tongTien = tongTien;
+		this.diaChi = diaChi;
 		this.trangThai = trangThai;
 		this.nhanVien = nhanVien;
 		this.khachHang = khachHang;
-		this.listChiTietPhieu = (listChiTietPhieu != null) ? listChiTietPhieu : new ArrayList<>();
+		this.listChiTietPhieu = listChiTietPhieu;
 	}
 
 	public double tinhTongTien() {
@@ -36,10 +39,10 @@ public class PhieuDatHang {
 		this.tongTien = tong;
 		return tong;
 	}
-	
-	 public void capNhatTongTien() {
-	        tinhTongTien();
-	    }
+
+	public void capNhatTongTien() {
+		tinhTongTien();
+	}
 
 	public void capNhatTrangThai(TrangThaiPhieuDat tr) {
 		if (tr == null) {
@@ -61,16 +64,16 @@ public class PhieuDatHang {
 				throw new IllegalStateException("Không thể chuyển từ đang xử lý sang " + tr);
 			}
 			break;
-		  case HOAN_TAT:
-	            throw new IllegalStateException("Phiếu đã hoàn tất, không thể thay đổi");
+		case HOAN_TAT:
+			throw new IllegalStateException("Phiếu đã hoàn tất, không thể thay đổi");
 
-	        case DA_HUY:
-	            throw new IllegalStateException("Phiếu đã hủy, không thể thay đổi");
+		case DA_HUY:
+			throw new IllegalStateException("Phiếu đã hủy, không thể thay đổi");
 
-	        default:
-				throw new IllegalStateException("Trạng thái hiện tại không hợp lệ");
+		default:
+			throw new IllegalStateException("Trạng thái hiện tại không hợp lệ");
 
-			}
+		}
 	}
 
 	public double getTongTien() {
@@ -123,6 +126,14 @@ public class PhieuDatHang {
 
 	public void setListChiTietPhieu(List<ChiTietPhieuDat> listChiTietPhieu) {
 		this.listChiTietPhieu = listChiTietPhieu;
+	}
+
+	public String getDiaChi() {
+		return diaChi;
+	}
+
+	public void setDiaChi(String diaChi) {
+		this.diaChi = diaChi;
 	}
 
 	@Override
