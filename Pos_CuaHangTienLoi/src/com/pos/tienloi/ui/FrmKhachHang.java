@@ -1,20 +1,30 @@
 package com.pos.tienloi.ui;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.Image;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
-import com.pos.tienloi.ui.components.SideBar;
 
-
-
-import java.awt.*;
-
-import com.pos.tienloi.ui.components.SideBar;
-
-public class FrmKhachHang extends JFrame {
+public class FrmKhachHang extends JPanel {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 	private JButton themBtn;
@@ -22,19 +32,13 @@ public class FrmKhachHang extends JFrame {
 	private JPanel headerPanel2Left, headerPanel2Right;
 	private PlaceholderTextField searchNorth;
 
-
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
 
 	public FrmKhachHang() {
-		setTitle("Pos - Cửa Hàng Tiện Lợi");
 		setLayout(new BorderLayout());
-		add(new SideBar(), BorderLayout.WEST);
-
 		setSize(1300, 800);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
-
 		initUI();
 
 	}
@@ -44,7 +48,7 @@ public class FrmKhachHang extends JFrame {
 		mainPanel.setBackground(Color.white);
 
 		// North Panel
-		
+
 		northPanel = new JPanel();
 		northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
 
@@ -92,37 +96,32 @@ public class FrmKhachHang extends JFrame {
 		headerPanel.add(titleNorth, BorderLayout.WEST);
 		headerPanel.add(userLogo, BorderLayout.EAST);
 		headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 50));
-		
 
 		// thêm vào northPanel
 		northPanel.add(Box.createVerticalStrut(60));
 		northPanel.add(headerPanel);
 		headerPanel2.add(splitPane);
 		northPanel.add(headerPanel2);
-		
+
 		// Center Panel
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		JPanel centerMainPanel = new JPanel();
 		centerPanel.setBackground(Color.WHITE);
 		centerMainPanel.setBackground(Color.white);
-		
+
 		String[] cols2 = { "SDT", "Tên", "Số Hóa Đơn", "Điểm tích Lũy", "Action" };
-		Object[][] data2 = { 
-				{ "012345678", "Tokai Teio", "123", "100" }, 
-				{ "012345678", "Tokai Teio", "123", "100" },
+		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
 				{ "012345678", "Tokai Teio", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
-
-
 
 		// add Panel
 		centerPanel.add(centerMainPanel);
 		mainPanel.add(northPanel, BorderLayout.NORTH);
 		mainPanel.add(centerPanel, BorderLayout.CENTER);
 		add(mainPanel);
-		
+
 		northPanel.setOpaque(false);
 		headerPanel.setOpaque(false);
 		headerPanel2Left.setOpaque(false);
@@ -131,15 +130,13 @@ public class FrmKhachHang extends JFrame {
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
 
-
 	}
 
 	private JPanel createTableCard(String[] columns, Object[][] data) {
 		JPanel card = new JPanel(new BorderLayout(0, 10));
 		card.setBackground(Color.WHITE);
 		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
-		BorderFactory.createEmptyBorder(15, 30, 15, 15)));
-		
+				BorderFactory.createEmptyBorder(15, 30, 15, 15)));
 
 		DefaultTableModel model = new DefaultTableModel(data, columns) {
 			@Override
@@ -158,8 +155,7 @@ public class FrmKhachHang extends JFrame {
 		table.setShowHorizontalLines(true);
 		table.getTableHeader().setBackground(NORMAL_COLOR);
 		table.getTableHeader().setForeground(TEXT_Color);
-		
-		
+
 		ButtonRenderer btnEdit = new ButtonRenderer("Delete");
 		btnEdit.setBackground(NORMAL_COLOR);
 		btnEdit.setForeground(TEXT_Color);
@@ -167,28 +163,23 @@ public class FrmKhachHang extends JFrame {
 		btnEdit.setFocusPainted(false);
 		btnEdit.setBorder(null);
 		btnEdit.setOpaque(false);
-		
 
-		
 		table.getColumnModel().getColumn(4).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(),"Edit"));
+		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
 		table.getColumnModel().getColumn(4).setPreferredWidth(60);
 		table.getColumnModel().getColumn(4).setMaxWidth(100);
 		table.getColumnModel().getColumn(4).setMinWidth(100);
 
-		
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
-
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		scrollPane.setBackground(Color.WHITE);
-		
+
 		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		card.add(scrollPane, BorderLayout.CENTER);
-		
 
 		return card;
 	}

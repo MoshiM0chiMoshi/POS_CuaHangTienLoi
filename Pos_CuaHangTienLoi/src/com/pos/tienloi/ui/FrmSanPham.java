@@ -1,6 +1,5 @@
 package com.pos.tienloi.ui;
 
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -9,38 +8,47 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
-import com.pos.tienloi.ui.components.SideBar;
 
-public class FrmSanPham extends JFrame{
+public class FrmSanPham extends JPanel {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 	private JButton themBtn;
 	private JSplitPane splitPane;
 	private JPanel headerPanel2Left, headerPanel2Right;
 	private PlaceholderTextField searchNorth;
-	
+
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
 
 	public FrmSanPham() {
-		setTitle("Pos - Cửa Hàng Tiện Lợi");
+
 		setLayout(new BorderLayout());
-		add(new SideBar(), BorderLayout.WEST);
 
 		setSize(1300, 800);
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
 
 		initUi();
 
 	}
+
 	public void initUi() {
 		mainPanel = new JPanel(new BorderLayout());
 		mainPanel.setBackground(Color.white);
@@ -53,24 +61,23 @@ public class FrmSanPham extends JFrame{
 		JPanel headerPanel = new JPanel();
 		headerPanel.setLayout(new BorderLayout());
 		headerPanel.setBackground(Color.WHITE);
-		
-		// Panel ngang chứa Search  box và Button thêm - Hàng 2 trong NorthPanel;
+
+		// Panel ngang chứa Search box và Button thêm - Hàng 2 trong NorthPanel;
 		JPanel headerPanel2 = new JPanel();
 		headerPanel2.setLayout(new BorderLayout());
 		headerPanel2Left = new JPanel();
 		headerPanel2Right = new JPanel();
-		
-		//Tạo ra Filter
+
+		// Tạo ra Filter
 		ImageIcon filterIcon = new ImageIcon(getClass().getResource("/images/Filter.png"));
 		Image imgFilter = filterIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		
-		
+
 		JButton btnFilter = new JButton(new ImageIcon(imgFilter));
 		btnFilter.setFocusPainted(false);
 		btnFilter.setBorderPainted(false);
 		btnFilter.setContentAreaFilled(false);
 		btnFilter.setCursor(new Cursor(Cursor.HAND_CURSOR));
-		
+
 		// Khai báo - customer - thêm cách components
 		searchNorth = new PlaceholderTextField("Tìm kiếm Sản Phẩm...");
 		searchNorth.setColumns(35);
@@ -81,57 +88,53 @@ public class FrmSanPham extends JFrame{
 		headerPanel2Right = new JPanel(new BorderLayout());
 		headerPanel2Right.add(themBtn = new JButton("Thêm Khách Hàng"), BorderLayout.EAST);
 		headerPanel2Left.add(btnFilter);
-		
+
 		themBtn.setPreferredSize(new Dimension(200, 55));
 		themBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		themBtn.setForeground(TEXT_Color);
 		themBtn.setBackground(NORMAL_COLOR);
 		themBtn.setFocusPainted(false);
 		themBtn.setOpaque(true);
-		
+
 		// Sử dụng jsplit panel để chia hàng 2 ra trái phải
 		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
 		splitPane.setResizeWeight(0.1);
 		splitPane.setDividerSize(0);
-		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0,12, 0, 20));
+		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 20));
 
 		titleNorth = new JLabel("Sản Phẩm");
 		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));
 		titleNorth.setForeground(TEXT_Color);
-		
+
 		// Tạo Image Icon User
 		ImageIcon userIcon = new ImageIcon(getClass().getResource("/images/User.png"));
 		Image imgUser = userIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
 		JLabel userLogo = new JLabel(new ImageIcon(imgUser));
 
-
 		// trái - phải
 		headerPanel.add(titleNorth, BorderLayout.WEST);
 		headerPanel.add(userLogo, BorderLayout.EAST);
 		headerPanel.setBorder(BorderFactory.createEmptyBorder(0, 25, 0, 50));
-		
+
 		// thêm vào northPanel
 		northPanel.add(Box.createVerticalStrut(60));
 		northPanel.add(headerPanel);
 		headerPanel2.add(splitPane);
 		northPanel.add(headerPanel2);
-		
+
 		// Center Panel
 		centerPanel = new JPanel();
 		centerPanel.setLayout(new BorderLayout());
 		JPanel centerMainPanel = new JPanel();
 		centerPanel.setBackground(Color.WHITE);
 		centerMainPanel.setBackground(Color.white);
-		
-		String[] cols2 = { "Image", "Mã", "Tên", "Stock","Giá", "Danh Mục", " "," " };
-		Object[][] data2 = { 
-				{ "012345678", "Tokai Teio", "123", "100" }, 
-				{ "012345678", "Tokai Teio", "123", "100" },
+
+		String[] cols2 = { "Image", "Mã", "Tên", "Stock", "Giá", "Danh Mục", " ", " " };
+		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
 				{ "012345678", "Tokai Teio", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
-		
 		// add Panel
 		centerPanel.add(centerMainPanel);
 		mainPanel.add(northPanel, BorderLayout.NORTH);
@@ -146,18 +149,17 @@ public class FrmSanPham extends JFrame{
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
 	}
-	
+
 	private JPanel createTableCard(String[] columns, Object[][] data) {
 		JPanel card = new JPanel(new BorderLayout(0, 10));
 		card.setBackground(Color.WHITE);
 		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
-		BorderFactory.createEmptyBorder(15, 30, 15, 15)));
-		
+				BorderFactory.createEmptyBorder(15, 30, 15, 15)));
 
 		DefaultTableModel model = new DefaultTableModel(data, columns) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 6 || column ==7;
+				return column == 6 || column == 7;
 			}
 		};
 
@@ -172,7 +174,7 @@ public class FrmSanPham extends JFrame{
 		table.getTableHeader().setBackground(NORMAL_COLOR);
 		table.getTableHeader().setForeground(TEXT_Color);
 		table.setShowVerticalLines(false);
-		
+
 		ButtonRenderer btnEdit = new ButtonRenderer("Edit");
 		btnEdit.setBackground(NORMAL_COLOR);
 		btnEdit.setForeground(TEXT_Color);
@@ -180,7 +182,7 @@ public class FrmSanPham extends JFrame{
 		btnEdit.setFocusPainted(false);
 		btnEdit.setBorder(null);
 		btnEdit.setOpaque(false);
-		
+
 		ButtonRenderer btnDelete = new ButtonRenderer("Delete");
 		btnDelete.setBackground(NORMAL_COLOR);
 		btnDelete.setForeground(TEXT_Color);
@@ -189,13 +191,12 @@ public class FrmSanPham extends JFrame{
 		btnDelete.setBorder(null);
 		btnDelete.setOpaque(false);
 
-		
 		table.getColumnModel().getColumn(6).setCellRenderer(btnEdit);
 		table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
 		table.getColumnModel().getColumn(6).setPreferredWidth(60);
 		table.getColumnModel().getColumn(6).setMaxWidth(100);
 		table.getColumnModel().getColumn(6).setMinWidth(100);
-		
+
 		table.getColumnModel().getColumn(7).setCellRenderer(btnDelete);
 		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
 		table.getColumnModel().getColumn(7).setPreferredWidth(60);
@@ -203,43 +204,41 @@ public class FrmSanPham extends JFrame{
 		table.getColumnModel().getColumn(7).setMinWidth(100);
 
 		table.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
-		    @Override
-		    public Component getTableCellRendererComponent(JTable table, Object value,
-		            boolean isSelected, boolean hasFocus, int row, int column) {
-		        
-		        JLabel headerLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-		        
-		        // Cấu hình giao diện cho Header
-		        headerLabel.setBackground(NORMAL_COLOR); // Màu nền của bạn
-		        headerLabel.setForeground(TEXT_Color);   // Màu chữ của bạn
-		        headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		        headerLabel.setHorizontalAlignment(JLabel.CENTER);
-		        
-		        // QUAN TRỌNG: Xóa Border mặc định (cái gây ra gạch dọc)
-		        // Bạn có thể set về EmptyBorder hoặc Border chỉ có gạch dưới
-		        headerLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, TEXT_Color)); 
-		        
-		        return headerLabel;
-		    }
+			@Override
+			public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
+					boolean hasFocus, int row, int column) {
+
+				JLabel headerLabel = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus,
+						row, column);
+
+				// Cấu hình giao diện cho Header
+				headerLabel.setBackground(NORMAL_COLOR); // Màu nền của bạn
+				headerLabel.setForeground(TEXT_Color); // Màu chữ của bạn
+				headerLabel.setFont(new Font("Segoe UI", Font.BOLD, 14));
+				headerLabel.setHorizontalAlignment(JLabel.CENTER);
+
+				// QUAN TRỌNG: Xóa Border mặc định (cái gây ra gạch dọc)
+				// Bạn có thể set về EmptyBorder hoặc Border chỉ có gạch dưới
+				headerLabel.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, TEXT_Color));
+
+				return headerLabel;
+			}
 		});
-		
+
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
-
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		scrollPane.setBackground(Color.WHITE);
-		
+
 		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		card.add(scrollPane, BorderLayout.CENTER);
-		
 
 		return card;
 	}
 
-	
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(() -> new FrmSanPham().setVisible(true));
 	}

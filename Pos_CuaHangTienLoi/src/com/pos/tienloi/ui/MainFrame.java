@@ -1,10 +1,13 @@
 package com.pos.tienloi.ui;
 
-import javax.swing.*;
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import com.pos.tienloi.ui.components.SideBar;
-
-import java.awt.*;
 
 public class MainFrame extends JFrame {
 	private CardLayout cardLayout;
@@ -17,16 +20,21 @@ public class MainFrame extends JFrame {
 		setLocationRelativeTo(null);
 		setLayout(new BorderLayout());
 
+		// Sidebar bên trái
+		add(new SideBar(this), BorderLayout.WEST);
 
-
+		// Khu vực đổi màn hình
 		cardLayout = new CardLayout();
 		contentPanel = new JPanel(cardLayout);
 
 		contentPanel.add(new FrmDashBoard(), "dashboard");
 		contentPanel.add(new FrmKhachHang(), "khachhang");
+		contentPanel.add(new FrmSanPham(), "sanpham");
 
-		
 		add(contentPanel, BorderLayout.CENTER);
+
+		// màn hình mặc định
+		showPanel("dashboard");
 	}
 
 	public void showPanel(String name) {
