@@ -129,7 +129,7 @@ public class FrmSanPham extends JPanel {
 		centerPanel.setBackground(Color.WHITE);
 		centerMainPanel.setBackground(Color.white);
 
-		String[] cols2 = { "Image", "Mã", "Tên", "Stock", "Giá", "Danh Mục", " ", " " };
+		String[] cols2 = { "Hình", "Mã", "Tên", "Tồn kho", "Giá", "Thuế (%)", "Danh mục", "Sửa", "Xóa" };
 		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
 				{ "012345678", "Tokai Teio", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
@@ -159,7 +159,7 @@ public class FrmSanPham extends JPanel {
 		DefaultTableModel model = new DefaultTableModel(data, columns) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 6 || column == 7;
+				return column == 7 || column == 8;
 			}
 		};
 
@@ -191,17 +191,15 @@ public class FrmSanPham extends JPanel {
 		btnDelete.setBorder(null);
 		btnDelete.setOpaque(false);
 
-		table.getColumnModel().getColumn(6).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(6).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
-		table.getColumnModel().getColumn(6).setPreferredWidth(60);
-		table.getColumnModel().getColumn(6).setMaxWidth(100);
-		table.getColumnModel().getColumn(6).setMinWidth(100);
+		table.getColumnModel().getColumn(7).setCellRenderer(btnEdit);
+		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
+		table.getColumnModel().getColumn(7).setPreferredWidth(80);
+		table.getColumnModel().getColumn(7).setMaxWidth(80);
 
-		table.getColumnModel().getColumn(7).setCellRenderer(btnDelete);
-		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
-		table.getColumnModel().getColumn(7).setPreferredWidth(60);
-		table.getColumnModel().getColumn(7).setMaxWidth(100);
-		table.getColumnModel().getColumn(7).setMinWidth(100);
+		table.getColumnModel().getColumn(8).setCellRenderer(btnDelete);
+		table.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
+		table.getColumnModel().getColumn(8).setPreferredWidth(80);
+		table.getColumnModel().getColumn(8).setMaxWidth(80);
 
 		table.getTableHeader().setDefaultRenderer(new DefaultTableCellRenderer() {
 			@Override
