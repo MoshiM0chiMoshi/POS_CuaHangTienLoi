@@ -14,18 +14,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 
-public class FrmSanPham extends JPanel {
+public class FrmHoaDon extends JPanel {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 	private JButton themBtn;
@@ -37,7 +39,7 @@ public class FrmSanPham extends JPanel {
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
 
-	public FrmSanPham() {
+	public FrmHoaDon() {
 
 		setLayout(new BorderLayout());
 
@@ -67,24 +69,52 @@ public class FrmSanPham extends JPanel {
 		headerPanel2Right = new JPanel();
 
 		// Tạo ra Filter
-		ImageIcon filterIcon = new ImageIcon(getClass().getResource("/images/Filter.png"));
-		Image imgFilter = filterIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon filterIcon = new ImageIcon(getClass().getResource("/images/filterArrow.png"));
 
-		JButton btnFilter = new JButton(new ImageIcon(imgFilter));
+		// Button filter Date
+		JButton btnDate = new JButton("Date");
+		btnDate.setIcon(filterIcon);
+		btnDate.setHorizontalTextPosition(SwingConstants.LEFT);
+		btnDate.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnDate.setForeground(TEXT_Color);
+		btnDate.setBackground(NORMAL_COLOR);
+		btnDate.setFocusPainted(false);
+		btnDate.setOpaque(true);
+		btnDate.setPreferredSize(new Dimension(105, 55));
+		btnDate.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		// Button filter Status
+		JButton btnFilter = new JButton("Status");
+		btnFilter.setIcon(filterIcon);
+		btnFilter.setHorizontalTextPosition(SwingConstants.LEFT);
+		btnFilter.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnFilter.setForeground(TEXT_Color);
+		btnFilter.setBackground(NORMAL_COLOR);
 		btnFilter.setFocusPainted(false);
-		btnFilter.setBorderPainted(false);
-		btnFilter.setContentAreaFilled(false);
+		btnFilter.setOpaque(true);
+		btnFilter.setPreferredSize(new Dimension(105, 55));
 		btnFilter.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+		// Place holder cho filter của popup Menu
+		JPopupMenu popupMenu = new JPopupMenu();
+		popupMenu.add(new JMenuItem("Active"));
+		popupMenu.add(new JMenuItem("Inactive"));
+
+		btnFilter.addActionListener(e -> {
+
+			popupMenu.show(btnFilter, 0, btnFilter.getHeight());
+		});
+
 		// Khai báo - customer - thêm cách components
-		searchNorth = new PlaceholderTextField("Tìm kiếm Sản Phẩm...");
+		searchNorth = new PlaceholderTextField("Tìm kiếm Phiếu Đặt...");
 		searchNorth.setColumns(35);
-		searchNorth.setFont(new Font("Segoe UI", Font.PLAIN, 16));
+		searchNorth.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
 		headerPanel2Left.add(searchNorth, BorderLayout.WEST);
 		searchNorth.setPreferredSize(new Dimension(250, 60));
 		headerPanel2Right = new JPanel(new BorderLayout());
-		headerPanel2Right.add(themBtn = new JButton("Thêm Khách Hàng"), BorderLayout.EAST);
+		headerPanel2Right.add(themBtn = new JButton("Thêm Hóa Đơn"), BorderLayout.EAST);
+		headerPanel2Left.add(btnDate);
 		headerPanel2Left.add(btnFilter);
 
 		themBtn.setPreferredSize(new Dimension(200, 55));
@@ -100,7 +130,7 @@ public class FrmSanPham extends JPanel {
 		splitPane.setDividerSize(0);
 		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 20));
 
-		titleNorth = new JLabel("Sản Phẩm");
+		titleNorth = new JLabel("Hóa Đơn");
 		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));
 		titleNorth.setForeground(TEXT_Color);
 
@@ -127,7 +157,8 @@ public class FrmSanPham extends JPanel {
 		centerPanel.setBackground(Color.WHITE);
 		centerMainPanel.setBackground(Color.white);
 
-		String[] cols2 = { "Hình", "Mã", "Tên", "Tồn kho", "Giá", "Thuế (%)", "Danh mục", "Sửa", "Xóa" };
+		String[] cols2 = { "Mã HD", "Khách Hàng", "Ngày Lập", "Trạng Thái", "Tổng Tiền", "Hình Thức", "Nhân Viên",
+				"Sửa", "Xóa" };
 		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
 				{ "012345678", "Tokai Teio", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
@@ -213,7 +244,4 @@ public class FrmSanPham extends JPanel {
 		return card;
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> new FrmSanPham().setVisible(true));
-	}
 }

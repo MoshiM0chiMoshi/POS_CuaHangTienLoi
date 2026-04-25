@@ -44,9 +44,9 @@ public class SideBar extends JPanel {
 		add(Box.createVerticalStrut(10));
 		add(createButton("Sản phẩm", "sanpham"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("Hóa Đơn", "sanpham"));
+		add(createButton("Hóa Đơn", "hoadon"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("Phiếu Đặt Hàng", "sanpham"));
+		add(createButton("Phiếu Đặt Hàng", "phieudat"));
 		add(Box.createVerticalStrut(10));
 		add(createButton("Nhân Viên", "sanpham"));
 		add(Box.createVerticalStrut(80));
