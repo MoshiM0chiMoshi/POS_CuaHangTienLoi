@@ -18,7 +18,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
@@ -36,6 +35,8 @@ public class FrmSanPham extends JPanel {
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
+	private final Color EDIT_COLOR = Color.decode("#F4B400");
+	private final Color DELETE_COLOR = Color.decode("#DC3545");
 
 	public FrmSanPham() {
 
@@ -175,7 +176,7 @@ public class FrmSanPham extends JPanel {
 
 		ButtonRenderer btnEdit = new ButtonRenderer("Edit");
 		btnEdit.setBackground(NORMAL_COLOR);
-		btnEdit.setForeground(TEXT_Color);
+		btnEdit.setForeground(EDIT_COLOR);
 		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		btnEdit.setFocusPainted(false);
 		btnEdit.setBorder(null);
@@ -183,7 +184,7 @@ public class FrmSanPham extends JPanel {
 
 		ButtonRenderer btnDelete = new ButtonRenderer("Delete");
 		btnDelete.setBackground(NORMAL_COLOR);
-		btnDelete.setForeground(TEXT_Color);
+		btnDelete.setForeground(DELETE_COLOR);
 		btnDelete.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		btnDelete.setFocusPainted(false);
 		btnDelete.setBorder(null);
@@ -213,7 +214,4 @@ public class FrmSanPham extends JPanel {
 		return card;
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> new FrmSanPham().setVisible(true));
-	}
 }

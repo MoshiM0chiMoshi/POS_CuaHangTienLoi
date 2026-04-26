@@ -158,7 +158,7 @@ public class FrmHoaDon extends JPanel {
 		centerMainPanel.setBackground(Color.white);
 
 		String[] cols2 = { "Mã HD", "Khách Hàng", "Ngày Lập", "Trạng Thái", "Tổng Tiền", "Hình Thức", "Nhân Viên",
-				"Sửa", "Xóa" };
+				"Detail	" };
 		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
 				{ "012345678", "Tokai Teio", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
@@ -204,31 +204,21 @@ public class FrmHoaDon extends JPanel {
 		table.getTableHeader().setForeground(TEXT_Color);
 		table.setShowVerticalLines(false);
 
-		ButtonRenderer btnEdit = new ButtonRenderer("Edit");
-		btnEdit.setBackground(NORMAL_COLOR);
-		btnEdit.setForeground(TEXT_Color);
+		// Tạo ra Filter
+		ImageIcon detailIcon = new ImageIcon(getClass().getResource("/images/detail.png"));
+		Image imgDetail = detailIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+
+		ButtonRenderer btnEdit = new ButtonRenderer(new ImageIcon(imgDetail));
+		btnEdit.setBackground(Color.red);
 		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		btnEdit.setFocusPainted(false);
 		btnEdit.setBorder(null);
-		btnEdit.setOpaque(false);
-
-		ButtonRenderer btnDelete = new ButtonRenderer("Delete");
-		btnDelete.setBackground(NORMAL_COLOR);
-		btnDelete.setForeground(TEXT_Color);
-		btnDelete.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		btnDelete.setFocusPainted(false);
-		btnDelete.setBorder(null);
-		btnDelete.setOpaque(false);
+		btnEdit.setOpaque(true);
 
 		table.getColumnModel().getColumn(7).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
+		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Detail"));
 		table.getColumnModel().getColumn(7).setPreferredWidth(80);
 		table.getColumnModel().getColumn(7).setMaxWidth(80);
-
-		table.getColumnModel().getColumn(8).setCellRenderer(btnDelete);
-		table.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
-		table.getColumnModel().getColumn(8).setPreferredWidth(80);
-		table.getColumnModel().getColumn(8).setMaxWidth(80);
 
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);

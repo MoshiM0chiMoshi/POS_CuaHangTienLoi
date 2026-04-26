@@ -17,7 +17,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
@@ -35,6 +34,7 @@ public class FrmKhachHang extends JPanel {
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
+	private final Color DELETE_COLOR = Color.decode("#F4B400");
 
 	public FrmKhachHang() {
 		setLayout(new BorderLayout());
@@ -156,9 +156,9 @@ public class FrmKhachHang extends JPanel {
 		table.getTableHeader().setBackground(NORMAL_COLOR);
 		table.getTableHeader().setForeground(TEXT_Color);
 
-		ButtonRenderer btnEdit = new ButtonRenderer("Delete");
+		ButtonRenderer btnEdit = new ButtonRenderer("Edit");
 		btnEdit.setBackground(NORMAL_COLOR);
-		btnEdit.setForeground(TEXT_Color);
+		btnEdit.setForeground(DELETE_COLOR);
 		btnEdit.setFont(new Font("Segoe UI", Font.BOLD, 18));
 		btnEdit.setFocusPainted(false);
 		btnEdit.setBorder(null);
@@ -184,7 +184,4 @@ public class FrmKhachHang extends JPanel {
 		return card;
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> new FrmKhachHang().setVisible(true));
-	}
 }
