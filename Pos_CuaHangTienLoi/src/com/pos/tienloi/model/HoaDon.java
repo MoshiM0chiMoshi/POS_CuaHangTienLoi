@@ -6,28 +6,16 @@ import java.util.List;
 
 public class HoaDon {
 	private String maHoaDon;
+	private KhachHang khachHang;
 	private Date ngayLap;
+	private TrangThaiHoaDon trangThai;
 	private double tongTien;
 	private PTTT phuongThuc;
-	private TrangThaiHoaDon trangThai;
 	private NhanVien nhanVien;
-	private KhachHang khachHang;
 	private List<ChiTietHoaDon> listChiTietHoaDon;
 
 	public HoaDon() {
 		this.listChiTietHoaDon = new ArrayList<>();
-	}
-
-	public HoaDon(String maHoaDon, Date ngayLap, double tongTien, PTTT phuongThuc, TrangThaiHoaDon trangThai,
-			NhanVien nhanVien, KhachHang khachHang, List<ChiTietHoaDon> listChiTietHoaDon) {
-		this.maHoaDon = maHoaDon;
-		this.ngayLap = ngayLap;
-		this.tongTien = tongTien;
-		this.phuongThuc = phuongThuc;
-		this.trangThai = trangThai;
-		this.nhanVien = nhanVien;
-		this.khachHang = khachHang;
-		this.listChiTietHoaDon = (listChiTietHoaDon != null) ? listChiTietHoaDon : new ArrayList<>();
 	}
 
 	public double tinhTongTien() {
@@ -38,11 +26,23 @@ public class HoaDon {
 		this.tongTien = tong;
 		return tong;
 	}
-	
-	 public void capNhatTongTien() {
-	        tinhTongTien();
-	    }
 
+	public HoaDon(String maHoaDon, KhachHang khachHang, Date ngayLap, TrangThaiHoaDon trangThai, double tongTien,
+			PTTT phuongThuc, NhanVien nhanVien, List<ChiTietHoaDon> listChiTietHoaDon) {
+		super();
+		this.maHoaDon = maHoaDon;
+		this.khachHang = khachHang;
+		this.ngayLap = ngayLap;
+		this.trangThai = trangThai;
+		this.tongTien = tongTien;
+		this.phuongThuc = phuongThuc;
+		this.nhanVien = nhanVien;
+		this.listChiTietHoaDon = listChiTietHoaDon;
+	}
+
+	public void capNhatTongTien() {
+		tinhTongTien();
+	}
 
 	public void capNhatTrangThai(TrangThaiHoaDon tr) {
 		if (tr == null) {
@@ -85,7 +85,6 @@ public class HoaDon {
 	public double getTongTien() {
 		return tongTien;
 	}
-
 
 	public PTTT getPhuongThuc() {
 		return phuongThuc;

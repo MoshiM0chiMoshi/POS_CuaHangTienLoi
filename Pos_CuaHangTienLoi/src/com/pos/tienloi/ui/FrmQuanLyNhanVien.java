@@ -14,17 +14,20 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 
-public class FrmSanPham extends JPanel {
+public class FrmQuanLyNhanVien extends JPanel {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 	private JButton themBtn;
@@ -38,14 +41,11 @@ public class FrmSanPham extends JPanel {
 	private final Color EDIT_COLOR = Color.decode("#F4B400");
 	private final Color DELETE_COLOR = Color.decode("#DC3545");
 
-	public FrmSanPham() {
-
+	public FrmQuanLyNhanVien() {
 		setLayout(new BorderLayout());
-
 		setSize(1300, 800);
 
 		initUi();
-
 	}
 
 	public void initUi() {
@@ -68,24 +68,38 @@ public class FrmSanPham extends JPanel {
 		headerPanel2Right = new JPanel();
 
 		// Tạo ra Filter
-		ImageIcon filterIcon = new ImageIcon(getClass().getResource("/images/Filter.png"));
-		Image imgFilter = filterIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
+		ImageIcon filterIcon = new ImageIcon(getClass().getResource("/images/filterArrow.png"));
 
-		JButton btnFilter = new JButton(new ImageIcon(imgFilter));
+		JButton btnFilter = new JButton("Roles");
+		btnFilter.setIcon(filterIcon);
+		btnFilter.setHorizontalTextPosition(SwingConstants.LEFT);
+		btnFilter.setFont(new Font("Segoe UI", Font.BOLD, 15));
+		btnFilter.setForeground(TEXT_Color);
+		btnFilter.setBackground(NORMAL_COLOR);
 		btnFilter.setFocusPainted(false);
-		btnFilter.setBorderPainted(false);
-		btnFilter.setContentAreaFilled(false);
+		btnFilter.setOpaque(true);
+		btnFilter.setPreferredSize(new Dimension(105, 55));
 		btnFilter.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+		// Place holder cho filter của popup Menu
+		JPopupMenu popupMenu = new JPopupMenu();
+		popupMenu.add(new JMenuItem("Admin"));
+		popupMenu.add(new JMenuItem("Staff"));
+
+		btnFilter.addActionListener(e -> {
+
+			popupMenu.show(btnFilter, 0, btnFilter.getHeight());
+		});
+
 		// Khai báo - customer - thêm cách components
-		searchNorth = new PlaceholderTextField("Tìm kiếm Sản Phẩm...");
+		searchNorth = new PlaceholderTextField("Tìm kiếm theo mã NV...");
 		searchNorth.setColumns(35);
 		searchNorth.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 
 		headerPanel2Left.add(searchNorth, BorderLayout.WEST);
 		searchNorth.setPreferredSize(new Dimension(250, 60));
 		headerPanel2Right = new JPanel(new BorderLayout());
-		headerPanel2Right.add(themBtn = new JButton("Thêm Sản Phẩm"), BorderLayout.EAST);
+		headerPanel2Right.add(themBtn = new JButton("Thêm Nhân Viên"), BorderLayout.EAST);
 		headerPanel2Left.add(btnFilter);
 
 		themBtn.setPreferredSize(new Dimension(200, 55));
@@ -101,7 +115,7 @@ public class FrmSanPham extends JPanel {
 		splitPane.setDividerSize(0);
 		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 20));
 
-		titleNorth = new JLabel("Sản Phẩm");
+		titleNorth = new JLabel("Danh Sách Nhân Viên");
 		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));
 		titleNorth.setForeground(TEXT_Color);
 
@@ -128,7 +142,7 @@ public class FrmSanPham extends JPanel {
 		centerPanel.setBackground(Color.WHITE);
 		centerMainPanel.setBackground(Color.white);
 
-		String[] cols2 = { "Hình", "Mã", "Tên", "Tồn kho", "Giá", "Thuế (%)", "Danh mục", "Sửa", "Xóa" };
+		String[] cols2 = { "Mã NV", "Tên NV", "SĐT", "Vai Trò", "Sửa", "Xóa" };
 		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
 				{ "012345678", "Tokai Teio", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
@@ -158,7 +172,7 @@ public class FrmSanPham extends JPanel {
 		DefaultTableModel model = new DefaultTableModel(data, columns) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
-				return column == 7 || column == 8;
+				return column == 4 || column == 5;
 			}
 		};
 
@@ -190,15 +204,15 @@ public class FrmSanPham extends JPanel {
 		btnDelete.setBorder(null);
 		btnDelete.setOpaque(false);
 
-		table.getColumnModel().getColumn(7).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
-		table.getColumnModel().getColumn(7).setPreferredWidth(80);
-		table.getColumnModel().getColumn(7).setMaxWidth(80);
+		table.getColumnModel().getColumn(4).setCellRenderer(btnEdit);
+		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
+		table.getColumnModel().getColumn(4).setPreferredWidth(80);
+		table.getColumnModel().getColumn(4).setMaxWidth(80);
 
-		table.getColumnModel().getColumn(8).setCellRenderer(btnDelete);
-		table.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
-		table.getColumnModel().getColumn(8).setPreferredWidth(80);
-		table.getColumnModel().getColumn(8).setMaxWidth(80);
+		table.getColumnModel().getColumn(5).setCellRenderer(btnDelete);
+		table.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
+		table.getColumnModel().getColumn(5).setPreferredWidth(80);
+		table.getColumnModel().getColumn(5).setMaxWidth(80);
 
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);

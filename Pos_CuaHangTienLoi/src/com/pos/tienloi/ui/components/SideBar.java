@@ -48,9 +48,9 @@ public class SideBar extends JPanel {
 		add(Box.createVerticalStrut(10));
 		add(createButton("Phiếu Đặt Hàng", "phieudat"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("Nhân Viên", "sanpham"));
+		add(createButton("List Nhân Viên", "qlnhanvien"));
 		add(Box.createVerticalStrut(80));
-		add(createButton("Log Out", "sanpham"));
+		add(createButton("Log Out", "qlnhanvien"));
 	}
 
 	private JButton createButton(String text, String panelName) {

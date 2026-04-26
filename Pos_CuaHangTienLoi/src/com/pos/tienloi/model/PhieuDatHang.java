@@ -6,29 +6,17 @@ import java.util.List;
 
 public class PhieuDatHang {
 	private String maPhieuDat;
+	private KhachHang khachHang;
 	private Date ngayDat;
-	private double tongTien;
 	private String diaChi;
+	private double tongTien;
 	private TrangThaiPhieuDat trangThai;
 	private NhanVien nhanVien;
-	private KhachHang khachHang;
+
 	private List<ChiTietPhieuDat> listChiTietPhieu;
 
 	public PhieuDatHang() {
 		this.listChiTietPhieu = new ArrayList<>();
-	}
-
-	public PhieuDatHang(String maPhieuDat, Date ngayDat, double tongTien, String diaChi, TrangThaiPhieuDat trangThai,
-			NhanVien nhanVien, KhachHang khachHang, List<ChiTietPhieuDat> listChiTietPhieu) {
-		super();
-		this.maPhieuDat = maPhieuDat;
-		this.ngayDat = ngayDat;
-		this.tongTien = tongTien;
-		this.diaChi = diaChi;
-		this.trangThai = trangThai;
-		this.nhanVien = nhanVien;
-		this.khachHang = khachHang;
-		this.listChiTietPhieu = listChiTietPhieu;
 	}
 
 	public double tinhTongTien() {
@@ -42,6 +30,19 @@ public class PhieuDatHang {
 
 	public void capNhatTongTien() {
 		tinhTongTien();
+	}
+
+	public PhieuDatHang(String maPhieuDat, KhachHang khachHang, Date ngayDat, String diaChi, double tongTien,
+			TrangThaiPhieuDat trangThai, NhanVien nhanVien, List<ChiTietPhieuDat> listChiTietPhieu) {
+		super();
+		this.maPhieuDat = maPhieuDat;
+		this.khachHang = khachHang;
+		this.ngayDat = ngayDat;
+		this.diaChi = diaChi;
+		this.tongTien = tongTien;
+		this.trangThai = trangThai;
+		this.nhanVien = nhanVien;
+		this.listChiTietPhieu = listChiTietPhieu;
 	}
 
 	public void capNhatTrangThai(TrangThaiPhieuDat tr) {

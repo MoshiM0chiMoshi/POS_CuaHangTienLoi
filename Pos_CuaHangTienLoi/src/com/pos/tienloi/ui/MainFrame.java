@@ -32,6 +32,7 @@ public class MainFrame extends JFrame {
 		contentPanel.add(new FrmSanPham(), "sanpham");
 		contentPanel.add(new FrmHoaDon(), "hoadon");
 		contentPanel.add(new FrmPhieuDat(), "phieudat");
+		contentPanel.add(new FrmQuanLyNhanVien(), "qlnhanvien");
 
 		add(contentPanel, BorderLayout.CENTER);
 
