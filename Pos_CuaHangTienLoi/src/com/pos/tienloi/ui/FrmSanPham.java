@@ -82,7 +82,7 @@ public class FrmSanPham extends JPanel {
 		searchNorth.setColumns(35);
 		searchNorth.setFont(new Font("Segoe UI", Font.PLAIN, 16));
 
-		headerPanel2Left.add(searchNorth, BorderLayout.WEST);
+		headerPanel2Left.add(searchNorth);
 		searchNorth.setPreferredSize(new Dimension(250, 60));
 		headerPanel2Right = new JPanel(new BorderLayout());
 		headerPanel2Right.add(themBtn = new JButton("Thêm Sản Phẩm"), BorderLayout.EAST);
@@ -96,7 +96,7 @@ public class FrmSanPham extends JPanel {
 		themBtn.setOpaque(true);
 
 		// Sử dụng jsplit panel để chia hàng 2 ra trái phải
-		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
 		splitPane.setResizeWeight(0.1);
 		splitPane.setDividerSize(0);
 		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 20));
@@ -128,9 +128,12 @@ public class FrmSanPham extends JPanel {
 		centerPanel.setBackground(Color.WHITE);
 		centerMainPanel.setBackground(Color.white);
 
+		// Hình ảnh của sản phẩm
+		ImageIcon imgSanPham1 = new ImageIcon(new ImageIcon(getClass().getResource("/images/sanPham1.png")).getImage()
+				.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+
 		String[] cols2 = { "Hình", "Mã", "Tên", "Tồn kho", "Giá", "Thuế (%)", "Danh mục", "Sửa", "Xóa" };
-		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
-				{ "012345678", "Tokai Teio", "123", "100" } };
+		Object[][] data2 = { { imgSanPham1, "SP001", "Tokai Teio", 100, 50000, 8, "Anime", null, null } };
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
@@ -160,14 +163,21 @@ public class FrmSanPham extends JPanel {
 			public boolean isCellEditable(int row, int column) {
 				return column == 7 || column == 8;
 			}
+
+			@Override
+			public Class<?> getColumnClass(int column) {
+				if (column == 0)
+					return ImageIcon.class; // cột hình
+				return Object.class;
+			}
 		};
 
 		JTable table = new JTable(model);
-		table.setRowHeight(30);
 		table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		table.setSelectionBackground(HOVER_COLOR);
 		table.setShowGrid(true);
 		table.setGridColor(TEXT_Color);
+		table.setRowHeight(60);
 
 		table.setShowHorizontalLines(true);
 		table.getTableHeader().setBackground(NORMAL_COLOR);
