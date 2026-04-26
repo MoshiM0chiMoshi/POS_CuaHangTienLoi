@@ -1,60 +1,87 @@
 package com.pos.tienloi.model;
 
 public class KhachHang {
-    private String sdt;
-    private String tenKhachHang;
-    private int diemTichLuy;
-    private int soHoaDon;
+	private String sdt;
+	private String tenKhachHang;
+	private int diemTichLuy;
+	private int soHoaDon;
 
-    public KhachHang() {
-    }
+	public KhachHang() {
+		this.sdt = "";
+		this.tenKhachHang = "Khách lẻ";
+		this.diemTichLuy = 0;
+		this.soHoaDon = 0;
+	}
 
-    public KhachHang(String sdt, String tenKhachHang, int diemTichLuy, int soHoaDon) {
-        this.sdt = sdt;
-        this.tenKhachHang = tenKhachHang;
-        this.diemTichLuy = diemTichLuy;
-        this.soHoaDon = soHoaDon;
-    }
+	public KhachHang(String sdt, String tenKhachHang, int diemTichLuy, int soHoaDon) {
+		this();
+		setSdt(sdt);
+		setTenKhachHang(tenKhachHang);
+		setDiemTichLuy(diemTichLuy);
+		setSoHoaDon(soHoaDon);
+	}
 
-    public String getSdt() {
-        return sdt;
-    }
+	public String getSdt() {
+		return sdt;
+	}
 
-    public void setSdt(String sdt) {
-        this.sdt = sdt;
-    }
+	public void setSdt(String sdt) {
+		if (sdt == null) {
+			throw new IllegalArgumentException("Số điện thoại không được null");
+		}
+		this.sdt = sdt.trim();
+	}
 
-    public String getTenKhachHang() {
-        return tenKhachHang;
-    }
+	public String getTenKhachHang() {
+		return tenKhachHang;
+	}
 
-    public void setTenKhachHang(String tenKhachHang) {
-        this.tenKhachHang = tenKhachHang;
-    }
+	public void setTenKhachHang(String tenKhachHang) {
+		if (tenKhachHang == null || tenKhachHang.trim().isEmpty()) {
+			this.tenKhachHang = "Khách lẻ";
+		} else {
+			this.tenKhachHang = tenKhachHang.trim();
+		}
+	}
 
-    public int getDiemTichLuy() {
-        return diemTichLuy;
-    }
+	public int getDiemTichLuy() {
+		return diemTichLuy;
+	}
 
-    public void setDiemTichLuy(int diemTichLuy) {
-        this.diemTichLuy = diemTichLuy;
-    }
+	public void setDiemTichLuy(int diemTichLuy) {
+		if (diemTichLuy < 0) {
+			throw new IllegalArgumentException("Điểm tích lũy không được âm");
+		}
+		this.diemTichLuy = diemTichLuy;
+	}
 
-    public int getSoHoaDon() {
-        return soHoaDon;
-    }
+	public int getSoHoaDon() {
+		return soHoaDon;
+	}
 
-    public void setSoHoaDon(int soHoaDon) {
-        this.soHoaDon = soHoaDon;
-    }
+	public void setSoHoaDon(int soHoaDon) {
+		if (soHoaDon < 0) {
+			throw new IllegalArgumentException("Số hóa đơn không được âm");
+		}
+		this.soHoaDon = soHoaDon;
+	}
 
-    @Override
-    public String toString() {
-        return "KhachHang{" +
-                "sdt='" + sdt + '\'' +
-                ", tenKhachHang='" + tenKhachHang + '\'' +
-                ", diemTichLuy=" + diemTichLuy +
-                ", soHoaDon=" + soHoaDon +
-                '}';
-    }
+	/*
+	 * public void tangSoHoaDon() { this.soHoaDon++; }
+	 * 
+	 * 
+	 * public void congDiemTichLuy(int diem) { if (diem < 0) { throw new
+	 * IllegalArgumentException("Điểm cộng không được âm"); } this.diemTichLuy +=
+	 * diem; }
+	 * 
+	 * public void truDiemTichLuy(int diem) { if (diem < 0) { throw new
+	 * IllegalArgumentException("Điểm trừ không được âm"); } this.diemTichLuy =
+	 * Math.max(0, this.diemTichLuy - diem); }
+	 */
+
+	@Override
+	public String toString() {
+		return "KhachHang{" + "sdt='" + sdt + '\'' + ", tenKhachHang='" + tenKhachHang + '\'' + ", diemTichLuy="
+				+ diemTichLuy + ", soHoaDon=" + soHoaDon + '}';
+	}
 }

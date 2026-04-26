@@ -15,16 +15,14 @@ public class HoaDon {
 	private List<ChiTietHoaDon> listChiTietHoaDon;
 
 	public HoaDon() {
+		this.maHoaDon = "";
+		this.khachHang = null;
+		this.ngayLap = new Date();
+		this.trangThai = TrangThaiHoaDon.Pending;
+		this.tongTien = 0.0;
+		this.phuongThuc = null;
+		this.nhanVien = null;
 		this.listChiTietHoaDon = new ArrayList<>();
-	}
-
-	public double tinhTongTien() {
-		double tong = 0;
-		for (ChiTietHoaDon ct : listChiTietHoaDon) {
-			tong += ct.tinhThanhTien();
-		}
-		this.tongTien = tong;
-		return tong;
 	}
 
 	public HoaDon(String maHoaDon, KhachHang khachHang, Date ngayLap, TrangThaiHoaDon trangThai, double tongTien,
@@ -40,8 +38,21 @@ public class HoaDon {
 		this.listChiTietHoaDon = listChiTietHoaDon;
 	}
 
+	public double tinhTongTien() {
+		capNhatTongTien();
+		return tongTien;
+	}
+
 	public void capNhatTongTien() {
-		tinhTongTien();
+		double tong = 0;
+		if (listChiTietHoaDon != null) {
+			for (ChiTietHoaDon ct : listChiTietHoaDon) {
+				if (ct != null) {
+					tong += ct.tinhThanhTien();
+				}
+			}
+		}
+		this.tongTien = tong;
 	}
 
 	public void capNhatTrangThai(TrangThaiHoaDon tr) {
@@ -71,15 +82,15 @@ public class HoaDon {
 	}
 
 	public void setMaHoaDon(String maHoaDon) {
-		this.maHoaDon = maHoaDon;
+		this.maHoaDon = (maHoaDon == null) ? "" : maHoaDon.trim();
 	}
 
 	public Date getNgayLap() {
-		return ngayLap;
+		return ngayLap == null ? null : new Date(ngayLap.getTime());
 	}
 
 	public void setNgayLap(Date ngayLap) {
-		this.ngayLap = ngayLap;
+		this.ngayLap = (ngayLap == null) ? new Date() : new Date(ngayLap.getTime());
 	}
 
 	public double getTongTien() {
@@ -123,7 +134,8 @@ public class HoaDon {
 	}
 
 	public void setListChiTietHoaDon(List<ChiTietHoaDon> listChiTietHoaDon) {
-		this.listChiTietHoaDon = listChiTietHoaDon;
+		this.listChiTietHoaDon = (listChiTietHoaDon == null) ? new ArrayList<>() : new ArrayList<>(listChiTietHoaDon);
+		capNhatTongTien();
 	}
 
 	@Override
