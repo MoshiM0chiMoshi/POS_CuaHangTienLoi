@@ -18,6 +18,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -39,6 +40,8 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 	private JSplitPane splitPane;
 	private JPanel headerPanel2Left, headerPanel2Right;
 	private PlaceholderTextField searchNorth;
+	private JTable table;
+	private DefaultTableModel model;
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -177,14 +180,14 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
 				BorderFactory.createEmptyBorder(15, 30, 15, 15)));
 
-		DefaultTableModel model = new DefaultTableModel(data, columns) {
+		model = new DefaultTableModel(data, columns) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 4 || column == 5;
 			}
 		};
 
-		JTable table = new JTable(model);
+		table = new JTable(model);
 		table.setRowHeight(30);
 		table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		table.setSelectionBackground(HOVER_COLOR);
@@ -238,9 +241,46 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object o = e.getSource();
-		if (o.equals(themBtn)) {
+		String cmd = e.getActionCommand();
+
+		if (cmd.startsWith("EDIT")) {
+			int row = Integer.parseInt(cmd.split(":")[1]);
+			xuLyEdit(row);
+
+		} else if (cmd.startsWith("DELETE")) {
+			int row = Integer.parseInt(cmd.split(":")[1]);
+			xuLyXoa(row);
+		} else if (e.getSource().equals(themBtn)) {
 			moFormThem();
+		}
+
+	}
+
+	private void xuLyEdit(int row) {
+		int modelRow = table.convertRowIndexToModel(row);
+
+		String ma = table.getModel().getValueAt(modelRow, 0).toString();
+
+		FrmThemNhanVien dialog = new FrmThemNhanVien(javax.swing.SwingUtilities.getWindowAncestor(this));
+
+		dialog.setVisible(true);
+
+		if (dialog.isSaved()) {
+			// TODO: gọi service update
+			System.out.println("Update: " + ma);
+		}
+	}
+
+	private void xuLyXoa(int row) {
+		int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận",
+				JOptionPane.YES_NO_OPTION);
+
+		if (confirm == JOptionPane.YES_OPTION) {
+			int modelRow = table.convertRowIndexToModel(row);
+			String ma = table.getModel().getValueAt(modelRow, 0).toString();
+
+			// TODO: DAO.delete(ma)
+			System.out.println("Xóa: " + ma);
 		}
 	}
 

@@ -36,6 +36,8 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	private JSplitPane splitPane;
 	private JPanel headerPanel2Left, headerPanel2Right;
 	private PlaceholderTextField searchNorth;
+	private JTable table;
+	private DefaultTableModel model;
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -167,7 +169,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
 				BorderFactory.createEmptyBorder(15, 30, 15, 15)));
 
-		DefaultTableModel model = new DefaultTableModel(data, columns) {
+		model = new DefaultTableModel(data, columns) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 7 || column == 8;
@@ -181,7 +183,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 			}
 		};
 
-		JTable table = new JTable(model);
+		table = new JTable(model);
 		table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 		table.setSelectionBackground(HOVER_COLOR);
 		table.setShowGrid(true);
