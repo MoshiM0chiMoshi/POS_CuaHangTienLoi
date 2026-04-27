@@ -210,12 +210,12 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		btnDelete.setOpaque(false);
 
 		table.getColumnModel().getColumn(7).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
+		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", "EDIT", this));
 		table.getColumnModel().getColumn(7).setPreferredWidth(80);
 		table.getColumnModel().getColumn(7).setMaxWidth(80);
 
 		table.getColumnModel().getColumn(8).setCellRenderer(btnDelete);
-		table.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
+		table.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete", "DELETE", this));
 		table.getColumnModel().getColumn(8).setPreferredWidth(80);
 		table.getColumnModel().getColumn(8).setMaxWidth(80);
 

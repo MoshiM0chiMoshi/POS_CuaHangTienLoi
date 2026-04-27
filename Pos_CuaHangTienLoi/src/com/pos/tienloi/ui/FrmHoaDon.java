@@ -6,6 +6,8 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -27,7 +29,7 @@ import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 
-public class FrmHoaDon extends JPanel {
+public class FrmHoaDon extends JPanel implements ActionListener {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 	private JButton themBtn;
@@ -216,7 +218,7 @@ public class FrmHoaDon extends JPanel {
 		btnEdit.setOpaque(true);
 
 		table.getColumnModel().getColumn(7).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Detail"));
+		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Detail", "DETAIL", this));
 		table.getColumnModel().getColumn(7).setPreferredWidth(80);
 		table.getColumnModel().getColumn(7).setMaxWidth(80);
 
@@ -232,6 +234,12 @@ public class FrmHoaDon extends JPanel {
 		card.add(scrollPane, BorderLayout.CENTER);
 
 		return card;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

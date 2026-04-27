@@ -130,28 +130,28 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 	}
 	// CÁC HÀM GETTER ĐỂ MÀN HÌNH CHÍNH LẤY DỮ LIỆU
 
-	public JTextField getTxtMa() {
-		return txtMa;
+	public String getTxtMa() {
+		return txtMa.getText();
 	}
 
-	public JTextField getTxtTen() {
-		return txtTen;
+	public String getTxtTen() {
+		return txtTen.getText();
 	}
 
-	public JTextField getTxtSDT() {
-		return txtSDT;
+	public String getTxtSDT() {
+		return txtSDT.getText();
 	}
 
-	public JPasswordField getTxtMatKhau() {
-		return txtMatKhau;
+	public String getTxtMatKhau() {
+		return new String(txtMatKhau.getPassword());
 	}
 
-	public JPasswordField getTxtXacNhan() {
-		return txtXacNhan;
+	public String getTxtXacNhan() {
+		return new String(txtXacNhan.getPassword());
 	}
 
-	public JComboBox<String> getCbxVaiTro() {
-		return cbxVaiTro;
+	public String getCbxVaiTro() {
+		return cbxVaiTro.getSelectedItem().toString();
 	}
 
 	public boolean isSaved() {

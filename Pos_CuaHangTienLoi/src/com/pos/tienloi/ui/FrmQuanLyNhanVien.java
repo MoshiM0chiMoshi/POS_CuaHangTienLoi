@@ -213,12 +213,12 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		btnDelete.setOpaque(false);
 
 		table.getColumnModel().getColumn(4).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
+		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", "EDIT", this));
 		table.getColumnModel().getColumn(4).setPreferredWidth(80);
 		table.getColumnModel().getColumn(4).setMaxWidth(80);
 
 		table.getColumnModel().getColumn(5).setCellRenderer(btnDelete);
-		table.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete"));
+		table.getColumnModel().getColumn(5).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete", "DELETE", this));
 		table.getColumnModel().getColumn(5).setPreferredWidth(80);
 		table.getColumnModel().getColumn(5).setMaxWidth(80);
 

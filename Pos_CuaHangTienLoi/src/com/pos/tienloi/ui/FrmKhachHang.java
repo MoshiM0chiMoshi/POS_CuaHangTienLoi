@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -23,7 +25,7 @@ import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 
-public class FrmKhachHang extends JPanel {
+public class FrmKhachHang extends JPanel implements ActionListener {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 	private JButton themBtn;
@@ -165,7 +167,7 @@ public class FrmKhachHang extends JPanel {
 		btnEdit.setOpaque(false);
 
 		table.getColumnModel().getColumn(4).setCellRenderer(btnEdit);
-		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit"));
+		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", "EDIT", this));
 		table.getColumnModel().getColumn(4).setPreferredWidth(60);
 		table.getColumnModel().getColumn(4).setMaxWidth(100);
 		table.getColumnModel().getColumn(4).setMinWidth(100);
@@ -182,6 +184,12 @@ public class FrmKhachHang extends JPanel {
 		card.add(scrollPane, BorderLayout.CENTER);
 
 		return card;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }
