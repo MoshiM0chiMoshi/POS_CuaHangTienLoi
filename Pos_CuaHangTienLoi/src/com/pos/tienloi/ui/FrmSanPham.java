@@ -6,6 +6,9 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Window;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -18,13 +21,15 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
+import com.pos.tienloi.ui.dialogs.FrmThemSanPham;
 
-public class FrmSanPham extends JPanel {
+public class FrmSanPham extends JPanel implements ActionListener {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 	private JButton themBtn;
@@ -150,6 +155,10 @@ public class FrmSanPham extends JPanel {
 		splitPane.setOpaque(false);
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
+
+		// Action
+		themBtn.addActionListener(this);
+
 	}
 
 	private JPanel createTableCard(String[] columns, Object[][] data) {
@@ -224,4 +233,21 @@ public class FrmSanPham extends JPanel {
 		return card;
 	}
 
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+
+		if (o.equals(themBtn)) {
+			moFormThem();
+		}
+	}
+
+	private void moFormThem() {
+		Window parentWindow = SwingUtilities.getWindowAncestor(this);
+		FrmThemSanPham dialog = new FrmThemSanPham(parentWindow);
+		dialog.setVisible(true);
+		if (dialog.isSaved()) {
+			// refresh table
+		}
+	}
 }
