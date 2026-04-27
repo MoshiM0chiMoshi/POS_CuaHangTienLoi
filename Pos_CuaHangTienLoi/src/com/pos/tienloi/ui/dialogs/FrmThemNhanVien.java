@@ -25,11 +25,16 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 	private JPasswordField txtMatKhau, txtXacNhan;
 	private JButton btnLuu, btnHuy;
 	private JComboBox<String> cbxVaiTro;
+	private boolean isEdit = false;
 
 	private boolean isSaved = false;
 
 	public FrmThemNhanVien(Window parent) {
-		super(parent, "Thêm Nhân Viên", ModalityType.APPLICATION_MODAL);
+		this(parent, false);
+	}
+
+	public FrmThemNhanVien(Window parent, boolean isEdit) {
+		super(parent, isEdit ? "Cập nhật nhân viên" : "Thêm nhân viên", ModalityType.APPLICATION_MODAL);
 		setSize(700, 450);
 		setLocationRelativeTo(parent);
 		setResizable(false);
@@ -80,7 +85,7 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 		btnHuy = new JButton("Hủy");
 		btnHuy.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
-		btnLuu = new JButton("Xác Nhận");
+		btnLuu = new JButton(isEdit ? "Cập nhật" : "Xác nhận");
 		btnLuu.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnLuu.setBackground(Color.decode("#4A90E2"));
 		btnLuu.setForeground(Color.WHITE);
@@ -91,6 +96,10 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		add(mainPanel);
+
+		if (isEdit) {
+			txtMa.setEditable(false);
+		}
 
 		btnLuu.addActionListener(this);
 		btnHuy.addActionListener(this);
@@ -128,6 +137,15 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 		isSaved = false;
 		dispose();
 	}
+
+	// Sử dụng nếu dùng Frm để edit
+	public void setNhanVienData(String ma, String ten, String sdt, String vaiTro) {
+		txtMa.setText(ma);
+		txtTen.setText(ten);
+		txtSDT.setText(sdt);
+		cbxVaiTro.setSelectedItem(vaiTro);
+	}
+
 	// CÁC HÀM GETTER ĐỂ MÀN HÌNH CHÍNH LẤY DỮ LIỆU
 
 	public String getTxtMa() {

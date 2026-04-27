@@ -260,8 +260,13 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		int modelRow = table.convertRowIndexToModel(row);
 
 		String ma = table.getModel().getValueAt(modelRow, 0).toString();
+		String ten = table.getModel().getValueAt(modelRow, 1).toString();
+		String sdt = table.getModel().getValueAt(modelRow, 2).toString();
+		String vaiTro = table.getModel().getValueAt(modelRow, 3).toString();
 
-		FrmThemNhanVien dialog = new FrmThemNhanVien(javax.swing.SwingUtilities.getWindowAncestor(this));
+		Window parentWindow = SwingUtilities.getWindowAncestor(this);
+		FrmThemNhanVien dialog = new FrmThemNhanVien(parentWindow, true);
+		dialog.setNhanVienData(ma, ten, sdt, vaiTro);
 
 		dialog.setVisible(true);
 
