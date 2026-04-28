@@ -322,6 +322,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		for (Object[] row : ds) {
 			model.addRow(row);
 		}
+		table.setModel(model);
 	}
 
 }
