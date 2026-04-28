@@ -12,18 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class FrmThemSanPham extends JDialog implements ActionListener {
@@ -177,7 +166,38 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		// TODO: Validate dữ liệu (kiểm tra rỗng, mã trùng...) ở đây
 		// Nếu validate thất bại, dùng JOptionPane.showMessageDialog để báo lỗi và
 		// return;
+        String ten = txtTen.getText();
+        String ma = txtMa.getText();
+        String tonkho = txtTonKho.getText();
+        String gia = txtGia.getText();
+        String thue = txtThue.getText();
 
+        if(!ma.matches("^SP[0-9]{3}")||(ma.trim().isEmpty())){
+            JOptionPane.showMessageDialog(this,"Mã sản phẩm phải theo form: Bắt đầu là SP kèm theo sau là 3 chữ số và không rỗng vd SP001");
+            requestFocus();
+            return;
+        }
+        if(!ten.matches("^([A-Z][a-z]+)( [A-Z][a-z]+)*$")||ten.trim().isEmpty()){
+            JOptionPane.showMessageDialog(this,"Tên sản phẩm phải bắt đầu bằng chữ hoa ,ít nhất 1 từ và không rỗng");
+            requestFocus();
+            return;
+        }
+
+        if(gia.trim().isEmpty()||(Integer.parseInt(gia)<=0)){
+            JOptionPane.showMessageDialog(this,"Giá phải >0");
+            requestFocus();
+            return;
+        }
+        if(tonkho.trim().isEmpty()||Integer.parseInt(tonkho)<=0){
+            JOptionPane.showMessageDialog(this,"Tồn kho phải >0 và không rỗng");
+            requestFocus();
+            return;
+        }
+        if(thue.trim().isEmpty()||Integer.parseInt(thue)<=0){
+            JOptionPane.showMessageDialog(this,"Thuế phải >0 và không rỗng");
+            requestFocus();
+            return;
+        }
 		isSaved = true;
 		dispose();
 	}
