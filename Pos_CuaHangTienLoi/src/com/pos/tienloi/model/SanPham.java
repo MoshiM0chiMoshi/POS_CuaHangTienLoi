@@ -1,26 +1,27 @@
 package com.pos.tienloi.model;
 
 public class SanPham {
+	private String hinhAnh;
 	private String maSP;
 	private String tenSP;
-	private double giaBan;
 	private int soLuongTon;
-	private String hinhAnh;
-	private DanhMuc danhMuc;
+	private double giaBan;
 	private Thue thue;
+	private DanhMuc danhMuc;
 
 	public SanPham() {
 	}
 
-	public SanPham(String maSP, String tenSP, double giaBan, int soLuongTon, String hinhAnh, DanhMuc danhMuc,
-			Thue thue) {
+	public SanPham(String hinhAnh, String maSP, String tenSP, int soLuongTon, double giaBan, Thue thue,
+			DanhMuc danhMuc) {
+		super();
+		this.hinhAnh = hinhAnh;
 		this.maSP = maSP;
 		this.tenSP = tenSP;
-		this.giaBan = giaBan;
 		this.soLuongTon = soLuongTon;
-		this.hinhAnh = hinhAnh;
-		this.danhMuc = danhMuc;
+		this.giaBan = giaBan;
 		this.thue = thue;
+		this.danhMuc = danhMuc;
 	}
 
 	public void tangSoLuong(int soLuong) {

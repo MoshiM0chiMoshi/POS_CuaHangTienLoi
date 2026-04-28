@@ -34,12 +34,17 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 	private JButton btnLuu, btnHuy, btnChonAnh;
 	private JLabel lblHinhAnh;
 
+	private boolean isEdit = false;
 	private boolean isSaved = false;
 
 	private String duongDanAnh = ""; // Lưu đường dẫn ảnh để sau này lưu vào DB
 
 	public FrmThemSanPham(Window parent) {
-		super(parent, "Thêm Sản Phẩm Mới", ModalityType.APPLICATION_MODAL);
+		this(parent, false);
+	}
+
+	public FrmThemSanPham(Window parent, boolean isEdit) {
+		super(parent, isEdit ? "Cập nhật Sản Phẩm" : "Thêm Sản Phẩm", ModalityType.APPLICATION_MODAL);
 		setSize(700, 450); // Mở rộng chiều ngang một chút để chứa ảnh
 		setLocationRelativeTo(parent);
 		setResizable(false);
@@ -125,6 +130,10 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		add(mainPanel);
+
+		if (isEdit) {
+			txtMa.setEditable(false);
+		}
 
 		btnChonAnh.addActionListener(this);
 		btnLuu.addActionListener(this);
@@ -257,13 +266,28 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		return cbxDanhMuc.getSelectedItem().toString();
 	}
 
-	public void setSanPhamData(String ma, String ten, String tonkho, String gia, String thue, String danhmuc) {
+	public void setSanPhamData(String duongDanAnh, String ma, String ten, String tonkho, String gia, String thue,
+			String danhmuc) {
+
 		txtMa.setText(ma);
-		txtThue.setText(thue);
-		txtGia.setText(gia);
 		txtTen.setText(ten);
-		cbxDanhMuc.setSelectedItem(danhmuc);
 		txtTonKho.setText(tonkho);
+		txtGia.setText(gia);
+		txtThue.setText(thue);
+		cbxDanhMuc.setSelectedItem(danhmuc);
+
+		this.duongDanAnh = duongDanAnh;
+
+// Hiển thị ảnh nếu có
+		if (duongDanAnh != null && !duongDanAnh.trim().isEmpty()) {
+			ImageIcon icon = new ImageIcon(duongDanAnh);
+			Image img = icon.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH);
+			lblHinhAnh.setIcon(new ImageIcon(img));
+			lblHinhAnh.setText("");
+		} else {
+			lblHinhAnh.setIcon(null);
+			lblHinhAnh.setText("Chưa có ảnh");
+		}
 	}
 
 }

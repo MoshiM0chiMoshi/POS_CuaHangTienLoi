@@ -10,13 +10,24 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
-import com.pos.tienloi.ui.dialogs.FrmThemNhanVien;
 import com.pos.tienloi.ui.dialogs.FrmThemSanPham;
 
 public class FrmSanPham extends JPanel implements ActionListener {
@@ -129,8 +140,8 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		ImageIcon imgSanPham1 = new ImageIcon(new ImageIcon(getClass().getResource("/images/sanPham1.png")).getImage()
 				.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
 
-		String[] cols2 = { "Hình", "Mã", "Tên", "Tồn kho", "Giá", "Thuế (%)", "Danh mục", "Sửa", "Xóa" };
-		Object[][] data2 = { { imgSanPham1, "SP001", "Tokai Teio", 100, 50000, 8, "Anime", null, null } };
+		String[] cols2 = { "Hình", "Mã", "Tên", "Tồn kho", "Giá", "Thuế (%)", "Danh mục", "Sửa", "Xóa", "path" };
+		Object[][] data2 = { { imgSanPham1, "SP001", "Tokai Teio", 100, 50000, 8, "Anime", null, null, "" } };
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
@@ -211,6 +222,11 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		table.getColumnModel().getColumn(8).setPreferredWidth(80);
 		table.getColumnModel().getColumn(8).setMaxWidth(80);
 
+		// Ẩn cột path đi
+		table.getColumnModel().getColumn(9).setMinWidth(0);
+		table.getColumnModel().getColumn(9).setMaxWidth(0);
+		table.getColumnModel().getColumn(9).setWidth(0);
+
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
 
@@ -228,76 +244,89 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-        String cmd = e.getActionCommand();
-        if (cmd.startsWith("EDIT")) {
-            int row = Integer.parseInt(cmd.split(":")[1]);
-            xuLyEdit(row);
+		String cmd = e.getActionCommand();
+		if (cmd.startsWith("EDIT")) {
+			int row = Integer.parseInt(cmd.split(":")[1]);
+			xuLyEdit(row);
 
-        } else if (cmd.startsWith("DELETE")) {
-            int row = Integer.parseInt(cmd.split(":")[1]);
-            xuLyXoa(row);
-        }
-		else if (o.equals(themBtn)) {
+		} else if (cmd.startsWith("DELETE")) {
+			int row = Integer.parseInt(cmd.split(":")[1]);
+			xuLyXoa(row);
+		} else if (o.equals(themBtn)) {
 			moFormThem();
 		}
 	}
-    private void xuLyXoa(int row) {
-        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận",
-                JOptionPane.YES_NO_OPTION);
 
-        if (confirm == JOptionPane.YES_OPTION) {
-            int modelRow = table.convertRowIndexToModel(row);
-            String ma = table.getModel().getValueAt(modelRow, 0).toString();
+	private void xuLyXoa(int row) {
+		int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận",
+				JOptionPane.YES_NO_OPTION);
 
-            // TODO: DAO.delete(ma)
-            model.removeRow(modelRow);
-        }
-    }
+		if (confirm == JOptionPane.YES_OPTION) {
+			int modelRow = table.convertRowIndexToModel(row);
+			String ma = table.getModel().getValueAt(modelRow, 1).toString();
 
-    private void xuLyEdit(int row) {
-        int modelRow = table.convertRowIndexToModel(row);
-        //Thiếu hình IMAGE
+			// TODO: DAO.delete(ma)
+			model.removeRow(modelRow);
+		}
+	}
 
-        String ma = table.getModel().getValueAt(modelRow, 1).toString();
-        String ten = table.getModel().getValueAt(modelRow, 2).toString();
-        String tonkho = table.getModel().getValueAt(modelRow,3).toString();
-        String gia = table.getModel().getValueAt(modelRow,4).toString();
-        String thue = table.getModel().getValueAt(modelRow,5).toString();
-        String danhMuc = table.getModel().getValueAt(modelRow,6).toString();
-        Window parentWindow = SwingUtilities.getWindowAncestor(this);
-        FrmThemSanPham dialog = new FrmThemSanPham(parentWindow);
-        dialog.setSanPhamData(ma,ten,tonkho,gia,thue,danhMuc);
+	private void xuLyEdit(int row) {
+		int modelRow = table.convertRowIndexToModel(row);
 
-        dialog.setVisible(true);
+		Object pathObj = table.getModel().getValueAt(modelRow, 9);
+		String path = pathObj == null ? "" : pathObj.toString();
 
-        if (dialog.isSaved()) {
-            model.setValueAt(dialog.getMaSP(),modelRow,1);
-            // TODO: gọi service update
-            model.setValueAt(dialog.getTenSP(), modelRow, 2);
-            model.setValueAt(dialog.getTonKho(), modelRow, 3);
-            model.setValueAt(dialog.getGia(), modelRow, 4);
-            model.setValueAt(dialog.getThue(), modelRow, 5);
-            model.setValueAt(dialog.getDanhMuc(), modelRow, 6);
-        }
-    }
+		String ma = table.getModel().getValueAt(modelRow, 1).toString();
+		String ten = table.getModel().getValueAt(modelRow, 2).toString();
+		String tonkho = table.getModel().getValueAt(modelRow, 3).toString();
+		String gia = table.getModel().getValueAt(modelRow, 4).toString();
+		String thue = table.getModel().getValueAt(modelRow, 5).toString();
+		String danhMuc = table.getModel().getValueAt(modelRow, 6).toString();
+
+		Window parentWindow = SwingUtilities.getWindowAncestor(this);
+		FrmThemSanPham dialog = new FrmThemSanPham(parentWindow, true);
+		dialog.setSanPhamData(path, ma, ten, tonkho, gia, thue, danhMuc);
+
+		dialog.setVisible(true);
+
+		if (dialog.isSaved()) {
+			String pathMoi = dialog.getDuongDanAnh();
+
+			if (pathMoi != null && !pathMoi.isBlank()) {
+				ImageIcon icon = new ImageIcon(pathMoi);
+				Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+				model.setValueAt(new ImageIcon(img), modelRow, 0);
+				model.setValueAt(pathMoi, modelRow, 9);
+			}
+
+			model.setValueAt(dialog.getMaSP(), modelRow, 1);
+			model.setValueAt(dialog.getTenSP(), modelRow, 2);
+			model.setValueAt(dialog.getTonKho(), modelRow, 3);
+			model.setValueAt(dialog.getGia(), modelRow, 4);
+			model.setValueAt(dialog.getThue(), modelRow, 5);
+			model.setValueAt(dialog.getDanhMuc(), modelRow, 6);
+		}
+	}
+
 	private void moFormThem() {
 		Window parentWindow = SwingUtilities.getWindowAncestor(this);
 		FrmThemSanPham dialog = new FrmThemSanPham(parentWindow);
 		dialog.setVisible(true);
 		if (dialog.isSaved()) {
 			// refresh table
-            String ten = dialog.getTenSP();
-            String ma = dialog.getMaSP();
-            int tonkho = Integer.parseInt(dialog.getTonKho());
-            int gia = Integer.parseInt(dialog.getGia());
-            Double thue = Double.parseDouble(dialog.getThue());
-            String danhmuc = dialog.getDanhMuc();
-            String anh = dialog.getDuongDanAnh();
-            //SỬA PHẦN IMGICON
+			String path = dialog.getDuongDanAnh();
 
-//            ImageIcon imgSanPham = new ImageIcon(new ImageIcon(getClass().getResource(anh)).getImage()
-//                    .getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-            model.addRow(new Object[]{anh,ma,ten,tonkho,gia,thue,danhmuc});
+			ImageIcon icon = new ImageIcon(path);
+			Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+			String ten = dialog.getTenSP();
+			String ma = dialog.getMaSP();
+			int tonkho = Integer.parseInt(dialog.getTonKho());
+			int gia = Integer.parseInt(dialog.getGia());
+			Double thue = Double.parseDouble(dialog.getThue());
+			String danhmuc = dialog.getDanhMuc();
+			String anh = dialog.getDuongDanAnh();
+
+			model.addRow(new Object[] { new ImageIcon(img), ma, ten, tonkho, gia, thue, danhmuc, null, null, path });
 		}
 	}
 }
