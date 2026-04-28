@@ -258,7 +258,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	}
 
 	private void xuLyXoa(int row) {
-		int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận",
+		int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận.",
 				JOptionPane.YES_NO_OPTION);
 
 		if (confirm == JOptionPane.YES_OPTION) {
