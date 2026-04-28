@@ -15,9 +15,8 @@ public class DanhMuc_Dao {
 		ArrayList<DanhMuc> dsdanhmuc = new ArrayList<DanhMuc>();
 		String sql = "Select * from DanhMuc";
 		Connection con = ConnectDB.getInstance().getConnection();
-		try {
-			PreparedStatement ps = con.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery();) {
+
 			while (rs.next()) {
 				DanhMuc dm = new DanhMuc();
 				dm.setMaDanhMuc(rs.getString(1));

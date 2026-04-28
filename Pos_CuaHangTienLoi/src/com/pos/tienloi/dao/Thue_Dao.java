@@ -11,13 +11,12 @@ import com.pos.tienloi.model.Thue;
 
 public class Thue_Dao {
 
-	public ArrayList<Thue> getallSanPham() {
+	public ArrayList<Thue> getallThue() {
 		ArrayList<Thue> dsThue = new ArrayList<Thue>();
 		String sql = "Select * from Thue";
 		Connection con = ConnectDB.getInstance().getConnection();
-		try {
-			PreparedStatement ps = con.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery();) {
+
 			while (rs.next()) {
 				Thue thue = new Thue();
 				thue.setMaThue(rs.getString("maThue"));

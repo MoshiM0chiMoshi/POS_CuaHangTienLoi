@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,6 +26,8 @@ import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import com.pos.tienloi.dao.SanPham_Dao;
+import com.pos.tienloi.model.SanPham;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
@@ -161,6 +164,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 
 		// Action
 		themBtn.addActionListener(this);
+		loadData();
 
 	}
 
@@ -333,4 +337,37 @@ public class FrmSanPham extends JPanel implements ActionListener {
 			model.addRow(new Object[] { new ImageIcon(img), ma, ten, tonkho, gia, thue, danhmuc, null, null, path });
 		}
 	}
+
+	private ImageIcon loadIcon(String fileName) {
+		if (fileName == null || fileName.isBlank())
+			return null;
+
+		java.net.URL imgURL = getClass().getResource("/" + fileName);
+		if (imgURL == null)
+			return null;
+
+		ImageIcon temp = new ImageIcon(imgURL);
+		Image img = temp.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+		return new ImageIcon(img);
+	}
+
+	private void loadData() {
+		SanPham_Dao spDao = new SanPham_Dao();
+		ArrayList<SanPham> ds = spDao.getAllSanPham();
+
+		model.setRowCount(0);
+
+		for (SanPham sp : ds) {
+			ImageIcon icon = loadIcon(sp.getHinhAnh());
+
+			Object mucThue = sp.getThue() != null ? sp.getThue().getMucThue() : "";
+			Object tenDanhMuc = sp.getDanhMuc() != null ? sp.getDanhMuc().getTenDanhMuc() : "";
+
+			Object[] rowData = { icon, sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), sp.getGiaBan(), mucThue,
+					tenDanhMuc, null, null, sp.getHinhAnh() };
+
+			model.addRow(rowData);
+		}
+	}
+
 }

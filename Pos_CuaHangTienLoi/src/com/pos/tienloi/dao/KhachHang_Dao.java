@@ -19,9 +19,8 @@ public class KhachHang_Dao {
 			throw new IllegalStateException("Chưa kết nối được db");
 		}
 
-		try {
-			PreparedStatement ps = con.prepareStatement(sql);
-			ResultSet rs = ps.executeQuery();
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery();) {
+
 			while (rs.next()) {
 				KhachHang kh = new KhachHang();
 				kh.setSdt(rs.getString("sdt"));
