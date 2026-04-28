@@ -151,8 +151,8 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		centerMainPanel.setBackground(Color.white);
 
 		String[] cols2 = { "Mã NV", "Tên NV", "SĐT", "Vai Trò", "Sửa", "Xóa" };
-		Object[][] data2 = { { "NV001", "Tokai Teio1", "090123455", "Admin" }, { "NV002", "Tokai Teio2", "030123868", "Staff" },
-				{ "NV003", "Tokai Teio3", "090586739", "Staff" } };
+		Object[][] data2 = { { "NV001", "Tokai Teion", "0901234550", "Admin" }, { "NV002", "Tokai Teioa", "0301238638", "Staff" },
+				{ "NV003", "Tokai Teiol", "0905867394", "Staff" } };
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
