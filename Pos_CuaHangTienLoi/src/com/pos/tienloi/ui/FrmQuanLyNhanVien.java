@@ -271,7 +271,11 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		dialog.setVisible(true);
 
 		if (dialog.isSaved()) {
+            model.setValueAt(dialog.getTxtMa(),modelRow,0);
 			// TODO: gọi service update
+            model.setValueAt(dialog.getTxtTen(), modelRow, 1);
+            model.setValueAt(dialog.getTxtSDT(), modelRow, 2);
+            model.setValueAt(dialog.getCbxVaiTro(), modelRow, 3);
 			System.out.println("Update: " + ma);
 		}
 	}
