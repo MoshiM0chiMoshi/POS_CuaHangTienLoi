@@ -85,20 +85,4 @@ public class SideBar extends JPanel {
 		return btn;
 	}
 
-	/*
-	 * private JPanel buildInputRow(Icon icon, JComponent field) { JPanel row = new
-	 * JPanel(); row.setOpaque(false);
-	 * 
-	 * // Đổi FlowLayout.LEFT thành FlowLayout.CENTER để căn giữa. // Tham số 0 đầu
-	 * tiên là hgap (khoảng cách ngang), set = 0 để icon sát vào field // nhất có
-	 * thể. row.setLayout(new FlowLayout(FlowLayout.CENTER, 0, 0));
-	 * row.setMaximumSize(new Dimension(380, 58));
-	 * 
-	 * row.setAlignmentX(Component.CENTER_ALIGNMENT); JLabel iconLabel = new
-	 * JLabel(icon); iconLabel.setPreferredSize(new Dimension(30, 30));
-	 * 
-	 * row.add(iconLabel); row.add(field);
-	 * 
-	 * return row; }
-	 */
 }
