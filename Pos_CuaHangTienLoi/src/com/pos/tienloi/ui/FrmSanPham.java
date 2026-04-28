@@ -10,23 +10,13 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
+import com.pos.tienloi.ui.dialogs.FrmThemNhanVien;
 import com.pos.tienloi.ui.dialogs.FrmThemSanPham;
 
 public class FrmSanPham extends JPanel implements ActionListener {
@@ -238,11 +228,32 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
+        String cmd = e.getActionCommand();
+        if (cmd.startsWith("EDIT")) {
+            int row = Integer.parseInt(cmd.split(":")[1]);
+            //Thiếu xử lý edit
 
-		if (o.equals(themBtn)) {
+        } else if (cmd.startsWith("DELETE")) {
+            int row = Integer.parseInt(cmd.split(":")[1]);
+            xuLyXoa(row);
+        }
+		else if (o.equals(themBtn)) {
 			moFormThem();
 		}
 	}
+    private void xuLyXoa(int row) {
+        int confirm = JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn xóa?", "Xác nhận",
+                JOptionPane.YES_NO_OPTION);
+
+        if (confirm == JOptionPane.YES_OPTION) {
+            int modelRow = table.convertRowIndexToModel(row);
+            String ma = table.getModel().getValueAt(modelRow, 0).toString();
+
+            // TODO: DAO.delete(ma)
+            model.removeRow(modelRow);
+        }
+    }
+
 
 	private void moFormThem() {
 		Window parentWindow = SwingUtilities.getWindowAncestor(this);
@@ -250,6 +261,18 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		dialog.setVisible(true);
 		if (dialog.isSaved()) {
 			// refresh table
+            String ten = dialog.getTenSP();
+            String ma = dialog.getMaSP();
+            int tonkho = Integer.parseInt(dialog.getTonKho());
+            int gia = Integer.parseInt(dialog.getGia());
+            Double thue = Double.parseDouble(dialog.getThue());
+            String danhmuc = dialog.getDanhMuc();
+            String anh = dialog.getDuongDanAnh();
+            //SỬA PHẦN IMGICON
+
+//            ImageIcon imgSanPham = new ImageIcon(new ImageIcon(getClass().getResource(anh)).getImage()
+//                    .getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+            model.addRow(new Object[]{anh,ma,ten,tonkho,gia,thue,danhmuc});
 		}
 	}
 }

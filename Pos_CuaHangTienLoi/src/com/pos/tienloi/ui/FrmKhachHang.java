@@ -1,29 +1,17 @@
 package com.pos.tienloi.ui;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Image;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTable;
+import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
+import com.pos.tienloi.ui.dialogs.FrmThemKhachHang;
+import com.pos.tienloi.ui.dialogs.FrmThemNhanVien;
 
 public class FrmKhachHang extends JPanel implements ActionListener {
 	private JPanel northPanel, mainPanel, centerPanel;
@@ -114,9 +102,9 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		centerPanel.setBackground(Color.WHITE);
 		centerMainPanel.setBackground(Color.white);
 
-		String[] cols2 = { "SDT", "Tên", "Số Hóa Đơn", "Điểm tích Lũy", "Action" };
-		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
-				{ "012345678", "Tokai Teio", "123", "100" } };
+		String[] cols2 = { "SDT", "Tên", "Số Hóa Đơn", "Điểm tích Lũy", "Sửa"};
+		Object[][] data2 = { { "0928475869", "Tokai Tei", "123", "100" }, { "0382749586", "Tokai Tejio", "123", "100" },
+				{ "0572837465", "Tokai Teiok", "123", "100" } };
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
@@ -134,6 +122,7 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
 
+        themBtn.addActionListener(this);
 	}
 
 	private JPanel createTableCard(String[] columns, Object[][] data) {
@@ -168,6 +157,7 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		btnEdit.setBorder(null);
 		btnEdit.setOpaque(false);
 
+
 		table.getColumnModel().getColumn(4).setCellRenderer(btnEdit);
 		table.getColumnModel().getColumn(4).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", "EDIT", this));
 		table.getColumnModel().getColumn(4).setPreferredWidth(60);
@@ -186,12 +176,57 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		card.add(scrollPane, BorderLayout.CENTER);
 
 		return card;
+
 	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-
+        String cmd = e.getActionCommand();
+        if(cmd.startsWith("EDIT")){
+            int row = Integer.parseInt(cmd.split(":")[1]);
+            xuLyEdit(row);
+        }
+        else if(e.getSource().equals(themBtn)){
+            moFormThem();
+        }
 	}
+    private void xuLyEdit(int row) {
+        int modelRow = table.convertRowIndexToModel(row);
 
+
+
+        String sdt = table.getModel().getValueAt(modelRow, 0).toString();
+        String ten = table.getModel().getValueAt(modelRow, 1).toString();
+        String soHoaDon = table.getModel().getValueAt(modelRow,2).toString();
+        String diemTichLuy = table.getModel().getValueAt(modelRow,3).toString();
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        FrmThemKhachHang dialog = new FrmThemKhachHang(parentWindow, true);
+        dialog.setKhachHangData(sdt,ten,soHoaDon,diemTichLuy);
+
+        dialog.setVisible(true);
+
+        if (dialog.isSaved()) {
+            model.setValueAt(dialog.getTxtSDT(), modelRow, 0);
+            // TODO: gọi service update
+            model.setValueAt(dialog.getTxtTen(), modelRow, 1);
+            model.setValueAt(dialog.gettxtSoHoaDon(),modelRow,2);
+            model.setValueAt(dialog.gettxtDiemTichLuy(),modelRow,3);
+
+        }
+    }
+    private void moFormThem() {
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        FrmThemKhachHang dialog = new FrmThemKhachHang(parentWindow);
+        dialog.setVisible(true);
+        if (dialog.isSaved()) {
+            String ten = dialog.getTxtTen();
+            String sdt = dialog.getTxtSDT();
+            int soHoaDon = Integer.parseInt(dialog.gettxtSoHoaDon());
+            int diemTichLuy = Integer.parseInt(dialog.gettxtDiemTichLuy());
+            model.addRow(new Object[]{
+                    sdt,ten,soHoaDon,diemTichLuy, "Edit"
+            });
+        }
+    }
 }
