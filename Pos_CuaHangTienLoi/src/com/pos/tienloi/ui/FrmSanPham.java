@@ -261,6 +261,18 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		dialog.setVisible(true);
 		if (dialog.isSaved()) {
 			// refresh table
+            String ten = dialog.getTenSP();
+            String ma = dialog.getMaSP();
+            int tonkho = Integer.parseInt(dialog.getTonKho());
+            int gia = Integer.parseInt(dialog.getGia());
+            Double thue = Double.parseDouble(dialog.getThue());
+            String danhmuc = dialog.getDanhMuc();
+            String anh = dialog.getDuongDanAnh();
+            //SỬA PHẦN IMGICON
+
+//            ImageIcon imgSanPham = new ImageIcon(new ImageIcon(getClass().getResource(anh)).getImage()
+//                    .getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+            model.addRow(new Object[]{anh,ma,ten,tonkho,gia,thue,danhmuc});
 		}
 	}
 }
