@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
+import com.pos.tienloi.connectDB.ConnectDB;
 import com.pos.tienloi.ui.components.SideBar;
 
 public class MainFrame extends JFrame {
@@ -45,6 +46,7 @@ public class MainFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
+		ConnectDB.getInstance().connect();
 		SwingUtilities.invokeLater(() -> new MainFrame().setVisible(true));
 	}
 }
