@@ -315,7 +315,6 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		if (dialog.isSaved()) {
 			// refresh table
 			String path = dialog.getDuongDanAnh();
-
 			ImageIcon icon = new ImageIcon(path);
 			Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 			String ten = dialog.getTenSP();
@@ -325,6 +324,11 @@ public class FrmSanPham extends JPanel implements ActionListener {
 			Double thue = Double.parseDouble(dialog.getThue());
 			String danhmuc = dialog.getDanhMuc();
 			String anh = dialog.getDuongDanAnh();
+
+			if (path == null || path.isBlank()) {
+				JOptionPane.showMessageDialog(this, "Vui lòng chọn ảnh sản phẩm!");
+				return;
+			}
 
 			model.addRow(new Object[] { new ImageIcon(img), ma, ten, tonkho, gia, thue, danhmuc, null, null, path });
 		}
