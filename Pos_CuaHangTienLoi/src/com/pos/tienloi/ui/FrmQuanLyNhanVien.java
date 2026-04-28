@@ -285,7 +285,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 			String ma = table.getModel().getValueAt(modelRow, 0).toString();
 
 			// TODO: DAO.delete(ma)
-			System.out.println("Xóa: " + ma);
+			model.removeRow(modelRow);
 		}
 	}
 
@@ -294,8 +294,15 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		FrmThemNhanVien dialog = new FrmThemNhanVien(parentWindow);
 		dialog.setVisible(true);
 		if (dialog.isSaved()) {
+            String ma = dialog.getTxtMa();
+            String ten = dialog.getTxtTen();
+            String sdt = dialog.getTxtSDT();
+            String vaiTro = dialog.getCbxVaiTro();
 
-		}
+            model.addRow(new Object[]{
+                    ma, ten, sdt, vaiTro, "Edit", "Delete"
+            });
+        }
 	}
 
 }
