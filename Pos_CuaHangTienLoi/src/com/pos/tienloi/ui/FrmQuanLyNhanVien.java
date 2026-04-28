@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -28,6 +29,8 @@ import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import com.pos.tienloi.dao.NhanVien_Dao;
+import com.pos.tienloi.dao.VaiTro_Dao;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
@@ -42,6 +45,8 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 	private PlaceholderTextField searchNorth;
 	private JTable table;
 	private DefaultTableModel model;
+	private NhanVien_Dao nvDao;
+	private VaiTro_Dao vaiTro;
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -151,8 +156,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		centerMainPanel.setBackground(Color.white);
 
 		String[] cols2 = { "Mã NV", "Tên NV", "SĐT", "Vai Trò", "Sửa", "Xóa" };
-		Object[][] data2 = { { "NV001", "Tokai Teion", "0901234550", "Admin" }, { "NV002", "Tokai Teioa", "0301238638", "Staff" },
-				{ "NV003", "Tokai Teiol", "0905867394", "Staff" } };
+		Object[][] data2 = {};
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
@@ -172,6 +176,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 
 		// Thêm action
 		themBtn.addActionListener(this);
+		loadTable();
 	}
 
 	private JPanel createTableCard(String[] columns, Object[][] data) {
@@ -271,11 +276,11 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		dialog.setVisible(true);
 
 		if (dialog.isSaved()) {
-            model.setValueAt(dialog.getTxtMa(),modelRow,0);
+			model.setValueAt(dialog.getTxtMa(), modelRow, 0);
 			// TODO: gọi service update
-            model.setValueAt(dialog.getTxtTen(), modelRow, 1);
-            model.setValueAt(dialog.getTxtSDT(), modelRow, 2);
-            model.setValueAt(dialog.getCbxVaiTro(), modelRow, 3);
+			model.setValueAt(dialog.getTxtTen(), modelRow, 1);
+			model.setValueAt(dialog.getTxtSDT(), modelRow, 2);
+			model.setValueAt(dialog.getCbxVaiTro(), modelRow, 3);
 			System.out.println("Update: " + ma);
 		}
 	}
@@ -298,15 +303,25 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		FrmThemNhanVien dialog = new FrmThemNhanVien(parentWindow);
 		dialog.setVisible(true);
 		if (dialog.isSaved()) {
-            String ma = dialog.getTxtMa();
-            String ten = dialog.getTxtTen();
-            String sdt = dialog.getTxtSDT();
-            String vaiTro = dialog.getCbxVaiTro();
+			String ma = dialog.getTxtMa();
+			String ten = dialog.getTxtTen();
+			String sdt = dialog.getTxtSDT();
+			String vaiTro = dialog.getCbxVaiTro();
 
-            model.addRow(new Object[]{
-                    ma, ten, sdt, vaiTro, "Edit", "Delete"
-            });
-        }
+			model.addRow(new Object[] { ma, ten, sdt, vaiTro, "Edit", "Delete" });
+		}
+	}
+
+	public void loadTable() {
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		model.setRowCount(0);
+
+		NhanVien_Dao dao = new NhanVien_Dao();
+		ArrayList<Object[]> ds = dao.getDuLieuNhanVienFull();
+
+		for (Object[] row : ds) {
+			model.addRow(row);
+		}
 	}
 
 }

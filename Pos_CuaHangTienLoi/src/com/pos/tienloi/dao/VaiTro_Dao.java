@@ -10,13 +10,6 @@ import com.pos.tienloi.connectDB.ConnectDB;
 import com.pos.tienloi.model.VaiTro;
 
 public class VaiTro_Dao {
-	ArrayList<VaiTro> dsvaitro;
-	VaiTro vt;
-
-	public VaiTro_Dao() {
-		dsvaitro = new ArrayList<VaiTro>();
-		vt = new VaiTro();
-	}
 
 	public ArrayList<VaiTro> getallVaiTro() {
 		ArrayList<VaiTro> ds = new ArrayList<>();
