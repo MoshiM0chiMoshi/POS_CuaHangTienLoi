@@ -143,6 +143,7 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 		// TODO: Validate dữ liệu (kiểm tra rỗng, mã trùng...) ở đây
 		// Nếu validate thất bại, dùng JOptionPane.showMessageDialog để báo lỗi và
 		// return;
+<<<<<<< HEAD
 		String ma = txtMa.getText();
 		String ten = txtTen.getText();
 		String sdt = txtSDT.getText();
@@ -159,6 +160,26 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 					"Số điện thoại phải bắt đầu bằng các số 03,09 hoặc 05 và phải đủ 10 số");
 			return;
 		}
+=======
+        String ma = txtMa.getText();
+        String ten = txtTen.getText();
+        String sdt = txtSDT.getText();
+        if(!ma.matches("^NV[0-9]{3}")||(ma.trim().isEmpty())){
+            JOptionPane.showMessageDialog(this,"Mã nhân viên phải theo form: Bắt đầu là NV kèm theo sau là 3 chữ số và không rỗng vd NV001");
+            requestFocus();
+            return;
+        }
+        if(!ten.matches("^([A-Z][a-z]+)( [A-Z][a-z]+)+$")||ten.isEmpty()){
+            JOptionPane.showMessageDialog(this,"Tên nhân viên phải bắt đầu bằng chữ hoa và ít nhất 2 từ và không rỗng");
+            requestFocus();
+            return;
+        }
+        if(!sdt.matches("^0(9|3|5)[0-9]{8}$")||sdt.isEmpty()){
+            JOptionPane.showMessageDialog(this,"Số điện thoại phải bắt đầu bằng các số 03,09 hoặc 05 ,phải đủ 10 số và không rỗng");
+            requestFocus();
+            return;
+        }
+>>>>>>> 92ca2ac1ce7c5178328315c0550b66d818d5347f
 		isSaved = true;
 		dispose();
 	}
