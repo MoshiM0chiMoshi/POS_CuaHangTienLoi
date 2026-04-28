@@ -1,55 +1,20 @@
 package com.pos.tienloi.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class TaiKhoan {
-	private String maNV; // dùng làm username
+public class TaiKhoan implements Serializable {
+	private NhanVien nhanVien; // Dùng làm username thông qua nhanVien.getMaNV()
 	private String matKhau;
-	private String maVaiTro;
-
-	// dùng khi JOIN
-	private NhanVien nhanVien;
 	private VaiTro vaiTro;
 
 	public TaiKhoan() {
 	}
 
-	public TaiKhoan(String maNV, String matKhau, String maVaiTro) {
-		this.maNV = maNV;
-		this.matKhau = matKhau;
-		this.maVaiTro = maVaiTro;
-	}
-
-	public TaiKhoan(String maNV, String matKhau, String maVaiTro, NhanVien nhanVien, VaiTro vaiTro) {
-		this.maNV = maNV;
-		this.matKhau = matKhau;
-		this.maVaiTro = maVaiTro;
+	public TaiKhoan(NhanVien nhanVien, String matKhau, VaiTro vaiTro) {
 		this.nhanVien = nhanVien;
-		this.vaiTro = vaiTro;
-	}
-
-	public String getMaNV() {
-		return maNV;
-	}
-
-	public void setMaNV(String maNV) {
-		this.maNV = maNV;
-	}
-
-	public String getMatKhau() {
-		return matKhau;
-	}
-
-	public void setMatKhau(String matKhau) {
 		this.matKhau = matKhau;
-	}
-
-	public String getMaVaiTro() {
-		return maVaiTro;
-	}
-
-	public void setMaVaiTro(String maVaiTro) {
-		this.maVaiTro = maVaiTro;
+		this.vaiTro = vaiTro;
 	}
 
 	public NhanVien getNhanVien() {
@@ -58,6 +23,14 @@ public class TaiKhoan {
 
 	public void setNhanVien(NhanVien nhanVien) {
 		this.nhanVien = nhanVien;
+	}
+
+	public String getMatKhau() {
+		return matKhau;
+	}
+
+	public void setMatKhau(String matKhau) {
+		this.matKhau = matKhau;
 	}
 
 	public VaiTro getVaiTro() {
@@ -70,7 +43,7 @@ public class TaiKhoan {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(maNV);
+		return Objects.hash(nhanVien);
 	}
 
 	@Override
@@ -82,12 +55,12 @@ public class TaiKhoan {
 		if (getClass() != obj.getClass())
 			return false;
 		TaiKhoan other = (TaiKhoan) obj;
-		return Objects.equals(maNV, other.maNV);
+		return Objects.equals(nhanVien, other.nhanVien);
 	}
 
 	@Override
 	public String toString() {
-		return "TaiKhoan{" + "maNV='" + maNV + '\'' + ", matKhau='***'" + ", maVaiTro='" + maVaiTro + '\''
-				+ ", nhanVien=" + nhanVien + ", vaiTro=" + vaiTro + '}';
+		return "TaiKhoan{" + "nhanVien=" + (nhanVien != null ? nhanVien.getMaNV() : "null") + ", matKhau='***'"
+				+ ", vaiTro=" + (vaiTro != null ? vaiTro.getTenVaiTro() : "null") + '}';
 	}
 }
