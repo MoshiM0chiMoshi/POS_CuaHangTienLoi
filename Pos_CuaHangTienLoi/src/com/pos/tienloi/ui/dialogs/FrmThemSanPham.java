@@ -11,6 +11,7 @@ import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -27,6 +28,9 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
+import com.pos.tienloi.dao.DanhMuc_Dao;
+import com.pos.tienloi.model.DanhMuc;
+
 public class FrmThemSanPham extends JDialog implements ActionListener {
 
 	private JTextField txtMa, txtTen, txtTonKho, txtGia, txtThue;
@@ -36,7 +40,7 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 
 	private boolean isEdit = false;
 	private boolean isSaved = false;
-
+	private DanhMuc_Dao dmDao;
 	private String duongDanAnh = ""; // Lưu đường dẫn ảnh để sau này lưu vào DB
 
 	public FrmThemSanPham(Window parent) {
@@ -105,8 +109,13 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		rightPanel.add(txtThue = new JTextField());
 
 		rightPanel.add(createLabel("Danh mục:", labelFont));
-		String[] danhMucList = { "Anime", "Manga", "Figure", "Khác" };
-		cbxDanhMuc = new JComboBox<>(danhMucList);
+		cbxDanhMuc = new JComboBox<>();
+		dmDao = new DanhMuc_Dao();
+		ArrayList<DanhMuc> dsDanhMuc = dmDao.getallDanhMuc();
+		for (DanhMuc x : dsDanhMuc) {
+			cbxDanhMuc.addItem(x.getTenDanhMuc());
+		}
+
 		rightPanel.add(cbxDanhMuc);
 
 		mainPanel.add(rightPanel, BorderLayout.CENTER);
