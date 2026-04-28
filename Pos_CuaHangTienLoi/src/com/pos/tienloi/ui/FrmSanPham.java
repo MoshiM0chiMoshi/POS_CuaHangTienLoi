@@ -231,7 +231,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
         String cmd = e.getActionCommand();
         if (cmd.startsWith("EDIT")) {
             int row = Integer.parseInt(cmd.split(":")[1]);
-            //Thiếu xử lý edit
+            xuLyEdit(row);
 
         } else if (cmd.startsWith("DELETE")) {
             int row = Integer.parseInt(cmd.split(":")[1]);
@@ -254,7 +254,32 @@ public class FrmSanPham extends JPanel implements ActionListener {
         }
     }
 
+    private void xuLyEdit(int row) {
+        int modelRow = table.convertRowIndexToModel(row);
+        //Thiếu hình IMAGE
 
+        String ma = table.getModel().getValueAt(modelRow, 1).toString();
+        String ten = table.getModel().getValueAt(modelRow, 2).toString();
+        String tonkho = table.getModel().getValueAt(modelRow,3).toString();
+        String gia = table.getModel().getValueAt(modelRow,4).toString();
+        String thue = table.getModel().getValueAt(modelRow,5).toString();
+        String danhMuc = table.getModel().getValueAt(modelRow,6).toString();
+        Window parentWindow = SwingUtilities.getWindowAncestor(this);
+        FrmThemSanPham dialog = new FrmThemSanPham(parentWindow);
+        dialog.setSanPhamData(ma,ten,tonkho,gia,thue,danhMuc);
+
+        dialog.setVisible(true);
+
+        if (dialog.isSaved()) {
+            model.setValueAt(dialog.getMaSP(),modelRow,1);
+            // TODO: gọi service update
+            model.setValueAt(dialog.getTenSP(), modelRow, 2);
+            model.setValueAt(dialog.getTonKho(), modelRow, 3);
+            model.setValueAt(dialog.getGia(), modelRow, 4);
+            model.setValueAt(dialog.getThue(), modelRow, 5);
+            model.setValueAt(dialog.getDanhMuc(), modelRow, 6);
+        }
+    }
 	private void moFormThem() {
 		Window parentWindow = SwingUtilities.getWindowAncestor(this);
 		FrmThemSanPham dialog = new FrmThemSanPham(parentWindow);

@@ -242,4 +242,14 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 	public String getDanhMuc() {
 		return cbxDanhMuc.getSelectedItem().toString();
 	}
+
+    public void setSanPhamData(String ma,String ten,String tonkho,String gia,String thue,String danhmuc) {
+        txtMa.setText(ma);
+        txtThue.setText(thue);
+        txtGia.setText(gia);
+        txtTen.setText(ten);
+        cbxDanhMuc.setSelectedItem(danhmuc);
+        txtTonKho.setText(tonkho);
+    }
+
 }
