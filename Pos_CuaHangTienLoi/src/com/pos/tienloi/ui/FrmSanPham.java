@@ -9,6 +9,7 @@ import java.awt.Image;
 import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -411,11 +412,30 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		if (fileName == null || fileName.isBlank())
 			return null;
 
-		java.net.URL imgURL = getClass().getResource("/" + fileName);
-		if (imgURL == null)
-			return null;
+		ImageIcon temp = null;
 
-		ImageIcon temp = new ImageIcon(imgURL);
+		// 1. Thử tải ảnh từ Resource của project (dành cho các file có sẵn như
+		// /images/sanPham1.png)
+		// Đảm bảo không bị dư dấu '/' ở đầu
+		String resourcePath = fileName.startsWith("/") ? fileName : "/" + fileName;
+		java.net.URL imgURL = getClass().getResource(resourcePath);
+
+		if (imgURL != null) {
+			temp = new ImageIcon(imgURL);
+		} else {
+			// 2. Nếu không có trong Resource, tải ảnh trực tiếp từ đường dẫn tuyệt đối trên
+			// ổ cứng
+			File imgFile = new File(fileName);
+			if (imgFile.exists()) {
+				temp = new ImageIcon(fileName);
+			}
+		}
+
+		// Nếu vẫn không tìm thấy ảnh (file bị xóa hoặc đổi tên) thì trả về null
+		if (temp == null) {
+			return null;
+		}
+
 		Image img = temp.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 		return new ImageIcon(img);
 	}

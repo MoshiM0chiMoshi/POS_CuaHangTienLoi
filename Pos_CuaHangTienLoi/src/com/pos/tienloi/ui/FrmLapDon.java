@@ -16,6 +16,7 @@ import java.util.Map;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
@@ -52,7 +53,6 @@ public class FrmLapDon extends JPanel {
 	private JButton btnLapDon;
 	private JButton btnLapPhieuDat;
 
-	// Giỏ hàng: Map lưu Sản Phẩm và Số lượng
 	private Map<SanPham, Integer> cartMap = new HashMap<>();
 	private DecimalFormat df = new DecimalFormat("#,###.## VND");
 
@@ -66,20 +66,16 @@ public class FrmLapDon extends JPanel {
 	}
 
 	public void initUi() {
-		// ==========================================
 		// 1. CỘT TRÁI (DANH SÁCH SẢN PHẨM) - Chiếm 65%
-		// ==========================================
+
 		JPanel pnlLeft = new JPanel(new BorderLayout(0, 10));
 		pnlLeft.setOpaque(false);
 		pnlLeft.setPreferredSize(new Dimension((int) (1300 * 0.65), 800));
 
 		// Thanh tìm kiếm sản phẩm
 		JPanel pnlSearch = new JPanel(new BorderLayout());
-		pnlSearch.setBorder(
-				BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(new Color(122, 90, 42), 1, true), // Nâu
-																													// vàng
-																													// đậm
-						new EmptyBorder(5, 10, 5, 10)));
+		pnlSearch.setBorder(BorderFactory.createCompoundBorder(
+				BorderFactory.createLineBorder(new Color(122, 90, 42), 1, true), new EmptyBorder(5, 10, 5, 10)));
 		pnlSearch.setBackground(Color.WHITE);
 
 		JLabel lblSearchIcon = new JLabel("🔍"); // Có thể thay bằng ImageIcon
@@ -100,10 +96,8 @@ public class FrmLapDon extends JPanel {
 		scrollProducts.setBorder(null);
 		scrollProducts.getVerticalScrollBar().setUnitIncrement(16);
 		pnlLeft.add(scrollProducts, BorderLayout.CENTER);
-
-		// ==========================================
 		// 2. CỘT PHẢI (GIỎ HÀNG & THANH TOÁN) - Chiếm 35%
-		// ==========================================
+
 		JPanel pnlRight = new JPanel(new BorderLayout(0, 10));
 		pnlRight.setOpaque(false);
 		pnlRight.setBorder(BorderFactory.createCompoundBorder(
@@ -192,9 +186,7 @@ public class FrmLapDon extends JPanel {
 		setupButtonActions();
 	}
 
-	// ==========================================
 	// LOGIC NGHIỆP VỤ
-	// ==========================================
 
 	private void loadProductsToUI() {
 		pnlProductContainer.removeAll();
@@ -209,24 +201,46 @@ public class FrmLapDon extends JPanel {
 	}
 
 	// Tạo 1 thẻ sản phẩm bên trái
+	// Tạo 1 thẻ sản phẩm bên trái
 	private JPanel createProductCard(SanPham sp) {
-		JPanel card = new JPanel(new BorderLayout());
+		// Thêm gap 5px giữa các thành phần
+		JPanel card = new JPanel(new BorderLayout(0, 5));
 		card.setBackground(Color.WHITE);
 		card.setBorder(BorderFactory.createCompoundBorder(
 				BorderFactory.createLineBorder(new Color(230, 230, 230), 1, true), new EmptyBorder(10, 10, 10, 10)));
 		card.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
+		// 1. Tạo Label chứa Hình ảnh
+		ImageIcon icon = loadIcon(sp.getHinhAnh());
+		JLabel lblImage = new JLabel();
+		if (icon != null) {
+			lblImage.setIcon(icon);
+		} else {
+			lblImage.setText("No Image"); // Hiển thị tạm nếu không có ảnh
+		}
+		lblImage.setHorizontalAlignment(SwingConstants.CENTER);
+
+		// 2. Gom Tên và Giá vào một Panel nhỏ nằm ở dưới
+		JPanel pnlInfo = new JPanel(new GridLayout(2, 1, 0, 5));
+		pnlInfo.setBackground(Color.WHITE);
+
 		// Tên SP
 		JLabel lblName = new JLabel(sp.getTenSP());
 		lblName.setFont(new Font("Arial", Font.BOLD, 14));
+		lblName.setHorizontalAlignment(SwingConstants.CENTER); // Căn giữa text
 
 		// Giá & Tồn kho
 		JLabel lblPriceStock = new JLabel(df.format(sp.getGiaBan()) + " | Kho: " + sp.getSoLuongTon());
 		lblPriceStock.setFont(new Font("Arial", Font.PLAIN, 12));
 		lblPriceStock.setForeground(Color.GRAY);
+		lblPriceStock.setHorizontalAlignment(SwingConstants.CENTER); // Căn giữa text
 
-		card.add(lblName, BorderLayout.CENTER);
-		card.add(lblPriceStock, BorderLayout.SOUTH);
+		pnlInfo.add(lblName);
+		pnlInfo.add(lblPriceStock);
+
+		// Lắp ráp vào Card chính
+		card.add(lblImage, BorderLayout.CENTER); // Ảnh nằm giữa/trên
+		card.add(pnlInfo, BorderLayout.SOUTH); // Thông tin nằm dưới
 
 		// Click để thêm vào giỏ
 		card.addMouseListener(new MouseAdapter() {
@@ -406,5 +420,34 @@ public class FrmLapDon extends JPanel {
 				}
 			});
 		}
+	}
+
+	private ImageIcon loadIcon(String fileName) {
+		if (fileName == null || fileName.isBlank())
+			return null;
+
+		ImageIcon temp = null;
+
+		// 1. Tìm trong Resource project
+		String resourcePath = fileName.startsWith("/") ? fileName : "/" + fileName;
+		java.net.URL imgURL = getClass().getResource(resourcePath);
+
+		if (imgURL != null) {
+			temp = new ImageIcon(imgURL);
+		} else {
+			// 2. Tìm theo đường dẫn tuyệt đối trên ổ đĩa
+			java.io.File imgFile = new java.io.File(fileName);
+			if (imgFile.exists()) {
+				temp = new ImageIcon(fileName);
+			}
+		}
+
+		if (temp == null)
+			return null;
+
+		// Scale kích thước ảnh cho phù hợp với thẻ sản phẩm bên form Lập Đơn (ví dụ:
+		// 100x100)
+		java.awt.Image img = temp.getImage().getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
+		return new ImageIcon(img);
 	}
 }
