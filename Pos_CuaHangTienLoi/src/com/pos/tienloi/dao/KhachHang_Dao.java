@@ -80,4 +80,34 @@ public class KhachHang_Dao {
 		return n > 0;
 	}
 
+	public KhachHang findBySdt(String sdt) {
+		if (sdt == null || sdt.trim().isEmpty()) {
+			return null;
+		}
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+
+		String sql = "SELECT * FROM KhachHang WHERE sdt = ?";
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, sdt);
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					KhachHang kh = new KhachHang();
+					kh.setSdt(rs.getString("sdt"));
+					kh.setTenKhachHang(rs.getString("tenKhachHang"));
+					kh.setDiemTichLuy(rs.getInt("diemTichLuy"));
+					kh.setSoHoaDon(rs.getInt("soHoaDon"));
+
+					return kh;
+				}
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
 }

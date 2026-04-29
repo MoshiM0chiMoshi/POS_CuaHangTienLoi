@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
@@ -25,6 +26,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
@@ -34,6 +36,7 @@ import com.pos.tienloi.model.KhachHang;
 import com.pos.tienloi.model.PTTT;
 import com.pos.tienloi.model.SanPham;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
+import com.pos.tienloi.ui.dialogs.FrmThemKhachHang;
 
 public class FrmLapDon extends JPanel {
 
@@ -78,7 +81,7 @@ public class FrmLapDon extends JPanel {
 		pnlSearch.setBackground(Color.WHITE);
 
 		JLabel lblSearchIcon = new JLabel("🔍");
-		PlaceholderTextField txtSearchProduct = new PlaceholderTextField("Tìm kiếm sản phẩm");
+		txtSearchProduct = new PlaceholderTextField("Tìm kiếm sản phẩm");
 		txtSearchProduct.setBorder(null);
 		txtSearchProduct.setFont(new Font("Arial", Font.PLAIN, 16));
 
@@ -323,38 +326,50 @@ public class FrmLapDon extends JPanel {
 
 	private void handleSearchCustomer() {
 		String phone = txtSearchPhone.getText().trim();
-		if (phone.isEmpty())
-			return;
 
-		ArrayList<KhachHang> dskh = khDao.getallKhachHang();
-		boolean found = false;
-
-		for (KhachHang kh : dskh) {
-			if (kh.getSdt().equals(phone)) {
-				currentCustomer = kh;
-				lblCustomerName.setText("KH: " + kh.getTenKhachHang() + " - Điểm: " + kh.getDiemTichLuy());
-				lblCustomerName.setForeground(new Color(0, 128, 0)); // Màu xanh lá
-				found = true;
-				break;
-			}
-		}
-
-		if (!found) {
+		if (phone.isEmpty()) {
 			currentCustomer = null;
 			lblCustomerName.setText("Khách lẻ");
 			lblCustomerName.setForeground(Color.GRAY);
+			return;
+		}
 
-			int confirm = JOptionPane.showConfirmDialog(this,
-					"Không tìm thấy khách hàng. Bạn có muốn tạo khách hàng mới không?", "Tạo khách hàng",
-					JOptionPane.YES_NO_OPTION);
+		KhachHang kh = khDao.findBySdt(phone);
 
-			if (confirm == JOptionPane.YES_OPTION) {
-				// Gọi FrmThemKhachHang (extends JDialog) của bạn ở đây
-				// FrmThemKhachHang frm = new FrmThemKhachHang(phone);
-				// frm.setVisible(true);
-				// Sau khi tạo xong có thể gán lại txtSearchPhone.setText() và gọi
-				// handleSearchCustomer() lại.
-				System.out.println("Đang mở FrmThemKhachHang...");
+		if (kh != null) {
+			currentCustomer = kh;
+			lblCustomerName.setText("KH: " + kh.getTenKhachHang() + " - Điểm: " + kh.getDiemTichLuy());
+			lblCustomerName.setForeground(new Color(0, 128, 0));
+			return;
+		}
+
+		currentCustomer = null;
+		lblCustomerName.setText("Khách lẻ");
+		lblCustomerName.setForeground(Color.GRAY);
+
+		int confirm = JOptionPane.showConfirmDialog(this,
+				"Không tìm thấy khách hàng. Bạn có muốn tạo khách hàng mới không?", "Tạo khách hàng",
+				JOptionPane.YES_NO_OPTION);
+
+		if (confirm == JOptionPane.YES_OPTION) {
+			Window parent = SwingUtilities.getWindowAncestor(this);
+			FrmThemKhachHang dialog = new FrmThemKhachHang(parent);
+			dialog.setVisible(true);
+
+			if (dialog.isSaved()) {
+				KhachHang khMoi = dialog.getKhachHang();
+
+				if (khMoi != null) {
+					// 🔥 lưu DB
+					khDao.create(khMoi);
+
+					// 🔥 gán vào currentCustomer
+					currentCustomer = khMoi;
+
+					txtSearchPhone.setText(khMoi.getSdt());
+					lblCustomerName.setText("KH: " + khMoi.getTenKhachHang() + " - Điểm: " + khMoi.getDiemTichLuy());
+					lblCustomerName.setForeground(new Color(0, 128, 0));
+				}
 			}
 		}
 	}

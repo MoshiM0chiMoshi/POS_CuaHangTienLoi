@@ -19,6 +19,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.pos.tienloi.model.KhachHang;
+
 public class FrmThemKhachHang extends JDialog implements ActionListener {
 
 	private JTextField txtTen, txtSDT, txtSoHoaDon, txtDiemTichLuy;
@@ -185,6 +187,18 @@ public class FrmThemKhachHang extends JDialog implements ActionListener {
 
 	public boolean isSaved() {
 		return isSaved;
+	}
+
+	public KhachHang getKhachHang() {
+		if (!isSaved)
+			return null;
+
+		String ten = txtTen.getText().trim();
+		String sdt = txtSDT.getText().trim();
+		int soHoaDon = Integer.parseInt(txtSoHoaDon.getText().trim());
+		int diem = Integer.parseInt(txtDiemTichLuy.getText().trim());
+
+		return new KhachHang(sdt, ten, diem, soHoaDon);
 	}
 
 }
