@@ -9,30 +9,24 @@ public class PhieuDatHang {
 	private KhachHang khachHang;
 	private Date ngayDat;
 	private String diaChi;
-	private double tongTien;
+	private float tongTien;
 	private TrangThaiPhieuDat trangThai;
 	private NhanVien nhanVien;
 
 	private List<ChiTietPhieuDat> listChiTietPhieu;
 
 	public PhieuDatHang() {
+		this.maPhieuDat = "";
+		this.khachHang = null;
+		this.ngayDat = new Date();
+		this.diaChi = "";
+		this.tongTien = 0;
+		this.trangThai = null;
+		this.nhanVien = null;
 		this.listChiTietPhieu = new ArrayList<>();
 	}
 
-	public double tinhTongTien() {
-		double tong = 0;
-		for (ChiTietPhieuDat ct : listChiTietPhieu) {
-			tong += ct.tinhThanhTien();
-		}
-		this.tongTien = tong;
-		return tong;
-	}
-
-	public void capNhatTongTien() {
-		tinhTongTien();
-	}
-
-	public PhieuDatHang(String maPhieuDat, KhachHang khachHang, Date ngayDat, String diaChi, double tongTien,
+	public PhieuDatHang(String maPhieuDat, KhachHang khachHang, Date ngayDat, String diaChi, float tongTien,
 			TrangThaiPhieuDat trangThai, NhanVien nhanVien, List<ChiTietPhieuDat> listChiTietPhieu) {
 		super();
 		this.maPhieuDat = maPhieuDat;
@@ -43,6 +37,26 @@ public class PhieuDatHang {
 		this.trangThai = trangThai;
 		this.nhanVien = nhanVien;
 		this.listChiTietPhieu = listChiTietPhieu;
+	}
+
+	public double tinhTongTien() {
+		tinhTongTien();
+		return tongTien;
+
+	}
+
+	public void capNhatTongTien() {
+
+		float tong = 0;
+		if (listChiTietPhieu != null) {
+			for (ChiTietPhieuDat ct : listChiTietPhieu) {
+				if (ct != null) {
+					tong += ct.tinhThanhTien();
+				}
+			}
+		}
+		this.tongTien = tong;
+
 	}
 
 	public void capNhatTrangThai(TrangThaiPhieuDat tr) {
@@ -77,7 +91,7 @@ public class PhieuDatHang {
 		}
 	}
 
-	public double getTongTien() {
+	public float getTongTien() {
 		return tongTien;
 	}
 
@@ -86,7 +100,7 @@ public class PhieuDatHang {
 	}
 
 	public void setMaPhieuDat(String maPhieuDat) {
-		this.maPhieuDat = maPhieuDat;
+		this.maPhieuDat = (maPhieuDat == null) ? "" : maPhieuDat.trim();
 	}
 
 	public Date getNgayDat() {
@@ -94,7 +108,7 @@ public class PhieuDatHang {
 	}
 
 	public void setNgayDat(Date ngayDat) {
-		this.ngayDat = ngayDat;
+		this.ngayDat = (ngayDat == null) ? new Date() : new Date(ngayDat.getTime());
 	}
 
 	public TrangThaiPhieuDat getTrangThai() {
@@ -126,7 +140,8 @@ public class PhieuDatHang {
 	}
 
 	public void setListChiTietPhieu(List<ChiTietPhieuDat> listChiTietPhieu) {
-		this.listChiTietPhieu = listChiTietPhieu;
+		this.listChiTietPhieu = (listChiTietPhieu == null) ? new ArrayList<>() : new ArrayList<>(listChiTietPhieu);
+		capNhatTongTien();
 	}
 
 	public String getDiaChi() {

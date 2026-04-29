@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,6 +27,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import com.pos.tienloi.dao.PhieuDat_Dao;
+import com.pos.tienloi.model.PhieuDatHang;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
@@ -163,8 +167,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 
 		String[] cols2 = { "Mã Phiếu", "Khách Hàng", "Ngày Đặt", "Địa Chỉ", "Tổng Tiền", "Trạng Thái", "Nhân Viên",
 				"Detail" };
-		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
-				{ "012345678", "Tokai Teio", "123", "100" } };
+		Object[][] data2 = {};
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
@@ -181,6 +184,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 		splitPane.setOpaque(false);
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
+		loadData();
 	}
 
 	private JPanel createTableCard(String[] columns, Object[][] data) {
@@ -242,6 +246,18 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 
+	}
+
+	public void loadData() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		PhieuDat_Dao pdDao = new PhieuDat_Dao();
+		ArrayList<PhieuDatHang> listpd = pdDao.getallPhieuDat();
+		for (PhieuDatHang pd : listpd) {
+			String[] rowData = { pd.getMaPhieuDat(), pd.getKhachHang().getTenKhachHang(), sdf.format(pd.getNgayDat()),
+					pd.getDiaChi(), pd.getTongTien() + "", pd.getTrangThai() + "", pd.getNhanVien().getTenNV() };
+			model.addRow(rowData);
+		}
+		table.setModel(model);
 	}
 
 }
