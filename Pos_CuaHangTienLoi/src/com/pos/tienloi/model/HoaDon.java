@@ -9,7 +9,7 @@ public class HoaDon {
 	private KhachHang khachHang;
 	private Date ngayLap;
 	private TrangThaiHoaDon trangThai;
-	private double tongTien;
+	private float tongTien;
 	private PTTT phuongThuc;
 	private NhanVien nhanVien;
 	private List<ChiTietHoaDon> listChiTietHoaDon;
@@ -19,13 +19,13 @@ public class HoaDon {
 		this.khachHang = null;
 		this.ngayLap = new Date();
 		this.trangThai = TrangThaiHoaDon.Pending;
-		this.tongTien = 0.0;
+		this.tongTien = 0;
 		this.phuongThuc = null;
 		this.nhanVien = null;
 		this.listChiTietHoaDon = new ArrayList<>();
 	}
 
-	public HoaDon(String maHoaDon, KhachHang khachHang, Date ngayLap, TrangThaiHoaDon trangThai, double tongTien,
+	public HoaDon(String maHoaDon, KhachHang khachHang, Date ngayLap, TrangThaiHoaDon trangThai, float tongTien,
 			PTTT phuongThuc, NhanVien nhanVien, List<ChiTietHoaDon> listChiTietHoaDon) {
 		super();
 		this.maHoaDon = maHoaDon;
@@ -44,7 +44,7 @@ public class HoaDon {
 	}
 
 	public void capNhatTongTien() {
-		double tong = 0;
+		float tong = 0;
 		if (listChiTietHoaDon != null) {
 			for (ChiTietHoaDon ct : listChiTietHoaDon) {
 				if (ct != null) {

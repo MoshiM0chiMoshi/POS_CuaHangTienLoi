@@ -15,12 +15,10 @@ public class TaiKhoan_Dao {
 	public ArrayList<TaiKhoan> getallTaiKhoan() {
 		ArrayList<TaiKhoan> dstk = new ArrayList<TaiKhoan>();
 		String sql = """
-				    SELECT tk.maNV, tk.matKhau, tk.maVaiTro,
-				           nv.tenNV, nv.sdt,
-				           vt.tenVaiTro, vt.moTa
-				    FROM TaiKhoan tk
-				    JOIN NhanVien nv ON tk.maNV = nv.maNV
-				    JOIN VaiTro vt ON tk.maVaiTro = vt.maVaiTro
+				SELECT hd.*, kh.tenKhachHang, nv.tenNV
+				FROM HoaDon hd
+				LEFT JOIN KhachHang kh ON hd.sdt = kh.sdt
+				LEFT JOIN NhanVien nv ON hd.maNV = nv.maNV
 				""";
 		Connection con = ConnectDB.getInstance().getConnection();
 		if (con == null) {
@@ -28,7 +26,7 @@ public class TaiKhoan_Dao {
 		}
 
 		try (java.sql.Statement statement = con.createStatement(); ResultSet rs = statement.executeQuery(sql)) {
-			if (rs.next()) {
+			while (rs.next()) {
 				NhanVien nv = new NhanVien();
 				nv.setMaNV(rs.getString("maNV"));
 				nv.setTenNV(rs.getString("tenNV"));

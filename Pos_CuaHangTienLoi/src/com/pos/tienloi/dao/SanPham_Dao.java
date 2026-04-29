@@ -15,7 +15,8 @@ public class SanPham_Dao {
 
 	public ArrayList<SanPham> getAllSanPham() {
 		ArrayList<SanPham> dssp = new ArrayList<SanPham>();
-		Connection con = ConnectDB.getInstance().getConnection();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 		String sql = """
 				    SELECT sp.*, dm.maDanhMuc, dm.tenDanhMuc, t.maThue, t.mucThue
 				    FROM SanPham sp

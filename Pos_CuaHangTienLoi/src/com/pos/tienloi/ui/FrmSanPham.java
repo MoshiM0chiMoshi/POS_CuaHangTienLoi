@@ -218,13 +218,33 @@ public class FrmSanPham extends JPanel implements ActionListener {
 
 		table.getColumnModel().getColumn(7).setCellRenderer(btnEdit);
 		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Edit", "EDIT", this));
-		table.getColumnModel().getColumn(7).setPreferredWidth(80);
-		table.getColumnModel().getColumn(7).setMaxWidth(80);
+		table.getColumnModel().getColumn(7).setPreferredWidth(70);
+		table.getColumnModel().getColumn(7).setMaxWidth(70);
 
 		table.getColumnModel().getColumn(8).setCellRenderer(btnDelete);
 		table.getColumnModel().getColumn(8).setCellEditor(new ButtonEditor(new JCheckBox(), "Delete", "DELETE", this));
-		table.getColumnModel().getColumn(8).setPreferredWidth(80);
-		table.getColumnModel().getColumn(8).setMaxWidth(80);
+		table.getColumnModel().getColumn(8).setPreferredWidth(70);
+		table.getColumnModel().getColumn(8).setMaxWidth(70);
+
+		table.getColumnModel().getColumn(5).setMaxWidth(65);
+		table.getColumnModel().getColumn(5).setMinWidth(65);
+		table.getColumnModel().getColumn(5).setMaxWidth(65);
+
+		table.getColumnModel().getColumn(3).setMaxWidth(70);
+		table.getColumnModel().getColumn(3).setMinWidth(70);
+		table.getColumnModel().getColumn(3).setMaxWidth(70);
+
+		table.getColumnModel().getColumn(1).setMaxWidth(70);
+		table.getColumnModel().getColumn(1).setMinWidth(70);
+		table.getColumnModel().getColumn(1).setMaxWidth(70);
+
+		table.getColumnModel().getColumn(0).setMaxWidth(70);
+		table.getColumnModel().getColumn(0).setMinWidth(70);
+		table.getColumnModel().getColumn(0).setMaxWidth(70);
+
+		table.getColumnModel().getColumn(4).setMaxWidth(80);
+		table.getColumnModel().getColumn(4).setMinWidth(80);
+		table.getColumnModel().getColumn(4).setMaxWidth(80);
 
 		// Ẩn cột path đi
 		table.getColumnModel().getColumn(9).setMinWidth(0);
@@ -279,6 +299,8 @@ public class FrmSanPham extends JPanel implements ActionListener {
 
 		Object pathObj = table.getModel().getValueAt(modelRow, 9);
 		String path = pathObj == null ? "" : pathObj.toString();
+
+		// String path = pathObj == null ? "" : pathObj.toString();
 
 		String ma = table.getModel().getValueAt(modelRow, 1).toString();
 		String ten = table.getModel().getValueAt(modelRow, 2).toString();
@@ -360,7 +382,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		for (SanPham sp : ds) {
 			ImageIcon icon = loadIcon(sp.getHinhAnh());
 
-			Object mucThue = sp.getThue() != null ? sp.getThue().getMucThue() : "";
+			Object mucThue = sp.getThue() != null ? Math.round(sp.getThue().getMucThue() * 100) : "";
 			Object tenDanhMuc = sp.getDanhMuc() != null ? sp.getDanhMuc().getTenDanhMuc() : "";
 
 			Object[] rowData = { icon, sp.getMaSP(), sp.getTenSP(), sp.getSoLuongTon(), sp.getGiaBan(), mucThue,

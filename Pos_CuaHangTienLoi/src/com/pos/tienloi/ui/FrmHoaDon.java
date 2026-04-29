@@ -8,6 +8,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -25,6 +27,8 @@ import javax.swing.JTable;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 
+import com.pos.tienloi.dao.HoaDon_Dao;
+import com.pos.tienloi.model.HoaDon;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
@@ -163,8 +167,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 
 		String[] cols2 = { "Mã HD", "Khách Hàng", "Ngày Lập", "Trạng Thái", "Tổng Tiền", "Hình Thức", "Nhân Viên",
 				"Detail	" };
-		Object[][] data2 = { { "012345678", "Tokai Teio", "123", "100" }, { "012345678", "Tokai Teio", "123", "100" },
-				{ "012345678", "Tokai Teio", "123", "100" } };
+		Object[][] data2 = {};
 		centerMainPanel = createTableCard(cols2, data2);
 		centerMainPanel.setBorder(BorderFactory.createEmptyBorder(15, 30, 15, 15));
 
@@ -181,6 +184,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		splitPane.setOpaque(false);
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
+		loadData();
 	}
 
 	private JPanel createTableCard(String[] columns, Object[][] data) {
@@ -221,8 +225,20 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 
 		table.getColumnModel().getColumn(7).setCellRenderer(btnEdit);
 		table.getColumnModel().getColumn(7).setCellEditor(new ButtonEditor(new JCheckBox(), "Detail", "DETAIL", this));
-		table.getColumnModel().getColumn(7).setPreferredWidth(80);
-		table.getColumnModel().getColumn(7).setMaxWidth(80);
+		table.getColumnModel().getColumn(7).setPreferredWidth(65);
+		table.getColumnModel().getColumn(7).setMaxWidth(65);
+
+		table.getColumnModel().getColumn(0).setMaxWidth(70);
+		table.getColumnModel().getColumn(0).setMinWidth(70);
+
+		table.getColumnModel().getColumn(2).setMaxWidth(120);
+		table.getColumnModel().getColumn(2).setMinWidth(120);
+
+		table.getColumnModel().getColumn(4).setMaxWidth(100);
+		table.getColumnModel().getColumn(4).setMinWidth(100);
+
+		table.getColumnModel().getColumn(3).setMaxWidth(80);
+		table.getColumnModel().getColumn(3).setMinWidth(80);
 
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
@@ -241,8 +257,20 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
-
 	}
 
+	private void loadData() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		HoaDon_Dao hdDao = new HoaDon_Dao();
+		ArrayList<HoaDon> listhd = hdDao.getallHoaDon();
+		for (HoaDon hd : listhd) {
+			String[] rowData = { hd.getMaHoaDon(), hd.getKhachHang().getTenKhachHang(), sdf.format(hd.getNgayLap()),
+					hd.getTrangThai() + "", hd.getTongTien() + "", hd.getPhuongThuc() + "",
+					hd.getNhanVien().getTenNV() };
+			model.addRow(rowData);
+		}
+		table.setModel(model);
+
+	}
 
 }
