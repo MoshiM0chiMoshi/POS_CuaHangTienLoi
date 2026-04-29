@@ -12,13 +12,13 @@ import com.pos.tienloi.model.SanPham;
 
 public class ChiTietHoaDon_Dao {
 
-	// Hàm lấy danh sách chi tiết hóa đơn theo mã hóa đơn
 	public ArrayList<ChiTietHoaDon> getChiTietByMaHD(String maHoaDon) {
 		ArrayList<ChiTietHoaDon> dsCTHD = new ArrayList<>();
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 
-		String sql = "SELECT * FROM ChiTietHoaDon WHERE maHoaDon = ?";
+		String sql = "SELECT ct.*, sp.tenSP, sp.giaBan, sp.hinhAnh " + "FROM ChiTietHoaDon ct "
+				+ "JOIN SanPham sp ON ct.maSP = sp.maSP " + "WHERE ct.maHoaDon = ?";
 
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, maHoaDon);
@@ -30,6 +30,10 @@ public class ChiTietHoaDon_Dao {
 				ct.setSoLuong(rs.getInt("soLuong"));
 
 				SanPham sp = new SanPham();
+				sp.setMaSP(rs.getString("maSP"));
+				sp.setTenSP(rs.getString("tenSP"));
+				sp.setGiaBan(rs.getDouble("giaBan"));
+				sp.setHinhAnh(rs.getString("hinhAnh"));
 
 				dsCTHD.add(ct);
 			}
