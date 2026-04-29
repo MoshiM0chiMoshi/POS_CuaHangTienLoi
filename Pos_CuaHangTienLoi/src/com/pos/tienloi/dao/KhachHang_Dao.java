@@ -36,4 +36,23 @@ public class KhachHang_Dao {
 		return dskh;
 	}
 
+	public boolean create(KhachHang kh) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		String sql = "INSERT INTO KhachHang (sdt, tenKhachHang, diemTichLuy, soHoaDon) VALUES (?, ?, ?, ?)";
+		int n = 0;
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, kh.getSdt());
+			ps.setString(2, kh.getTenKhachHang());
+			ps.setInt(3, kh.getDiemTichLuy());
+			ps.setInt(4, kh.getSoHoaDon());
+
+			n = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n > 0;
+	}
+
 }

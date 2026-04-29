@@ -28,6 +28,7 @@ public class MainFrame extends JFrame {
 		cardLayout = new CardLayout();
 		contentPanel = new JPanel(cardLayout);
 
+		contentPanel.add(new FrmLapDon(), "lapdon");
 		contentPanel.add(new FrmDashBoard(), "dashboard");
 		contentPanel.add(new FrmKhachHang(), "khachhang");
 		contentPanel.add(new FrmSanPham(), "sanpham");

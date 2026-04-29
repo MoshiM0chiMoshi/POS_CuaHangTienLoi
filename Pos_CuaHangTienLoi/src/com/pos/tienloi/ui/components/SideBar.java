@@ -34,26 +34,29 @@ public class SideBar extends JPanel {
 		Image imgLogo = logoIcon.getImage().getScaledInstance(250, 250, Image.SCALE_SMOOTH);
 		JLabel logoLabel = new JLabel(new ImageIcon(imgLogo));
 		logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
 		add(Box.createVerticalStrut(1));
-		add(logoLabel);
 
-		add(createButton("Dashboard", "dashboard"));
+		JButton logo = createButton(new ImageIcon(imgLogo), "", "lapdon");
+		logo.setMaximumSize(new Dimension(250, 250));
+		add(logo);
+
+		add(createButton(null, "Dashboard", "dashboard"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("Khách Hàng", "khachhang"));
+		add(createButton(null, "Khách Hàng", "khachhang"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("Sản phẩm", "sanpham"));
+		add(createButton(null, "Sản phẩm", "sanpham"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("Hóa Đơn", "hoadon"));
+		add(createButton(null, "Hóa Đơn", "hoadon"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("Phiếu Đặt Hàng", "phieudat"));
+		add(createButton(null, "Phiếu Đặt Hàng", "phieudat"));
 		add(Box.createVerticalStrut(10));
-		add(createButton("List Nhân Viên", "qlnhanvien"));
+		add(createButton(null, "List Nhân Viên", "qlnhanvien"));
 		add(Box.createVerticalStrut(80));
-		add(createButton("Log Out", "qlnhanvien"));
+		add(createButton(null, "Log Out", "qlnhanvien"));
+
 	}
 
-	private JButton createButton(String text, String panelName) {
+	private JButton createButton(ImageIcon img, String text, String panelName) {
 		JButton btn = new JButton(text);
 		btn.setFont(new Font("Segoe UI", Font.BOLD, 30));
 		btn.setForeground(TEXT_Color);
@@ -65,8 +68,13 @@ public class SideBar extends JPanel {
 		btn.setFocusPainted(false);
 		btn.setBorderPainted(false);
 		btn.setOpaque(true);
-
 		btn.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+		if (img != null) {
+			btn.setIcon(img);
+			btn.setHorizontalTextPosition(JButton.CENTER);
+			btn.setVerticalTextPosition(JButton.BOTTOM);
+		}
 
 		btn.addMouseListener(new java.awt.event.MouseAdapter() {
 			public void mouseEntered(java.awt.event.MouseEvent evt) {
