@@ -39,6 +39,10 @@ public class KhachHang_Dao {
 	public boolean create(KhachHang kh) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
+
+		if (con == null) {
+			throw new IllegalStateException("Chưa kết nối DB");
+		}
 		String sql = "INSERT INTO KhachHang (sdt, tenKhachHang, diemTichLuy, soHoaDon) VALUES (?, ?, ?, ?)";
 		int n = 0;
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
@@ -48,6 +52,27 @@ public class KhachHang_Dao {
 			ps.setInt(3, kh.getDiemTichLuy());
 			ps.setInt(4, kh.getSoHoaDon());
 
+			n = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n > 0;
+	}
+
+	public boolean update(KhachHang kh) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		if (con == null) {
+			throw new IllegalStateException("Chưa kết nối DB");
+		}
+		String sql = "update KhachHang set tenKhachHang=?, diemTichLuy=?, soHoaDon=? where sdt=?";
+		int n = 0;
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, kh.getTenKhachHang());
+			ps.setInt(2, kh.getDiemTichLuy());
+			ps.setInt(3, kh.getSoHoaDon());
+			ps.setString(4, kh.getSdt());
 			n = ps.executeUpdate();
 		} catch (SQLException e) {
 			e.printStackTrace();

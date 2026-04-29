@@ -216,19 +216,36 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		String ten = table.getModel().getValueAt(modelRow, 1).toString();
 		String soHoaDon = table.getModel().getValueAt(modelRow, 2).toString();
 		String diemTichLuy = table.getModel().getValueAt(modelRow, 3).toString();
+
 		Window parentWindow = SwingUtilities.getWindowAncestor(this);
 		FrmThemKhachHang dialog = new FrmThemKhachHang(parentWindow, true);
 		dialog.setKhachHangData(sdt, ten, soHoaDon, diemTichLuy);
-
 		dialog.setVisible(true);
 
 		if (dialog.isSaved()) {
-			model.setValueAt(dialog.getTxtSDT(), modelRow, 0);
-			// TODO: gọi service update
-			model.setValueAt(dialog.getTxtTen(), modelRow, 1);
-			model.setValueAt(dialog.gettxtSoHoaDon(), modelRow, 2);
-			model.setValueAt(dialog.gettxtDiemTichLuy(), modelRow, 3);
+			try {
 
+				String newTen = dialog.getTxtTen();
+				int newSoHoaDon = Integer.parseInt(dialog.gettxtSoHoaDon());
+				int newDiem = Integer.parseInt(dialog.gettxtDiemTichLuy());
+
+				KhachHang kh = new KhachHang(sdt, newTen, newDiem, newSoHoaDon);
+				KhachHang_Dao dao = new KhachHang_Dao();
+				boolean result = dao.update(kh);
+
+				if (result) {
+					model.setValueAt(newTen, modelRow, 1);
+					model.setValueAt(newSoHoaDon, modelRow, 2);
+					model.setValueAt(newDiem, modelRow, 3);
+
+					JOptionPane.showMessageDialog(this, "Cập nhật thành công");
+				} else {
+					JOptionPane.showMessageDialog(this, "Cập nhật thất bại");
+				}
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(this, "Dữ liệu không hợp lệ");
+
+			}
 		}
 	}
 
