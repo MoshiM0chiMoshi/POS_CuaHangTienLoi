@@ -4,7 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
-import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.Window;
@@ -29,19 +28,22 @@ import javax.swing.SwingConstants;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import com.pos.tienloi.dao.DanhMuc_Dao;
+import com.pos.tienloi.dao.Thue_Dao;
 import com.pos.tienloi.model.DanhMuc;
+import com.pos.tienloi.model.Thue;
 
 public class FrmThemSanPham extends JDialog implements ActionListener {
 
-	private JTextField txtMa, txtTen, txtTonKho, txtGia, txtThue;
-	private JComboBox<String> cbxDanhMuc;
+	private JTextField txtMa, txtTen, txtTonKho, txtGia;
+	private JComboBox<DanhMuc> cbxDanhMuc;
+	private JComboBox<Thue> cbxThue;
 	private JButton btnLuu, btnHuy, btnChonAnh;
 	private JLabel lblHinhAnh;
 
 	private boolean isEdit = false;
 	private boolean isSaved = false;
-	private DanhMuc_Dao dmDao;
-	private String duongDanAnh = ""; // Lưu đường dẫn ảnh để sau này lưu vào DB
+
+	private String duongDanAnh = "";
 
 	public FrmThemSanPham(Window parent) {
 		this(parent, false);
@@ -49,7 +51,8 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 
 	public FrmThemSanPham(Window parent, boolean isEdit) {
 		super(parent, isEdit ? "Cập nhật Sản Phẩm" : "Thêm Sản Phẩm", ModalityType.APPLICATION_MODAL);
-		setSize(700, 450); // Mở rộng chiều ngang một chút để chứa ảnh
+		this.isEdit = isEdit;
+		setSize(700, 450);
 		setLocationRelativeTo(parent);
 		setResizable(false);
 
@@ -58,12 +61,12 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 
 	private void initUi() {
 		setLayout(new BorderLayout());
-		JPanel mainPanel = new JPanel(new BorderLayout(20, 0)); // Khoảng cách giữa trái và phải là 20px
+
+		JPanel mainPanel = new JPanel(new BorderLayout(20, 0));
 		mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		mainPanel.setBackground(Color.WHITE);
 
-		// 1. PHẦN BÊN TRÁI: CHỌN HÌNH ẢNH (WEST)
-
+		// ===== LEFT: IMAGE =====
 		JPanel leftPanel = new JPanel();
 		leftPanel.setLayout(new BoxLayout(leftPanel, BoxLayout.Y_AXIS));
 		leftPanel.setBackground(Color.WHITE);
@@ -74,64 +77,59 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		lblHinhAnh.setBorder(BorderFactory.createLineBorder(Color.GRAY));
 
 		btnChonAnh = new JButton("Chọn Ảnh...");
-		btnChonAnh.setFont(new Font("Segoe UI", Font.PLAIN, 14));
 		btnChonAnh.setAlignmentX(CENTER_ALIGNMENT);
 
-		// Căn giữa components trong BoxLayout
 		lblHinhAnh.setAlignmentX(CENTER_ALIGNMENT);
 
-		leftPanel.add(Box.createVerticalStrut(20)); // Căn xuống một chút
+		leftPanel.add(Box.createVerticalStrut(20));
 		leftPanel.add(lblHinhAnh);
 		leftPanel.add(Box.createVerticalStrut(15));
 		leftPanel.add(btnChonAnh);
 
 		mainPanel.add(leftPanel, BorderLayout.WEST);
 
-		// 2. PHẦN BÊN PHẢI: NHẬP LIỆU (CENTER)
-
+		// ===== RIGHT: FORM =====
 		JPanel rightPanel = new JPanel(new GridLayout(6, 2, 10, 15));
 		rightPanel.setBackground(Color.WHITE);
-		Font labelFont = new Font("Segoe UI", Font.BOLD, 14);
 
-		rightPanel.add(createLabel("Mã sản phẩm:", labelFont));
+		rightPanel.add(createLabel("Mã sản phẩm:"));
 		rightPanel.add(txtMa = new JTextField());
 
-		rightPanel.add(createLabel("Tên sản phẩm:", labelFont));
+		rightPanel.add(createLabel("Tên sản phẩm:"));
 		rightPanel.add(txtTen = new JTextField());
 
-		rightPanel.add(createLabel("Tồn kho:", labelFont));
+		rightPanel.add(createLabel("Tồn kho:"));
 		rightPanel.add(txtTonKho = new JTextField());
 
-		rightPanel.add(createLabel("Giá bán:", labelFont));
+		rightPanel.add(createLabel("Giá bán:"));
 		rightPanel.add(txtGia = new JTextField());
 
-		rightPanel.add(createLabel("Thuế (%):", labelFont));
-		rightPanel.add(txtThue = new JTextField());
-
-		rightPanel.add(createLabel("Danh mục:", labelFont));
-		cbxDanhMuc = new JComboBox<>();
-		dmDao = new DanhMuc_Dao();
-		ArrayList<DanhMuc> dsDanhMuc = dmDao.getallDanhMuc();
-		for (DanhMuc x : dsDanhMuc) {
-			cbxDanhMuc.addItem(x.getTenDanhMuc());
+		// ===== THUẾ =====
+		rightPanel.add(createLabel("Thuế:"));
+		cbxThue = new JComboBox<>();
+		Thue_Dao thueDao = new Thue_Dao();
+		for (Thue t : thueDao.getallThue()) {
+			cbxThue.addItem(t);
 		}
+		rightPanel.add(cbxThue);
 
+		// ===== DANH MỤC =====
+		rightPanel.add(createLabel("Danh mục:"));
+		cbxDanhMuc = new JComboBox<>();
+		DanhMuc_Dao dmDao = new DanhMuc_Dao();
+		ArrayList<DanhMuc> ds = dmDao.getallDanhMuc();
+		for (DanhMuc d : ds) {
+			cbxDanhMuc.addItem(d);
+		}
 		rightPanel.add(cbxDanhMuc);
 
 		mainPanel.add(rightPanel, BorderLayout.CENTER);
 
-		// 3. PHẦN NÚT BẤM (SOUTH)
-
-		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
-		buttonPanel.setBackground(Color.WHITE);
+		// ===== BUTTON =====
+		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 
 		btnHuy = new JButton("Hủy");
-		btnHuy.setFont(new Font("Segoe UI", Font.BOLD, 14));
-
-		btnLuu = new JButton("Lưu Sản Phẩm");
-		btnLuu.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		btnLuu.setBackground(Color.decode("#4A90E2"));
-		btnLuu.setForeground(Color.WHITE);
+		btnLuu = new JButton("Lưu");
 
 		buttonPanel.add(btnHuy);
 		buttonPanel.add(btnLuu);
@@ -140,98 +138,63 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 
 		add(mainPanel);
 
-		if (isEdit) {
-			txtMa.setEditable(false);
-		}
-
 		btnChonAnh.addActionListener(this);
 		btnLuu.addActionListener(this);
 		btnHuy.addActionListener(this);
 	}
 
-	private JLabel createLabel(String text, Font font) {
-		JLabel label = new JLabel(text);
-		label.setFont(font);
-		return label;
+	private JLabel createLabel(String text) {
+		return new JLabel(text);
 	}
-
-	// XỬ LÝ TẤT CẢ SỰ KIỆN Ở ĐÂY
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		Object source = e.getSource();
-
-		if (source.equals(btnChonAnh)) {
+		if (e.getSource() == btnChonAnh) {
 			xuLyChonAnh();
-		} else if (source.equals(btnLuu)) {
+		} else if (e.getSource() == btnLuu) {
 			xuLyLuu();
-		} else if (source.equals(btnHuy)) {
-			xuLyHuy();
+		} else {
+			dispose();
 		}
 	}
 
 	private void xuLyChonAnh() {
 		JFileChooser fileChooser = new JFileChooser();
-		fileChooser.setDialogTitle("Chọn hình ảnh sản phẩm");
+		fileChooser.setFileFilter(new FileNameExtensionFilter("Image", "jpg", "png"));
 
-		// Lọc chỉ cho phép chọn file ảnh
-		FileNameExtensionFilter imageFilter = new FileNameExtensionFilter("Hình ảnh (JPG, PNG, GIF)", "jpg", "jpeg",
-				"png", "gif");
-		fileChooser.setFileFilter(imageFilter);
+		if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+			File file = fileChooser.getSelectedFile();
+			duongDanAnh = file.getAbsolutePath();
 
-		int userSelection = fileChooser.showOpenDialog(this);
-
-		if (userSelection == JFileChooser.APPROVE_OPTION) {
-			File fileToSave = fileChooser.getSelectedFile();
-			duongDanAnh = fileToSave.getAbsolutePath();
-
-			// Hiển thị ảnh lên JLabel và resize cho vừa khung 180x180
 			ImageIcon icon = new ImageIcon(duongDanAnh);
 			Image img = icon.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH);
 			lblHinhAnh.setIcon(new ImageIcon(img));
-			lblHinhAnh.setText(""); // Xóa chữ "Chưa có ảnh"
+			lblHinhAnh.setText("");
 		}
 	}
 
 	private void xuLyLuu() {
-		// TODO: Validate dữ liệu (kiểm tra rỗng, mã trùng...) ở đây
-		// Nếu validate thất bại, dùng JOptionPane.showMessageDialog để báo lỗi và
-		// return;
-		String ten = txtTen.getText();
-		String ma = txtMa.getText();
-		String tonkho = txtTonKho.getText();
-		String gia = txtGia.getText();
-		String thue = txtThue.getText();
+		try {
+			if (txtMa.getText().trim().isEmpty())
+				throw new Exception("Mã rỗng");
+			if (txtTen.getText().trim().isEmpty())
+				throw new Exception("Tên rỗng");
 
-		if (!ma.matches("^SP[0-9]{3}") || (ma.trim().isEmpty())) {
-			JOptionPane.showMessageDialog(this,
-					"Mã sản phẩm phải theo form: Bắt đầu là SP kèm theo sau là 3 chữ số và không rỗng vd SP001");
-			requestFocus();
-			return;
-		}
-		if (!ten.matches("^([A-Z][a-z]+)( [A-Z][a-z]+)*$") || ten.trim().isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Tên sản phẩm phải bắt đầu bằng chữ hoa ,ít nhất 1 từ và không rỗng");
-			requestFocus();
-			return;
-		}
+			int ton = Integer.parseInt(txtTonKho.getText());
+			double gia = Double.parseDouble(txtGia.getText());
 
-		if (gia.trim().isEmpty() || (Integer.parseInt(gia) <= 0)) {
-			JOptionPane.showMessageDialog(this, "Giá phải >0");
-			requestFocus();
-			return;
+			if (ton < 0 || gia <= 0)
+				throw new Exception("Sai số");
+
+			if (duongDanAnh.isEmpty())
+				throw new Exception("Chưa chọn ảnh");
+
+			isSaved = true;
+			dispose();
+
+		} catch (Exception e) {
+			JOptionPane.showMessageDialog(this, "Dữ liệu không hợp lệ!");
 		}
-		if (tonkho.trim().isEmpty() || Integer.parseInt(tonkho) <= 0) {
-			JOptionPane.showMessageDialog(this, "Tồn kho phải >0 và không rỗng");
-			requestFocus();
-			return;
-		}
-		if (thue.trim().isEmpty() || Integer.parseInt(thue) <= 0) {
-			JOptionPane.showMessageDialog(this, "Thuế phải >0 và không rỗng");
-			requestFocus();
-			return;
-		}
-		isSaved = true;
-		dispose();
 	}
 
 	private void xuLyHuy() {
@@ -239,14 +202,11 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		dispose();
 	}
 
-	// ==========================================
-	// CÁC HÀM GETTER ĐỂ MÀN HÌNH CHÍNH LẤY DỮ LIỆU
-	// ==========================================
+	// ===== GETTER =====
 	public boolean isSaved() {
 		return isSaved;
 	}
 
-	// Tạo thêm các hàm này để bên FrmSanPham có thể lấy dữ liệu vừa nhập
 	public String getDuongDanAnh() {
 		return duongDanAnh;
 	}
@@ -267,28 +227,44 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		return txtGia.getText();
 	}
 
-	public String getThue() {
-		return txtThue.getText();
+	public DanhMuc getDanhMuc() {
+		return (DanhMuc) cbxDanhMuc.getSelectedItem();
 	}
 
-	public String getDanhMuc() {
-		return cbxDanhMuc.getSelectedItem().toString();
+	public Thue getThue() {
+		return (Thue) cbxThue.getSelectedItem();
 	}
 
-	public void setSanPhamData(String duongDanAnh, String ma, String ten, String tonkho, String gia, String thue,
-			String danhmuc) {
-
+	public void setSanPhamData(String duongDanAnh, String ma, String ten, String tonkho, String gia, String tenThue,
+			String tenDM) {
 		txtMa.setText(ma);
+		txtMa.setEditable(false); // Không cho sửa mã SP khi Edit
 		txtTen.setText(ten);
 		txtTonKho.setText(tonkho);
 		txtGia.setText(gia);
-		txtThue.setText(thue);
-		cbxDanhMuc.setSelectedItem(danhmuc);
-
 		this.duongDanAnh = duongDanAnh;
 
-// Hiển thị ảnh nếu có
-		if (duongDanAnh != null && !duongDanAnh.trim().isEmpty()) {
+		// Chọn đúng Thuế trong ComboBox
+		for (int i = 0; i < cbxThue.getItemCount(); i++) {
+			Thue t = cbxThue.getItemAt(i);
+			if (String.valueOf(Math.round(t.getMucThue() * 100)).equals(tenThue)) {
+				cbxThue.setSelectedIndex(i);
+				break;
+			}
+		}
+
+		// Chọn đúng Danh Mục trong ComboBox
+		for (int i = 0; i < cbxDanhMuc.getItemCount(); i++) {
+			DanhMuc d = cbxDanhMuc.getItemAt(i);
+			if (d.getTenDanhMuc().equals(tenDM)) {
+				cbxDanhMuc.setSelectedIndex(i);
+				break;
+			}
+		}
+
+		if (duongDanAnh != null && !duongDanAnh.trim().isEmpty())
+
+		{
 			ImageIcon icon = new ImageIcon(duongDanAnh);
 			Image img = icon.getImage().getScaledInstance(180, 180, Image.SCALE_SMOOTH);
 			lblHinhAnh.setIcon(new ImageIcon(img));
@@ -298,5 +274,4 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 			lblHinhAnh.setText("Chưa có ảnh");
 		}
 	}
-
 }

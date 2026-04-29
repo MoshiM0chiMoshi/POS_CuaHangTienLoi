@@ -27,7 +27,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.dao.SanPham_Dao;
+import com.pos.tienloi.model.DanhMuc;
 import com.pos.tienloi.model.SanPham;
+import com.pos.tienloi.model.Thue;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
@@ -297,40 +299,65 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	private void xuLyEdit(int row) {
 		int modelRow = table.convertRowIndexToModel(row);
 
-		Object pathObj = table.getModel().getValueAt(modelRow, 9);
-		String path = pathObj == null ? "" : pathObj.toString();
-
-		// String path = pathObj == null ? "" : pathObj.toString();
-
+		// 1. Lấy dữ liệu từ Table (lúc này các cột 5, 6 đang là String/Float)
+		String path = (String) table.getModel().getValueAt(modelRow, 9);
 		String ma = table.getModel().getValueAt(modelRow, 1).toString();
 		String ten = table.getModel().getValueAt(modelRow, 2).toString();
 		String tonkho = table.getModel().getValueAt(modelRow, 3).toString();
 		String gia = table.getModel().getValueAt(modelRow, 4).toString();
-		String thue = table.getModel().getValueAt(modelRow, 5).toString();
-		String danhMuc = table.getModel().getValueAt(modelRow, 6).toString();
+
+		// Lưu ý: Cột 5 và 6 trên bảng đang hiển thị Text, ta sẽ xử lý chọn lại trong
+		// Dialog sau
+		String tenThue = table.getModel().getValueAt(modelRow, 5).toString();
+		String tenDM = table.getModel().getValueAt(modelRow, 6).toString();
 
 		Window parentWindow = SwingUtilities.getWindowAncestor(this);
 		FrmThemSanPham dialog = new FrmThemSanPham(parentWindow, true);
-		dialog.setSanPhamData(path, ma, ten, tonkho, gia, thue, danhMuc);
 
+		// Truyền dữ liệu vào Dialog
+		dialog.setSanPhamData(path, ma, ten, tonkho, gia, tenThue, tenDM);
 		dialog.setVisible(true);
 
 		if (dialog.isSaved()) {
-			String pathMoi = dialog.getDuongDanAnh();
+			try {
+				// 2. Lấy dữ liệu mới từ Dialog
+				String pathMoi = dialog.getDuongDanAnh();
+				String tenMoi = dialog.getTenSP();
+				int tonMoi = Integer.parseInt(dialog.getTonKho());
+				double giaMoi = Double.parseDouble(dialog.getGia());
+				Thue thueMoi = dialog.getThue();
+				DanhMuc dmMoi = dialog.getDanhMuc();
 
-			if (pathMoi != null && !pathMoi.isBlank()) {
-				ImageIcon icon = new ImageIcon(pathMoi);
-				Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-				model.setValueAt(new ImageIcon(img), modelRow, 0);
-				model.setValueAt(pathMoi, modelRow, 9);
+				// 3. Tạo đối tượng và CẬP NHẬT DATABASE
+				SanPham spMoi = new SanPham(pathMoi, ma, tenMoi, tonMoi, giaMoi, thueMoi, dmMoi);
+				SanPham_Dao dao = new SanPham_Dao();
+
+				// Bạn cần thêm hàm update trong SanPham_Dao (xem hướng dẫn bên dưới)
+				boolean isUpdated = dao.update(spMoi);
+
+				if (isUpdated) {
+					// 4. Cập nhật lại giao diện Table
+					if (pathMoi != null && !pathMoi.isBlank()) {
+						ImageIcon icon = new ImageIcon(pathMoi);
+						Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+						model.setValueAt(new ImageIcon(img), modelRow, 0);
+						model.setValueAt(pathMoi, modelRow, 9);
+					}
+
+					model.setValueAt(tenMoi, modelRow, 2);
+					model.setValueAt(tonMoi, modelRow, 3);
+					model.setValueAt(giaMoi, modelRow, 4);
+					model.setValueAt(Math.round(thueMoi.getMucThue() * 100), modelRow, 5);
+					model.setValueAt(dmMoi.getTenDanhMuc(), modelRow, 6);
+
+					JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+				} else {
+					JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
+				}
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				JOptionPane.showMessageDialog(this, "Lỗi dữ liệu khi cập nhật!");
 			}
-
-			model.setValueAt(dialog.getMaSP(), modelRow, 1);
-			model.setValueAt(dialog.getTenSP(), modelRow, 2);
-			model.setValueAt(dialog.getTonKho(), modelRow, 3);
-			model.setValueAt(dialog.getGia(), modelRow, 4);
-			model.setValueAt(dialog.getThue(), modelRow, 5);
-			model.setValueAt(dialog.getDanhMuc(), modelRow, 6);
 		}
 	}
 
@@ -338,25 +365,45 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		Window parentWindow = SwingUtilities.getWindowAncestor(this);
 		FrmThemSanPham dialog = new FrmThemSanPham(parentWindow);
 		dialog.setVisible(true);
+
 		if (dialog.isSaved()) {
-			// refresh table
-			String path = dialog.getDuongDanAnh();
-			ImageIcon icon = new ImageIcon(path);
-			Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
-			String ten = dialog.getTenSP();
-			String ma = dialog.getMaSP();
-			int tonkho = Integer.parseInt(dialog.getTonKho());
-			int gia = Integer.parseInt(dialog.getGia());
-			Double thue = Double.parseDouble(dialog.getThue());
-			String danhmuc = dialog.getDanhMuc();
-			String anh = dialog.getDuongDanAnh();
+			try {
+				// ===== LẤY DỮ LIỆU =====
+				String ma = dialog.getMaSP();
+				String ten = dialog.getTenSP();
+				int tonKho = Integer.parseInt(dialog.getTonKho());
+				double gia = Double.parseDouble(dialog.getGia());
+				String anh = dialog.getDuongDanAnh();
 
-			if (path == null || path.isBlank()) {
-				JOptionPane.showMessageDialog(this, "Vui lòng chọn ảnh sản phẩm!");
-				return;
+				DanhMuc dm = dialog.getDanhMuc(); // ✅ đã là object
+				Thue thue = dialog.getThue(); // ✅ đã là object
+
+				// ===== TẠO OBJECT =====
+				SanPham sp = new SanPham(anh, ma, ten, tonKho, gia, thue, dm);
+
+				// ===== GỌI DAO =====
+				SanPham_Dao dao = new SanPham_Dao();
+				boolean kq = dao.create(sp);
+
+				if (kq) {
+					// ===== HIỂN THỊ TABLE =====
+					ImageIcon icon = new ImageIcon(anh);
+					Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+
+					model.addRow(new Object[] { new ImageIcon(img), ma, ten, tonKho, gia, thue.getMucThue(), // hiển thị
+																												// %
+							dm.getTenDanhMuc(), // hiển thị tên
+							null, null, anh });
+
+					JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công!");
+				} else {
+					JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại!");
+				}
+
+			} catch (Exception e) {
+				JOptionPane.showMessageDialog(this, "Lỗi dữ liệu!");
+				e.printStackTrace();
 			}
-
-			model.addRow(new Object[] { new ImageIcon(img), ma, ten, tonkho, gia, thue, danhmuc, null, null, path });
 		}
 	}
 
