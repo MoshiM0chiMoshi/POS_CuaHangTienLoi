@@ -17,6 +17,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -235,12 +236,33 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		Window parentWindow = SwingUtilities.getWindowAncestor(this);
 		FrmThemKhachHang dialog = new FrmThemKhachHang(parentWindow);
 		dialog.setVisible(true);
+
 		if (dialog.isSaved()) {
 			String ten = dialog.getTxtTen();
 			String sdt = dialog.getTxtSDT();
-			int soHoaDon = Integer.parseInt(dialog.gettxtSoHoaDon());
-			int diemTichLuy = Integer.parseInt(dialog.gettxtDiemTichLuy());
-			model.addRow(new Object[] { sdt, ten, soHoaDon, diemTichLuy, "Edit" });
+			int soHoaDon;
+			int diemTichLuy;
+			try {
+				soHoaDon = Integer.parseInt(dialog.gettxtSoHoaDon());
+				diemTichLuy = Integer.parseInt(dialog.gettxtDiemTichLuy());
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(this, "Số phải là số nguyên!");
+				return;
+			}
+			// 🔥 1. Tạo object
+			KhachHang kh = new KhachHang(sdt, ten, diemTichLuy, soHoaDon);
+
+			// 🔥 2. Gọi DAO
+			KhachHang_Dao dao = new KhachHang_Dao();
+			boolean result = dao.create(kh);
+
+			// 🔥 3. Xử lý kết quả
+			if (result) {
+				model.addRow(new Object[] { sdt, ten, soHoaDon, diemTichLuy, "Edit" });
+				JOptionPane.showMessageDialog(this, "Thêm khách hàng thành công!");
+			} else {
+				JOptionPane.showMessageDialog(this, "Thêm thất bại!");
+			}
 		}
 	}
 
