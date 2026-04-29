@@ -33,6 +33,7 @@ import com.pos.tienloi.dao.SanPham_Dao;
 import com.pos.tienloi.model.KhachHang;
 import com.pos.tienloi.model.PTTT;
 import com.pos.tienloi.model.SanPham;
+import com.pos.tienloi.ui.components.PlaceholderTextField;
 
 public class FrmLapDon extends JPanel {
 
@@ -43,7 +44,7 @@ public class FrmLapDon extends JPanel {
 	private JTextField txtSearchProduct;
 	private JPanel pnlProductContainer;
 
-	private JTextField txtSearchPhone;
+	private PlaceholderTextField txtSearchPhone;
 	private JLabel lblCustomerName;
 	private KhachHang currentCustomer = null;
 
@@ -66,8 +67,6 @@ public class FrmLapDon extends JPanel {
 	}
 
 	public void initUi() {
-		// 1. CỘT TRÁI (DANH SÁCH SẢN PHẨM) - Chiếm 65%
-
 		JPanel pnlLeft = new JPanel(new BorderLayout(0, 10));
 		pnlLeft.setOpaque(false);
 		pnlLeft.setPreferredSize(new Dimension((int) (1300 * 0.65), 800));
@@ -78,11 +77,10 @@ public class FrmLapDon extends JPanel {
 				BorderFactory.createLineBorder(new Color(122, 90, 42), 1, true), new EmptyBorder(5, 10, 5, 10)));
 		pnlSearch.setBackground(Color.WHITE);
 
-		JLabel lblSearchIcon = new JLabel("🔍"); // Có thể thay bằng ImageIcon
-		txtSearchProduct = new JTextField();
+		JLabel lblSearchIcon = new JLabel("🔍");
+		PlaceholderTextField txtSearchProduct = new PlaceholderTextField("Tìm kiếm sản phẩm");
 		txtSearchProduct.setBorder(null);
 		txtSearchProduct.setFont(new Font("Arial", Font.PLAIN, 16));
-		TextPrompt placeholderText = new TextPrompt("Nhập tên sản phẩm...", txtSearchProduct);
 
 		pnlSearch.add(lblSearchIcon, BorderLayout.WEST);
 		pnlSearch.add(txtSearchProduct, BorderLayout.CENTER);
@@ -109,9 +107,10 @@ public class FrmLapDon extends JPanel {
 		pnlCustomer.setBorder(new TitledBorder(null, "Khách Hàng", TitledBorder.DEFAULT_JUSTIFICATION,
 				TitledBorder.DEFAULT_POSITION, new Font("Arial", Font.BOLD, 16)));
 
-		txtSearchPhone = new JTextField();
+		txtSearchPhone = new PlaceholderTextField("Tìm khách hàng");
+
 		txtSearchPhone.setFont(new Font("Arial", Font.PLAIN, 14));
-		TextPrompt placeholderPhone = new TextPrompt("Nhập SĐT + Enter để tìm...", txtSearchPhone);
+
 		lblCustomerName = new JLabel("Khách lẻ");
 		lblCustomerName.setFont(new Font("Arial", Font.ITALIC, 13));
 		lblCustomerName.setForeground(Color.GRAY);
@@ -322,7 +321,6 @@ public class FrmLapDon extends JPanel {
 		pnlCartContainer.repaint();
 	}
 
-	// Xử lý tìm khách hàng
 	private void handleSearchCustomer() {
 		String phone = txtSearchPhone.getText().trim();
 		if (phone.isEmpty())
@@ -393,33 +391,6 @@ public class FrmLapDon extends JPanel {
 			cartMap.clear();
 			updateCartUI();
 		});
-	}
-
-	// Helper class để làm Placeholder cho JTextField
-	class TextPrompt extends JLabel {
-		public TextPrompt(String text, JTextField component) {
-			super(text);
-			setForeground(Color.GRAY);
-			component.setLayout(new BorderLayout());
-			component.add(this);
-			component.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
-				public void insertUpdate(javax.swing.event.DocumentEvent e) {
-					check();
-				}
-
-				public void removeUpdate(javax.swing.event.DocumentEvent e) {
-					check();
-				}
-
-				public void changedUpdate(javax.swing.event.DocumentEvent e) {
-					check();
-				}
-
-				private void check() {
-					setVisible(component.getText().isEmpty());
-				}
-			});
-		}
 	}
 
 	private ImageIcon loadIcon(String fileName) {
