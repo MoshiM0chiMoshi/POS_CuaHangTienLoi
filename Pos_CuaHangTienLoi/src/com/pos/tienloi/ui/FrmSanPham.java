@@ -325,7 +325,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				String pathMoi = dialog.getDuongDanAnh();
 				String tenMoi = dialog.getTenSP();
 				int tonMoi = Integer.parseInt(dialog.getTonKho());
-				double giaMoi = Double.parseDouble(dialog.getGia());
+				float giaMoi = Float.parseFloat(dialog.getGia());
 				Thue thueMoi = dialog.getThue();
 				DanhMuc dmMoi = dialog.getDanhMuc();
 
@@ -373,7 +373,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				String ma = dialog.getMaSP();
 				String ten = dialog.getTenSP();
 				int tonKho = Integer.parseInt(dialog.getTonKho());
-				double gia = Double.parseDouble(dialog.getGia());
+				float gia = Float.parseFloat(dialog.getGia());
 				String anh = dialog.getDuongDanAnh();
 
 				DanhMuc dm = dialog.getDanhMuc(); // ✅ đã là object

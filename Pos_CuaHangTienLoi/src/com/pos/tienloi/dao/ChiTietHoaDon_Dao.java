@@ -32,7 +32,7 @@ public class ChiTietHoaDon_Dao {
 				SanPham sp = new SanPham();
 				sp.setMaSP(rs.getString("maSP"));
 				sp.setTenSP(rs.getString("tenSP"));
-				sp.setGiaBan(rs.getDouble("giaBan"));
+				sp.setGiaBan(rs.getFloat("giaBan"));
 				sp.setHinhAnh(rs.getString("hinhAnh"));
 
 				dsCTHD.add(ct);
@@ -41,5 +41,25 @@ public class ChiTietHoaDon_Dao {
 			e.printStackTrace();
 		}
 		return dsCTHD;
+	}
+
+	public boolean create(ChiTietHoaDon ct, String maHD) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		String sql = "INSERT INTO ChiTietHoaDon(maHoaDon, maSP, soLuong, donGia) VALUES (?, ?, ?, ?)";
+		int n = 0;
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, maHD);
+			ps.setString(2, ct.getSanPham().getMaSP());
+			ps.setInt(3, ct.getSoLuong());
+			ps.setFloat(4, (float) ct.getDonGia());
+
+			n = ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n > 0;
+
 	}
 }

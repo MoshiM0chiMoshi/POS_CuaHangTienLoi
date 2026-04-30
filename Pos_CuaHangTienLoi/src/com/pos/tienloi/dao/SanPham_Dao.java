@@ -33,7 +33,7 @@ public class SanPham_Dao {
 				thue.setMucThue(rs.getFloat("mucThue"));
 
 				SanPham sp = new SanPham(rs.getString("hinhAnh"), rs.getString("maSP"), rs.getString("tenSP"),
-						rs.getInt("soLuongTon"), rs.getDouble("giaBan"), thue, dm);
+						rs.getInt("soLuongTon"), rs.getFloat("giaBan"), thue, dm);
 
 				dssp.add(sp);
 			}

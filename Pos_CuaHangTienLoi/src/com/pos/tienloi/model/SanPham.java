@@ -5,14 +5,14 @@ public class SanPham {
 	private String maSP;
 	private String tenSP;
 	private int soLuongTon;
-	private double giaBan;
+	private float giaBan;
 	private Thue thue;
 	private DanhMuc danhMuc;
 
 	public SanPham() {
 	}
 
-	public SanPham(String hinhAnh, String maSP, String tenSP, int soLuongTon, double giaBan, Thue thue,
+	public SanPham(String hinhAnh, String maSP, String tenSP, int soLuongTon, float giaBan, Thue thue,
 			DanhMuc danhMuc) {
 		super();
 		this.hinhAnh = hinhAnh;
@@ -72,7 +72,7 @@ public class SanPham {
 		return giaBan;
 	}
 
-	public void setGiaBan(double giaBan) {
+	public void setGiaBan(float giaBan) {
 		this.giaBan = giaBan;
 	}
 

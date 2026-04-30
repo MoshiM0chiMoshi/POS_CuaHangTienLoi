@@ -33,7 +33,7 @@ public class ChiTietPhieuDat_Dao {
 				SanPham sp = new SanPham();
 				sp.setMaSP(rs.getString("maSP"));
 				sp.setTenSP(rs.getString("tenSP"));
-				sp.setGiaBan(rs.getDouble("giaBan"));
+				sp.setGiaBan(rs.getFloat("giaBan"));
 				sp.setHinhAnh(rs.getString("hinhAnh"));
 				ct.setSanPham(sp);
 

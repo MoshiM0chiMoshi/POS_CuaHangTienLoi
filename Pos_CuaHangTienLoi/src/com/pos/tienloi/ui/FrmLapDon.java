@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.swing.BorderFactory;
@@ -30,11 +31,16 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import com.pos.tienloi.dao.HoaDon_Dao;
 import com.pos.tienloi.dao.KhachHang_Dao;
 import com.pos.tienloi.dao.SanPham_Dao;
+import com.pos.tienloi.model.ChiTietHoaDon;
+import com.pos.tienloi.model.HoaDon;
 import com.pos.tienloi.model.KhachHang;
+import com.pos.tienloi.model.NhanVien;
 import com.pos.tienloi.model.PTTT;
 import com.pos.tienloi.model.SanPham;
+import com.pos.tienloi.model.TrangThaiHoaDon;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 import com.pos.tienloi.ui.dialogs.FrmThemKhachHang;
 
@@ -42,6 +48,7 @@ public class FrmLapDon extends JPanel {
 
 	private SanPham_Dao spDao = new SanPham_Dao();
 	private KhachHang_Dao khDao = new KhachHang_Dao();
+	HoaDon_Dao hdDao = new HoaDon_Dao();
 
 	// UI Components
 	private JTextField txtSearchProduct;
@@ -203,9 +210,9 @@ public class FrmLapDon extends JPanel {
 	}
 
 	// Tạo 1 thẻ sản phẩm bên trái
-	// Tạo 1 thẻ sản phẩm bên trái
+
 	private JPanel createProductCard(SanPham sp) {
-		// Thêm gap 5px giữa các thành phần
+
 		JPanel card = new JPanel(new BorderLayout(0, 5));
 		card.setBackground(Color.WHITE);
 		card.setBorder(BorderFactory.createCompoundBorder(
@@ -240,7 +247,6 @@ public class FrmLapDon extends JPanel {
 		pnlInfo.add(lblName);
 		pnlInfo.add(lblPriceStock);
 
-		// Lắp ráp vào Card chính
 		card.add(lblImage, BorderLayout.CENTER); // Ảnh nằm giữa/trên
 		card.add(pnlInfo, BorderLayout.SOUTH); // Thông tin nằm dưới
 
@@ -260,7 +266,6 @@ public class FrmLapDon extends JPanel {
 		updateCartUI();
 	}
 
-	// Vẽ lại danh sách giỏ hàng bên phải
 	private void updateCartUI() {
 		pnlCartContainer.removeAll();
 		double total = 0;
@@ -380,11 +385,41 @@ public class FrmLapDon extends JPanel {
 				JOptionPane.showMessageDialog(this, "Giỏ hàng trống!");
 				return;
 			}
-			PTTT phuongThuc = (PTTT) cbxPaymentMethod.getSelectedItem();
-			// TODO: Tạo đối tượng HoaDon, setTrangThaiHoaDon (Đã thanh toán),
-			// setPhuongThuc(phuongThuc)
-			// TODO: Gọi HoaDon_Dao để lưu DB.
-			JOptionPane.showMessageDialog(this, "Lập đơn bán trực tiếp thành công với hình thức: " + phuongThuc.name());
+			try {
+
+				HoaDon hd = new HoaDon();
+				String maHD = hdDao.generateNextMaHD();
+				hd.setMaHoaDon(maHD);
+				hd.setNgayLap(new java.util.Date());
+				hd.setKhachHang(currentCustomer);
+				NhanVien nv = new NhanVien();
+				nv.setMaNV("NV001");
+				hd.setNhanVien(nv);
+				PTTT phuongThuc = (PTTT) cbxPaymentMethod.getSelectedItem();
+				hd.setPhuongThuc(phuongThuc);
+				hd.setTrangThai(TrangThaiHoaDon.Paid);
+
+				// 6. Tạo chi tiết hóa đơn
+				List<ChiTietHoaDon> dsCT = new ArrayList<>();
+
+				for (Map.Entry<SanPham, Integer> entry : cartMap.entrySet()) {
+					SanPham sp = entry.getKey();
+					int soLuong = entry.getValue();
+
+					ChiTietHoaDon ct = new ChiTietHoaDon();
+					ct.setSanPham(sp);
+					ct.setSoLuong(soLuong);
+
+					dsCT.add(ct);
+				}
+				JOptionPane.showMessageDialog(this,
+						"Lập đơn bán trực tiếp thành công với hình thức: " + phuongThuc.name());
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+				JOptionPane.showMessageDialog(this, "lỗi");
+			}
+
 			cartMap.clear();
 			updateCartUI();
 		});

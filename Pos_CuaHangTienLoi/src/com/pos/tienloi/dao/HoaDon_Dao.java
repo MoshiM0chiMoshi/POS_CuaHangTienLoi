@@ -95,4 +95,28 @@ public class HoaDon_Dao {
 		return n > 0;
 	}
 
+	public String generateNextMaHD() {
+		String nextMaHD = "HD001";
+		String sql = "SELECT TOP 1 maHoaDon FROM HoaDon ORDER BY maHoaDon DESC";
+
+		try (Connection con = ConnectDB.getConnection(); // Chú ý sửa chỗ lấy Connection cho đúng code của bạn
+				PreparedStatement pst = con.prepareStatement(sql);
+				ResultSet rs = pst.executeQuery()) {
+
+			if (rs.next()) {
+				String maxMaHD = rs.getString("maHoaDon");
+				if (maxMaHD != null && maxMaHD.length() > 2) {
+					String soHienTaiStr = maxMaHD.substring(2);
+					int soHienTai = Integer.parseInt(soHienTaiStr);
+					int soTiepTheo = soHienTai + 1;
+					nextMaHD = String.format("HD%03d", soTiepTheo);
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return nextMaHD;
+	}
+
 }
