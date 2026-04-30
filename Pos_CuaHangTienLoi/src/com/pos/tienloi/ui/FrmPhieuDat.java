@@ -246,8 +246,10 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 		PhieuDat_Dao pdDao = new PhieuDat_Dao();
 		ArrayList<PhieuDatHang> listpd = pdDao.getallPhieuDat();
 		for (PhieuDatHang pd : listpd) {
-			String[] rowData = { pd.getMaPhieuDat(), pd.getKhachHang().getTenKhachHang(), sdf.format(pd.getNgayDat()),
-					pd.getDiaChi(), pd.getTongTien() + "", pd.getTrangThai() + "", pd.getNhanVien().getTenNV() };
+			String tenKH = (pd.getKhachHang() != null) ? pd.getKhachHang().getTenKhachHang() : "Khách lẻ";
+			String tenNV = (pd.getNhanVien() != null) ? pd.getNhanVien().getTenNV() : "Không rõ";
+			String[] rowData = { pd.getMaPhieuDat(), tenKH, sdf.format(pd.getNgayDat()), pd.getDiaChi(),
+					pd.getTongTien() + "", pd.getTrangThai() + "", tenNV };
 			model.addRow(rowData);
 		}
 		table.setModel(model);

@@ -5,9 +5,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.pos.tienloi.connectDB.ConnectDB;
-import com.pos.tienloi.model.ChiTietHoaDon;
 import com.pos.tienloi.model.ChiTietPhieuDat;
 import com.pos.tienloi.model.SanPham;
 
@@ -45,22 +45,32 @@ public class ChiTietPhieuDat_Dao {
 		return dsCTPD;
 	}
 
-	public boolean create(ChiTietHoaDon ct, String maHD) {
+	public boolean create(ChiTietPhieuDat pd, String maPD) {
 		Connection con = ConnectDB.getConnection();
-		String sql = "INSERT INTO ChiTietHoaDon(maHoaDon, maSP, soLuong, giaBan) VALUES (?, ?, ?, ?)";
+		String sql = "INSERT INTO ChiTietPhieuDat(maPhieuDat, maSP, soLuongDat, donGiaDat) VALUES (?, ?, ?, ?)";
 		int n = 0;
 
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
-			ps.setString(1, maHD);
-			ps.setString(2, ct.getSanPham().getMaSP());
-			ps.setInt(3, ct.getSoLuong());
-			ps.setDouble(4, ct.getDonGia());
+			ps.setString(1, maPD);
+			ps.setString(2, pd.getSanPham().getMaSP());
+			ps.setInt(3, pd.getSoLuongDat());
+			ps.setDouble(4, pd.getDonGiaDat());
 
 			n = ps.executeUpdate();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return n > 0;
+	}
+
+	public boolean createList(List<ChiTietPhieuDat> dsPD, String maPD) {
+		for (ChiTietPhieuDat ct : dsPD) {
+			// Gọi lại hàm create lẻ mà bạn đã viết ở trên
+			if (!create(ct, maPD)) {
+				return false; // Nếu có 1 dòng lỗi thì báo thất bại
+			}
+		}
+		return true;
 	}
 
 }

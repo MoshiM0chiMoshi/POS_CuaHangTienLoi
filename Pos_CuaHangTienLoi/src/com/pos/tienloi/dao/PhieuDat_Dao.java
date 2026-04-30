@@ -57,4 +57,56 @@ public class PhieuDat_Dao {
 
 	}
 
+	public boolean create(PhieuDatHang pd) {
+		int n = 0;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		if (con == null) {
+			throw new IllegalStateException("Phiếu đặt hàng Dao không kết nối được");
+		}
+		String sql = "INSERT INTO PhieuDatHang (maPhieuDat, ngayDat, tongTien, diaChi, trangThai, maNV, sdtKhachHang) VALUES (?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, pd.getMaPhieuDat());
+			ps.setDate(2, new java.sql.Date(pd.getNgayDat().getTime()));
+			ps.setFloat(3, pd.getTongTien());
+			ps.setString(4, pd.getDiaChi());
+			ps.setString(5, pd.getTrangThai() != null ? pd.getTrangThai().name() : null);
+			ps.setString(6, pd.getNhanVien() != null ? pd.getNhanVien().getMaNV() : null);
+			ps.setString(7, pd.getKhachHang() != null ? pd.getKhachHang().getSdt() : null);
+			n = ps.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return n > 0;
+	}
+
+	public String generateNextMaPD() {
+		String nextMaPD = "PD001";
+		String sql = "SELECT TOP 1 maPhieuDat FROM PhieuDatHang ORDER BY maPhieuDat DESC";
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
+		try {
+			con = ConnectDB.getConnection();
+			pst = con.prepareStatement(sql);
+			rs = pst.executeQuery();
+
+			if (rs.next()) {
+				String maxMaPD = rs.getString("maPhieuDat");
+				if (maxMaPD != null && maxMaPD.length() > 2) {
+					String soHienTaiStr = maxMaPD.substring(2);
+					int soHienTai = Integer.parseInt(soHienTaiStr);
+					int soTiepTheo = soHienTai + 1;
+					nextMaPD = String.format("PD%03d", soTiepTheo);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return nextMaPD;
+
+	}
+
 }

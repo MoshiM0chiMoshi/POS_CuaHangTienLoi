@@ -32,16 +32,21 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
 import com.pos.tienloi.dao.ChiTietHoaDon_Dao;
+import com.pos.tienloi.dao.ChiTietPhieuDat_Dao;
 import com.pos.tienloi.dao.HoaDon_Dao;
 import com.pos.tienloi.dao.KhachHang_Dao;
+import com.pos.tienloi.dao.PhieuDat_Dao;
 import com.pos.tienloi.dao.SanPham_Dao;
 import com.pos.tienloi.model.ChiTietHoaDon;
+import com.pos.tienloi.model.ChiTietPhieuDat;
 import com.pos.tienloi.model.HoaDon;
 import com.pos.tienloi.model.KhachHang;
 import com.pos.tienloi.model.NhanVien;
 import com.pos.tienloi.model.PTTT;
+import com.pos.tienloi.model.PhieuDatHang;
 import com.pos.tienloi.model.SanPham;
 import com.pos.tienloi.model.TrangThaiHoaDon;
+import com.pos.tienloi.model.TrangThaiPhieuDat;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 import com.pos.tienloi.ui.dialogs.FrmThemKhachHang;
 
@@ -51,6 +56,8 @@ public class FrmLapDon extends JPanel {
 	private KhachHang_Dao khDao = new KhachHang_Dao();
 	HoaDon_Dao hdDao = new HoaDon_Dao();
 	private ChiTietHoaDon_Dao ctDao = new ChiTietHoaDon_Dao();
+	private PhieuDat_Dao pdDao = new PhieuDat_Dao();
+	private ChiTietPhieuDat_Dao ctpdDao = new ChiTietPhieuDat_Dao();
 
 	// UI Components
 	private JTextField txtSearchProduct;
@@ -59,6 +66,7 @@ public class FrmLapDon extends JPanel {
 	private PlaceholderTextField txtSearchPhone;
 	private JLabel lblCustomerName;
 	private KhachHang currentCustomer = null;
+	private SanPham currentSanPham = null;
 
 	private JPanel pnlCartContainer;
 	private JLabel lblTotalAmount;
@@ -281,13 +289,13 @@ public class FrmLapDon extends JPanel {
 			JPanel pnlItem = new JPanel(new BorderLayout(5, 5));
 			pnlItem.setBackground(Color.WHITE);
 			pnlItem.setBorder(new EmptyBorder(10, 10, 10, 10));
-			pnlItem.setMaximumSize(new Dimension(500, 60)); // Giữ chiều cao cố định khi dùng BoxLayout
+			pnlItem.setMaximumSize(new Dimension(500, 60));
 
 			JLabel lblInfo = new JLabel(sp.getTenSP() + " x" + qty);
 			lblInfo.setFont(new Font("Arial", Font.BOLD, 14));
 
 			JLabel lblPrice = new JLabel(df.format(subTotal));
-			lblPrice.setForeground(new Color(240, 138, 39)); // Màu cam
+			lblPrice.setForeground(new Color(240, 138, 39));
 
 			// Nút tăng giảm
 			JPanel pnlControls = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
@@ -367,12 +375,8 @@ public class FrmLapDon extends JPanel {
 				KhachHang khMoi = dialog.getKhachHang();
 
 				if (khMoi != null) {
-					// 🔥 lưu DB
 					khDao.create(khMoi);
-
-					// 🔥 gán vào currentCustomer
 					currentCustomer = khMoi;
-
 					txtSearchPhone.setText(khMoi.getSdt());
 					lblCustomerName.setText("KH: " + khMoi.getTenKhachHang() + " - Điểm: " + khMoi.getDiemTichLuy());
 					lblCustomerName.setForeground(new Color(0, 128, 0));
@@ -387,6 +391,7 @@ public class FrmLapDon extends JPanel {
 				JOptionPane.showMessageDialog(this, "Giỏ hàng trống!");
 				return;
 			}
+
 			try {
 
 				HoaDon hd = new HoaDon();
@@ -401,7 +406,6 @@ public class FrmLapDon extends JPanel {
 				hd.setPhuongThuc(phuongThuc);
 				hd.setTrangThai(TrangThaiHoaDon.Paid);
 
-				// 6. Tạo chi tiết hóa đơn
 				List<ChiTietHoaDon> dsCT = new ArrayList<>();
 
 				for (Map.Entry<SanPham, Integer> entry : cartMap.entrySet()) {
@@ -416,6 +420,7 @@ public class FrmLapDon extends JPanel {
 				}
 				hd.setListChiTietHoaDon(dsCT);
 				hd.capNhatTongTien();
+
 				boolean success = hdDao.create(hd);
 				if (success) {
 
@@ -423,11 +428,10 @@ public class FrmLapDon extends JPanel {
 					if (allItemsSaved) {
 						if (currentCustomer != null) {
 							currentCustomer.setSoHoaDon(currentCustomer.getSoHoaDon() + 1);
-
 							int diemCong = (int) (hd.getTongTien() / 10000);
 							currentCustomer.setDiemTichLuy(currentCustomer.getDiemTichLuy() + diemCong);
-
 							khDao.update(currentCustomer);
+
 						}
 
 						JOptionPane.showMessageDialog(this, "Lập đơn thành công! Mã đơn: " + maHD);
@@ -453,13 +457,60 @@ public class FrmLapDon extends JPanel {
 				JOptionPane.showMessageDialog(this, "Giỏ hàng trống!");
 				return;
 			}
+
+			try {
+				PhieuDatHang pd = new PhieuDatHang();
+				String maPD = pdDao.generateNextMaPD();
+				pd.setMaPhieuDat(maPD);
+				pd.setNgayDat(new java.util.Date());
+				pd.setKhachHang(currentCustomer);
+				NhanVien nv = new NhanVien();
+				nv.setMaNV("NV001");
+				pd.setNhanVien(nv);
+				pd.setTrangThai(TrangThaiPhieuDat.CHO_DUYET);
+
+				List<ChiTietPhieuDat> dsCT = new ArrayList<>();
+
+				for (Map.Entry<SanPham, Integer> entry : cartMap.entrySet()) {
+					SanPham sp = entry.getKey();
+					int soLuong = entry.getValue();
+					ChiTietPhieuDat ct = new ChiTietPhieuDat();
+					ct.setSanPham(sp);
+					ct.setSoLuongDat(soLuong);
+					ct.setDonGiaDat(sp.getGiaBan());
+					dsCT.add(ct);
+				}
+				pd.setListChiTietPhieu(dsCT);
+				pd.capNhatTongTien();
+				boolean success = pdDao.create(pd);
+				if (success) {
+					boolean allItemsSaved = ctpdDao.createList(dsCT, maPD);
+					if (allItemsSaved) {
+						if (currentCustomer != null) {
+							currentCustomer.setSoHoaDon(currentCustomer.getSoHoaDon() + 1);
+							int diemCong = (int) (pd.getTongTien() / 10000);
+							currentCustomer.setDiemTichLuy(currentCustomer.getDiemTichLuy() + diemCong);
+							khDao.update(currentCustomer);
+							JOptionPane.showMessageDialog(this, "Lập đơn thành công! Mã đơn: " + maPD);
+							cartMap.clear();
+							updateCartUI();
+						} else {
+							JOptionPane.showMessageDialog(this, "Lưu chi tiết đơn hàng thất bại!");
+						}
+
+					}
+
+				}
+
+			} catch (Exception ex) {
+				ex.printStackTrace();
+			}
 			if (currentCustomer == null) {
 				JOptionPane.showMessageDialog(this, "Lập phiếu đặt hàng cần thông tin Khách Hàng. Vui lòng nhập SĐT!");
 				txtSearchPhone.requestFocus();
 				return;
 			}
-			// TODO: Tạo đối tượng PhieuDatHang hoặc HoaDon (Trạng thái: Chờ giao/Chưa thanh
-			// toán)
+
 			JOptionPane.showMessageDialog(this,
 					"Lập phiếu đặt hàng thành công cho KH: " + currentCustomer.getTenKhachHang());
 			cartMap.clear();
