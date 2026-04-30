@@ -31,6 +31,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.TitledBorder;
 
+import com.pos.tienloi.dao.ChiTietHoaDon_Dao;
 import com.pos.tienloi.dao.HoaDon_Dao;
 import com.pos.tienloi.dao.KhachHang_Dao;
 import com.pos.tienloi.dao.SanPham_Dao;
@@ -49,6 +50,7 @@ public class FrmLapDon extends JPanel {
 	private SanPham_Dao spDao = new SanPham_Dao();
 	private KhachHang_Dao khDao = new KhachHang_Dao();
 	HoaDon_Dao hdDao = new HoaDon_Dao();
+	private ChiTietHoaDon_Dao ctDao = new ChiTietHoaDon_Dao();
 
 	// UI Components
 	private JTextField txtSearchProduct;
@@ -409,11 +411,33 @@ public class FrmLapDon extends JPanel {
 					ChiTietHoaDon ct = new ChiTietHoaDon();
 					ct.setSanPham(sp);
 					ct.setSoLuong(soLuong);
-
+					ct.setDonGia(sp.getGiaBan());
 					dsCT.add(ct);
 				}
-				JOptionPane.showMessageDialog(this,
-						"Lập đơn bán trực tiếp thành công với hình thức: " + phuongThuc.name());
+				hd.setListChiTietHoaDon(dsCT);
+				hd.capNhatTongTien();
+				boolean success = hdDao.create(hd);
+				if (success) {
+
+					boolean allItemsSaved = ctDao.createList(dsCT, maHD);
+					if (allItemsSaved) {
+						if (currentCustomer != null) {
+							currentCustomer.setSoHoaDon(currentCustomer.getSoHoaDon() + 1);
+
+							int diemCong = (int) (hd.getTongTien() / 10000);
+							currentCustomer.setDiemTichLuy(currentCustomer.getDiemTichLuy() + diemCong);
+
+							khDao.update(currentCustomer);
+						}
+
+						JOptionPane.showMessageDialog(this, "Lập đơn thành công! Mã đơn: " + maHD);
+						cartMap.clear();
+						updateCartUI();
+					} else {
+						JOptionPane.showMessageDialog(this, "Lưu chi tiết đơn hàng thất bại!");
+					}
+
+				}
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
@@ -466,9 +490,8 @@ public class FrmLapDon extends JPanel {
 		if (temp == null)
 			return null;
 
-		// Scale kích thước ảnh cho phù hợp với thẻ sản phẩm bên form Lập Đơn (ví dụ:
-		// 100x100)
 		java.awt.Image img = temp.getImage().getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
 		return new ImageIcon(img);
 	}
+
 }

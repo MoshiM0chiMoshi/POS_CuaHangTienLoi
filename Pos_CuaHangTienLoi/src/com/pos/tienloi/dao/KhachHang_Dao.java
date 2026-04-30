@@ -81,13 +81,14 @@ public class KhachHang_Dao {
 	}
 
 	public KhachHang findBySdt(String sdt) {
-		if (sdt == null || sdt.trim().isEmpty()) {
+		if (sdt == null || sdt.trim().isEmpty())
 			return null;
-		}
-		ConnectDB.getInstance();
-		Connection con = ConnectDB.getConnection();
+
+		sdt = sdt.trim().replaceAll("[\\s-]", "");
 
 		String sql = "SELECT * FROM KhachHang WHERE sdt = ?";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
 
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, sdt);
@@ -98,15 +99,12 @@ public class KhachHang_Dao {
 					kh.setTenKhachHang(rs.getString("tenKhachHang"));
 					kh.setDiemTichLuy(rs.getInt("diemTichLuy"));
 					kh.setSoHoaDon(rs.getInt("soHoaDon"));
-
 					return kh;
 				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return null;
 	}
 

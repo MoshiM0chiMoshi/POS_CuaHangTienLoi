@@ -257,9 +257,11 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		HoaDon_Dao hdDao = new HoaDon_Dao();
 		ArrayList<HoaDon> listhd = hdDao.getallHoaDon();
 		for (HoaDon hd : listhd) {
-			String[] rowData = { hd.getMaHoaDon(), hd.getKhachHang().getTenKhachHang(), sdf.format(hd.getNgayLap()),
-					hd.getTrangThai() + "", hd.getTongTien() + "", hd.getPhuongThuc() + "",
-					hd.getNhanVien().getTenNV() };
+			String tenKH = (hd.getKhachHang() != null) ? hd.getKhachHang().getTenKhachHang() : "Khách lẻ";
+			String tenNV = (hd.getNhanVien() != null) ? hd.getNhanVien().getTenNV() : "Không rõ";
+
+			String[] rowData = { hd.getMaHoaDon(), tenKH, sdf.format(hd.getNgayLap()), hd.getTrangThai() + "",
+					hd.getTongTien() + "", hd.getPhuongThuc() + "", tenNV };
 			model.addRow(rowData);
 		}
 		table.setModel(model);

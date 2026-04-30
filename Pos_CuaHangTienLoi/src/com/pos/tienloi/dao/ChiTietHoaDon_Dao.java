@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.pos.tienloi.connectDB.ConnectDB;
 import com.pos.tienloi.model.ChiTietHoaDon;
@@ -61,5 +62,15 @@ public class ChiTietHoaDon_Dao {
 		}
 		return n > 0;
 
+	}
+
+	public boolean createList(List<ChiTietHoaDon> dsCT, String maHD) {
+		for (ChiTietHoaDon ct : dsCT) {
+			// Gọi lại hàm create lẻ mà bạn đã viết ở trên
+			if (!create(ct, maHD)) {
+				return false; // Nếu có 1 dòng lỗi thì báo thất bại
+			}
+		}
+		return true;
 	}
 }

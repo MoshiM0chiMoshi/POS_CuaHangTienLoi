@@ -74,6 +74,22 @@ public class HoaDon_Dao {
 	public boolean create(HoaDon hd) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
+
+		if (con == null) {
+			System.out.println("Connection is null");
+			return false;
+		}
+
+		try {
+			if (con.isClosed()) {
+				System.out.println("Connection đã bị đóng");
+				return false;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+
 		String sql = "INSERT INTO HoaDon (maHoaDon, ngayLap, tongTien, phuongThuc, trangThai, maNV, sdtKhachHang) VALUES (?, ?, ?, ?, ?, ?, ?)";
 		int n = 0;
 
@@ -83,12 +99,10 @@ public class HoaDon_Dao {
 			ps.setFloat(3, (float) hd.getTongTien());
 			ps.setString(4, hd.getPhuongThuc() != null ? hd.getPhuongThuc().name() : null);
 			ps.setString(5, hd.getTrangThai() != null ? hd.getTrangThai().name() : null);
-
 			ps.setString(6, hd.getNhanVien() != null ? hd.getNhanVien().getMaNV() : null);
 			ps.setString(7, hd.getKhachHang() != null ? hd.getKhachHang().getSdt() : null);
 
 			n = ps.executeUpdate();
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -98,10 +112,14 @@ public class HoaDon_Dao {
 	public String generateNextMaHD() {
 		String nextMaHD = "HD001";
 		String sql = "SELECT TOP 1 maHoaDon FROM HoaDon ORDER BY maHoaDon DESC";
+		Connection con = null;
+		PreparedStatement pst = null;
+		ResultSet rs = null;
 
-		try (Connection con = ConnectDB.getConnection(); // Chú ý sửa chỗ lấy Connection cho đúng code của bạn
-				PreparedStatement pst = con.prepareStatement(sql);
-				ResultSet rs = pst.executeQuery()) {
+		try {
+			con = ConnectDB.getConnection();
+			pst = con.prepareStatement(sql);
+			rs = pst.executeQuery();
 
 			if (rs.next()) {
 				String maxMaHD = rs.getString("maHoaDon");

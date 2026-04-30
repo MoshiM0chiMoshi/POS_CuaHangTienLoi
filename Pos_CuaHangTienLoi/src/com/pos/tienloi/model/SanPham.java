@@ -68,7 +68,7 @@ public class SanPham {
 		this.tenSP = tenSP;
 	}
 
-	public double getGiaBan() {
+	public float getGiaBan() {
 		return giaBan;
 	}
 
