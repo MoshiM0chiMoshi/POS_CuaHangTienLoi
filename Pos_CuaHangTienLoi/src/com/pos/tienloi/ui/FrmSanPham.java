@@ -45,6 +45,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	private PlaceholderTextField searchNorth;
 	private JTable table;
 	private DefaultTableModel model;
+	private SanPham_Dao spDao = new SanPham_Dao();
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -290,10 +291,14 @@ public class FrmSanPham extends JPanel implements ActionListener {
 
 		if (confirm == JOptionPane.YES_OPTION) {
 			int modelRow = table.convertRowIndexToModel(row);
-			String ma = table.getModel().getValueAt(modelRow, 1).toString();
 
-			// TODO: DAO.delete(ma)
-			model.removeRow(modelRow);
+			if (modelRow > 0) {
+				String ma = table.getModel().getValueAt(modelRow, 1).toString();
+				if (spDao.delete(ma)) {
+					model.removeRow(row);
+				}
+			}
+
 		}
 	}
 

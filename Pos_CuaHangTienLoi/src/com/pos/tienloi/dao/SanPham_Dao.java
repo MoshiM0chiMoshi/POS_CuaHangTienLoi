@@ -89,4 +89,22 @@ public class SanPham_Dao {
 		}
 	}
 
+	public boolean delete(String maSP) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+
+		String sql = "DELETE FROM SanPham WHERE maSP = ?";
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, maSP);
+
+			int n = ps.executeUpdate();
+			return n > 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
 }
