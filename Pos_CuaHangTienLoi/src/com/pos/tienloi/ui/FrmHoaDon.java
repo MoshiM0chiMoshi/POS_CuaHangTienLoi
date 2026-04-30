@@ -121,16 +121,9 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		headerPanel2Left.add(searchNorth, BorderLayout.WEST);
 		searchNorth.setPreferredSize(new Dimension(250, 60));
 		headerPanel2Right = new JPanel(new BorderLayout());
-		headerPanel2Right.add(themBtn = new JButton("Thêm Hóa Đơn"), BorderLayout.EAST);
+
 		headerPanel2Left.add(btnDate);
 		headerPanel2Left.add(btnFilter);
-
-		themBtn.setPreferredSize(new Dimension(200, 55));
-		themBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		themBtn.setForeground(TEXT_Color);
-		themBtn.setBackground(NORMAL_COLOR);
-		themBtn.setFocusPainted(false);
-		themBtn.setOpaque(true);
 
 		// Sử dụng jsplit panel để chia hàng 2 ra trái phải
 		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);

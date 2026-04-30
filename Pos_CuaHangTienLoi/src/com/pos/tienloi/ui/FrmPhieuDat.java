@@ -36,7 +36,7 @@ import com.pos.tienloi.ui.components.PlaceholderTextField;
 public class FrmPhieuDat extends JPanel implements ActionListener {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
-	private JButton themBtn;
+
 	private JSplitPane splitPane;
 	private JPanel headerPanel2Left, headerPanel2Right;
 	private PlaceholderTextField searchNorth;
@@ -121,16 +121,9 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 		headerPanel2Left.add(searchNorth, BorderLayout.WEST);
 		searchNorth.setPreferredSize(new Dimension(250, 60));
 		headerPanel2Right = new JPanel(new BorderLayout());
-		headerPanel2Right.add(themBtn = new JButton("Thêm Phiếu Đặt"), BorderLayout.EAST);
+
 		headerPanel2Left.add(btnDate);
 		headerPanel2Left.add(btnFilter);
-
-		themBtn.setPreferredSize(new Dimension(200, 55));
-		themBtn.setFont(new Font("Segoe UI", Font.BOLD, 18));
-		themBtn.setForeground(TEXT_Color);
-		themBtn.setBackground(NORMAL_COLOR);
-		themBtn.setFocusPainted(false);
-		themBtn.setOpaque(true);
 
 		// Sử dụng jsplit panel để chia hàng 2 ra trái phải
 		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
