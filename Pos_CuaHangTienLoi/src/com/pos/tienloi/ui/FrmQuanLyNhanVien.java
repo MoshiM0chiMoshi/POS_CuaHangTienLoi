@@ -249,42 +249,25 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
-
 		if (cmd.startsWith("EDIT")) {
-			int row = Integer.parseInt(cmd.split(":")[1]);
+			int row = table.getSelectedRow();
+			if (row == -1) {
+				JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
+				return;
+			}
 			xuLyEdit(row);
 
 		} else if (cmd.startsWith("DELETE")) {
-			int row = Integer.parseInt(cmd.split(":")[1]);
+			int row = table.getSelectedRow();
+			if (row == -1) {
+				JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
+				return;
+			}
 			xuLyXoa(row);
 		} else if (e.getSource().equals(themBtn)) {
 			moFormThem();
 		}
 
-	}
-
-	private void xuLyEdit(int row) {
-		int modelRow = table.convertRowIndexToModel(row);
-
-		String ma = table.getModel().getValueAt(modelRow, 0).toString();
-		String ten = table.getModel().getValueAt(modelRow, 1).toString();
-		String sdt = table.getModel().getValueAt(modelRow, 2).toString();
-		String vaiTro = table.getModel().getValueAt(modelRow, 3).toString();
-
-		Window parentWindow = SwingUtilities.getWindowAncestor(this);
-		FrmThemNhanVien dialog = new FrmThemNhanVien(parentWindow, true);
-		dialog.setNhanVienData(ma, ten, sdt, vaiTro);
-
-		dialog.setVisible(true);
-
-		if (dialog.isSaved()) {
-			model.setValueAt(dialog.getTxtMa(), modelRow, 0);
-			// TODO: gọi service update
-			model.setValueAt(dialog.getTxtTen(), modelRow, 1);
-			model.setValueAt(dialog.getTxtSDT(), modelRow, 2);
-			model.setValueAt(dialog.getCbxVaiTro(), modelRow, 3);
-			System.out.println("Update: " + ma);
-		}
 	}
 
 	private void xuLyXoa(int row) {
@@ -329,6 +312,44 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		}
 	}
 
+	private void xuLyEdit(int row) {
+		int modelRow = table.convertRowIndexToModel(row);
+		String ma = table.getModel().getValueAt(modelRow, 0).toString();
+		String ten = table.getModel().getValueAt(modelRow, 1).toString();
+		String sdt = table.getModel().getValueAt(modelRow, 2).toString();
+		String vaiTro = table.getModel().getValueAt(modelRow, 3).toString();
+		Window parentWindow = SwingUtilities.getWindowAncestor(this);
+		FrmThemNhanVien dialog = new FrmThemNhanVien(parentWindow, true);
+		dialog.setNhanVienData(ma, ten, sdt, vaiTro);
+		dialog.setVisible(true);
+		if (dialog.isSaved()) {
+
+			String tenMoi = dialog.getTxtTen();
+			String sdtMoi = dialog.getTxtSDT();
+			String mkMoi = dialog.getTxtMatKhau();
+			String vaiTroMoi = dialog.getCbxVaiTro();
+
+			NhanVien nv = new NhanVien(ma, tenMoi, sdtMoi);
+			nvDao = new NhanVien_Dao();
+			tkDao = new TaiKhoan_Dao();
+			boolean updateNV = nvDao.capNhatNhanVien(nv);
+			boolean updateTK = tkDao.capNhatTaiKhoan(ma, mkMoi, vaiTroMoi);
+			if (updateNV && updateTK) {
+
+				model.setValueAt(tenMoi, modelRow, 1);
+				model.setValueAt(sdtMoi, modelRow, 2);
+				model.setValueAt(vaiTroMoi, modelRow, 3);
+
+				JOptionPane.showMessageDialog(this, "Cập nhật nhân viên thành công!");
+			} else {
+				JOptionPane.showMessageDialog(this, "Cập nhật thất bại. Vui lòng thử lại!", "Lỗi",
+						JOptionPane.ERROR_MESSAGE);
+			}
+
+		}
+
+	}
+
 	public void loadTable() {
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		model.setRowCount(0);
@@ -351,7 +372,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		}
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã NV
+			String maTrongBang = model.getValueAt(i, 0).toString();
 
 			if (ma.equalsIgnoreCase(maTrongBang)) {
 

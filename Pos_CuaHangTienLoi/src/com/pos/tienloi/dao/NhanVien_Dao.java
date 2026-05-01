@@ -81,4 +81,20 @@ public class NhanVien_Dao {
 		return false;
 	}
 
+	public boolean capNhatNhanVien(NhanVien nv) {
+		String sql = "UPDATE NhanVien SET tenNV = ?, sdt = ? WHERE maNV = ?";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, nv.getTenNV());
+			ps.setString(2, nv.getSdt());
+			ps.setString(3, nv.getMaNV());
+
+			return ps.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }

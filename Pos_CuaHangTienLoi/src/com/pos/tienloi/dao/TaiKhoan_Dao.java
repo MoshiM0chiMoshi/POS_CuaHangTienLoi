@@ -71,4 +71,26 @@ public class TaiKhoan_Dao {
 		return false;
 	}
 
+	public boolean capNhatTaiKhoan(String maNV, String matKhau, String tenVaiTro) {
+
+		String sql = """
+				UPDATE TaiKhoan
+				SET matKhau = ?, maVaiTro = (SELECT maVaiTro FROM VaiTro WHERE tenVaiTro = ?)
+				WHERE maNV = ?
+				""";
+
+		try (Connection con = ConnectDB.getInstance().getConnection();
+				PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, matKhau);
+			ps.setString(2, tenVaiTro);
+			ps.setString(3, maNV);
+
+			return ps.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }
