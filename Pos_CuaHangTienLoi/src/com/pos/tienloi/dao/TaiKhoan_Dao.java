@@ -1,6 +1,7 @@
 package com.pos.tienloi.dao;
 
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,10 +16,10 @@ public class TaiKhoan_Dao {
 	public ArrayList<TaiKhoan> getallTaiKhoan() {
 		ArrayList<TaiKhoan> dstk = new ArrayList<TaiKhoan>();
 		String sql = """
-				SELECT hd.*, kh.tenKhachHang, nv.tenNV
-				FROM HoaDon hd
-				LEFT JOIN KhachHang kh ON hd.sdt = kh.sdt
-				LEFT JOIN NhanVien nv ON hd.maNV = nv.maNV
+				SELECT tk.*, vt.tenVaiTro, nv.tenNV
+				FROM TaiKhoan tk
+				LEFT JOIN VaiTro vt ON tk.maVaiTro = vt.maVaiTro
+				LEFT JOIN NhanVien nv ON tk.maNV = nv.maNV
 				""";
 		Connection con = ConnectDB.getInstance().getConnection();
 		if (con == null) {
@@ -28,14 +29,10 @@ public class TaiKhoan_Dao {
 		try (java.sql.Statement statement = con.createStatement(); ResultSet rs = statement.executeQuery(sql)) {
 			while (rs.next()) {
 				NhanVien nv = new NhanVien();
-				nv.setMaNV(rs.getString("maNV"));
 				nv.setTenNV(rs.getString("tenNV"));
-				nv.setSdt(rs.getString("sdt"));
 
 				VaiTro vt = new VaiTro();
-				vt.setMaVaiTro(rs.getString("maVaiTro"));
 				vt.setTenVaiTro(rs.getString("tenVaiTro"));
-				vt.setMoTa(rs.getString("moTa"));
 
 				TaiKhoan tk = new TaiKhoan();
 				tk.setNhanVien(nv);
@@ -49,6 +46,29 @@ public class TaiKhoan_Dao {
 			e.printStackTrace();
 		}
 		return dstk;
+	}
+
+	public boolean themTaiKhoan(String maNV, String matKhau, String tenVaiTro) {
+		String sql = """
+				INSERT INTO TaiKhoan (maNV, matKhau, maVaiTro)
+				VALUES (?, ?, (SELECT maVaiTro FROM VaiTro WHERE tenVaiTro = ?))
+				""";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		PreparedStatement pst = null;
+
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, maNV);
+			ps.setString(2, matKhau);
+			ps.setString(3, tenVaiTro);
+
+			int n = ps.executeUpdate();
+			return n > 0;
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 
 }

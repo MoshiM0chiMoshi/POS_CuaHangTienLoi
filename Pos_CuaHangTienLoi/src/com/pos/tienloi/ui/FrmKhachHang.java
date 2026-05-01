@@ -284,8 +284,9 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		}
 	}
 
-	private void loadData() {
+	public void loadData() {
 		KhachHang_Dao khDao = new KhachHang_Dao();
+		model.setRowCount(0);
 		ArrayList<KhachHang> dskh = khDao.getallKhachHang();
 		for (KhachHang kh : dskh) {
 			String[] rowData = { kh.getSdt(), kh.getTenKhachHang(), kh.getSoHoaDon() + "", kh.getDiemTichLuy() + "" };

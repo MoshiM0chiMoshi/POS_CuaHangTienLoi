@@ -62,4 +62,23 @@ public class NhanVien_Dao {
 		return ds;
 	}
 
+	public boolean themNhanVien(NhanVien nv) {
+		String sql = "INSERT INTO NhanVien (maNV, tenNV, sdt) VALUES (?, ?, ?)";
+
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+			ps.setString(1, nv.getMaNV());
+			ps.setString(2, nv.getTenNV());
+			ps.setString(3, nv.getSdt());
+
+			int n = ps.executeUpdate();
+			return n > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }

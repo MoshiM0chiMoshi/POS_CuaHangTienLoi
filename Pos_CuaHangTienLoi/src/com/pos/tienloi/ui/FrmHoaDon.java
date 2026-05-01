@@ -254,7 +254,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		// TODO Auto-generated method stub
 	}
 
-	private void loadData() {
+	public void loadData() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		model.setRowCount(0);
 		HoaDon_Dao hdDao = new HoaDon_Dao();

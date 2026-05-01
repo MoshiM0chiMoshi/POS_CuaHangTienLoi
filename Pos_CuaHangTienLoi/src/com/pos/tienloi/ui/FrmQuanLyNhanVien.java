@@ -30,7 +30,8 @@ import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.dao.NhanVien_Dao;
-import com.pos.tienloi.dao.VaiTro_Dao;
+import com.pos.tienloi.dao.TaiKhoan_Dao;
+import com.pos.tienloi.model.NhanVien;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
@@ -46,7 +47,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 	private JTable table;
 	private DefaultTableModel model;
 	private NhanVien_Dao nvDao;
-	private VaiTro_Dao vaiTro;
+	private TaiKhoan_Dao tkDao;
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -123,7 +124,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		themBtn.setOpaque(true);
 
 		// Sử dụng jsplit panel để chia hàng 2 ra trái phải
-		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
 		splitPane.setResizeWeight(0.1);
 		splitPane.setDividerSize(0);
 		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 20));
@@ -307,9 +308,24 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 			String ma = dialog.getTxtMa();
 			String ten = dialog.getTxtTen();
 			String sdt = dialog.getTxtSDT();
+			String mk = dialog.getTxtMatKhau();
 			String vaiTro = dialog.getCbxVaiTro();
+			NhanVien nv = new NhanVien(ma, ten, sdt);
+			nvDao = new NhanVien_Dao();
+			tkDao = new TaiKhoan_Dao();
+			if (nvDao.themNhanVien(nv)) {
+				if (tkDao.themTaiKhoan(ma, mk, vaiTro)) {
+					model.addRow(new Object[] { ma, ten, sdt, vaiTro, "Edit", "Delete" });
+					JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công!");
+				} else {
+					JOptionPane.showMessageDialog(this, "Thêm nhân viên thành công nhưng lỗi tạo tài khoản");
+				}
 
-			model.addRow(new Object[] { ma, ten, sdt, vaiTro, "Edit", "Delete" });
+			} else {
+				JOptionPane.showMessageDialog(this, "Thêm thất bại! Vui lòng kiểm tra lại (có thể trùng Mã NV).", "Lỗi",
+						JOptionPane.ERROR_MESSAGE);
+			}
+
 		}
 	}
 

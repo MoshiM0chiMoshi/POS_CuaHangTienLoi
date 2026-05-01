@@ -447,6 +447,9 @@ public class FrmLapDon extends JPanel {
 						}
 
 						JOptionPane.showMessageDialog(this, "Lập đơn thành công! Mã đơn: " + maHD);
+						if (orderSuccessListener != null) {
+							orderSuccessListener.onSuccess();
+						}
 						cartMap.clear();
 						updateCartUI();
 					} else {
@@ -472,8 +475,14 @@ public class FrmLapDon extends JPanel {
 
 			String diaChiGiao = txtAddress.getText().trim();
 			if (diaChiGiao.isEmpty()) {
-				JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ nhận hàng!");
+				JOptionPane.showMessageDialog(this, "Phiếu giao hàng phải nhập địa chỉ nhận hàng!");
 				txtAddress.requestFocus();
+				return;
+			}
+
+			if (currentCustomer == null) {
+				JOptionPane.showMessageDialog(this, "Lập phiếu đặt hàng cần thông tin Khách Hàng. Vui lòng nhập SĐT!");
+				txtSearchPhone.requestFocus();
 				return;
 			}
 
@@ -512,6 +521,9 @@ public class FrmLapDon extends JPanel {
 							currentCustomer.setDiemTichLuy(currentCustomer.getDiemTichLuy() + diemCong);
 							khDao.update(currentCustomer);
 							JOptionPane.showMessageDialog(this, "Lập đơn thành công! Mã đơn: " + maPD);
+							if (orderSuccessListener != null) {
+								orderSuccessListener.onSuccess();
+							}
 							cartMap.clear();
 							updateCartUI();
 						} else {
@@ -524,11 +536,6 @@ public class FrmLapDon extends JPanel {
 
 			} catch (Exception ex) {
 				ex.printStackTrace();
-			}
-			if (currentCustomer == null) {
-				JOptionPane.showMessageDialog(this, "Lập phiếu đặt hàng cần thông tin Khách Hàng. Vui lòng nhập SĐT!");
-				txtSearchPhone.requestFocus();
-				return;
 			}
 
 			JOptionPane.showMessageDialog(this,
@@ -563,6 +570,17 @@ public class FrmLapDon extends JPanel {
 
 		java.awt.Image img = temp.getImage().getScaledInstance(200, 200, java.awt.Image.SCALE_SMOOTH);
 		return new ImageIcon(img);
+	}
+
+	// Thêm đoạn code này vào làm thuộc tính của class FrmLapDon
+	public interface OnOrderSuccessListener {
+		void onSuccess();
+	}
+
+	private OnOrderSuccessListener orderSuccessListener;
+
+	public void setOrderSuccessListener(OnOrderSuccessListener listener) {
+		this.orderSuccessListener = listener;
 	}
 
 }

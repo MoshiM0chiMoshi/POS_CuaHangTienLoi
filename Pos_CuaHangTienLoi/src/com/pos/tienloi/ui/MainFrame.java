@@ -27,6 +27,19 @@ public class MainFrame extends JFrame {
 		// Khu vực đổi màn hình
 		cardLayout = new CardLayout();
 		contentPanel = new JPanel(cardLayout);
+		FrmLapDon frmLapDon = new FrmLapDon();
+		FrmHoaDon frmHoaDon = new FrmHoaDon();
+		FrmPhieuDat frmPhieuDat = new FrmPhieuDat();
+		FrmKhachHang frmKhachHang = new FrmKhachHang();
+		frmLapDon.setOrderSuccessListener(new FrmLapDon.OnOrderSuccessListener() {
+			@Override
+			public void onSuccess() {
+				frmHoaDon.loadData();
+				frmKhachHang.loadData();
+				frmPhieuDat.loadData();
+
+			}
+		});
 
 		contentPanel.add(new FrmLapDon(), "lapdon");
 		contentPanel.add(new FrmDashBoard(), "dashboard");
