@@ -22,6 +22,7 @@ public class SanPham_Dao {
 				    FROM SanPham sp
 				    JOIN DanhMuc dm ON sp.maDanhMuc = dm.maDanhMuc
 				    JOIN Thue t ON sp.maThue = t.maThue
+				    WHERE sp.trangThai = 1
 				""";
 		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
 			while (rs.next()) {
@@ -89,18 +90,15 @@ public class SanPham_Dao {
 		}
 	}
 
-	public boolean delete(String maSP) {
+	public boolean softDelete(String maSP) {
 		ConnectDB.getInstance();
 		Connection con = ConnectDB.getConnection();
 
-		String sql = "DELETE FROM SanPham WHERE maSP = ?";
+		String sql = "UPDATE SanPham SET trangThai = 0 WHERE maSP = ?";
 
 		try (PreparedStatement ps = con.prepareStatement(sql)) {
 			ps.setString(1, maSP);
-
-			int n = ps.executeUpdate();
-			return n > 0;
-
+			return ps.executeUpdate() > 0;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;

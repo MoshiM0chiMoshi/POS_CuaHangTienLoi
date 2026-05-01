@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
@@ -46,6 +47,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
+	private JButton capNhat, huyDon;
 
 	public FrmPhieuDat() {
 
@@ -115,21 +117,38 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 
 		// Khai báo - customer - thêm cách components
 		searchNorth = new PlaceholderTextField("Tìm kiếm Phiếu Đặt...");
-		searchNorth.setColumns(35);
+		searchNorth.setColumns(30);
 		searchNorth.setFont(new Font("Segoe UI", Font.PLAIN, 12));
 
 		headerPanel2Left.add(searchNorth, BorderLayout.WEST);
 		searchNorth.setPreferredSize(new Dimension(250, 60));
-		headerPanel2Right = new JPanel(new BorderLayout());
+		headerPanel2Right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
 
 		headerPanel2Left.add(btnDate);
 		headerPanel2Left.add(btnFilter);
 
+		headerPanel2Right.add(capNhat = new JButton("Trạng Thái"));
+		headerPanel2Right.add(huyDon = new JButton("Hủy Đơn"));
+
+		capNhat.setPreferredSize(new Dimension(150, 60));
+		capNhat.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		capNhat.setForeground(TEXT_Color);
+		capNhat.setBackground(NORMAL_COLOR);
+		capNhat.setFocusPainted(false);
+		capNhat.setOpaque(true);
+
+		huyDon.setPreferredSize(new Dimension(150, 60));
+		huyDon.setFont(new Font("Segoe UI", Font.BOLD, 18));
+		huyDon.setForeground(TEXT_Color);
+		huyDon.setBackground(NORMAL_COLOR);
+		huyDon.setFocusPainted(false);
+		huyDon.setOpaque(true);
+
 		// Sử dụng jsplit panel để chia hàng 2 ra trái phải
-		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
+		splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
 		splitPane.setResizeWeight(0.1);
 		splitPane.setDividerSize(0);
-		headerPanel2.setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 20));
+		headerPanel2.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 0));
 
 		titleNorth = new JLabel("Phiếu Đặt Hàng");
 		titleNorth.setFont(new Font("Segoe UI", Font.BOLD, 50));

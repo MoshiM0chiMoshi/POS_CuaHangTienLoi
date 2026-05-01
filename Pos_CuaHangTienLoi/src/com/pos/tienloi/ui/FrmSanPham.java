@@ -187,7 +187,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 			@Override
 			public Class<?> getColumnClass(int column) {
 				if (column == 0)
-					return ImageIcon.class; // cột hình
+					return ImageIcon.class;
 				return Object.class;
 			}
 		};
@@ -294,8 +294,9 @@ public class FrmSanPham extends JPanel implements ActionListener {
 
 			if (modelRow > 0) {
 				String ma = table.getModel().getValueAt(modelRow, 1).toString();
-				if (spDao.delete(ma)) {
-					model.removeRow(row);
+				if (spDao.softDelete(ma)) {
+					loadData();
+
 				}
 			}
 

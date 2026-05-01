@@ -64,6 +64,7 @@ public class FrmLapDon extends JPanel {
 	private JPanel pnlProductContainer;
 
 	private PlaceholderTextField txtSearchPhone;
+	private PlaceholderTextField txtAddress;
 	private JLabel lblCustomerName;
 	private KhachHang currentCustomer = null;
 	private SanPham currentSanPham = null;
@@ -131,12 +132,23 @@ public class FrmLapDon extends JPanel {
 
 		txtSearchPhone.setFont(new Font("Arial", Font.PLAIN, 14));
 
+		JPanel pnlCustomerDetail = new JPanel();
+		pnlCustomerDetail.setLayout(new BoxLayout(pnlCustomerDetail, BoxLayout.Y_AXIS));
+		pnlCustomerDetail.setOpaque(false);
+
 		lblCustomerName = new JLabel("Khách lẻ");
 		lblCustomerName.setFont(new Font("Arial", Font.ITALIC, 13));
 		lblCustomerName.setForeground(Color.GRAY);
 
+		txtAddress = new PlaceholderTextField("Địa chỉ nhận hàng");
+		txtAddress.setFont(new Font("Arial", Font.PLAIN, 14));
+
+		pnlCustomerDetail.add(lblCustomerName);
+		pnlCustomerDetail.add(javax.swing.Box.createVerticalStrut(5)); // Khoảng cách
+		pnlCustomerDetail.add(txtAddress);
+
 		pnlCustomer.add(txtSearchPhone, BorderLayout.NORTH);
-		pnlCustomer.add(lblCustomerName, BorderLayout.CENTER);
+		pnlCustomer.add(pnlCustomerDetail, BorderLayout.CENTER);
 
 		// Bắt sự kiện tìm khách hàng khi bấm Enter
 		txtSearchPhone.addActionListener(e -> handleSearchCustomer());
@@ -458,6 +470,13 @@ public class FrmLapDon extends JPanel {
 				return;
 			}
 
+			String diaChiGiao = txtAddress.getText().trim();
+			if (diaChiGiao.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Vui lòng nhập địa chỉ nhận hàng!");
+				txtAddress.requestFocus();
+				return;
+			}
+
 			try {
 				PhieuDatHang pd = new PhieuDatHang();
 				String maPD = pdDao.generateNextMaPD();
@@ -468,6 +487,7 @@ public class FrmLapDon extends JPanel {
 				nv.setMaNV("NV001");
 				pd.setNhanVien(nv);
 				pd.setTrangThai(TrangThaiPhieuDat.CHO_DUYET);
+				pd.setDiaChi(diaChiGiao);
 
 				List<ChiTietPhieuDat> dsCT = new ArrayList<>();
 
