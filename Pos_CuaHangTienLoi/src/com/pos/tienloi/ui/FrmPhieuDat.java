@@ -9,6 +9,8 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -20,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -30,11 +33,12 @@ import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.dao.PhieuDat_Dao;
 import com.pos.tienloi.model.PhieuDatHang;
+import com.pos.tienloi.model.TrangThaiPhieuDat;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
 
-public class FrmPhieuDat extends JPanel implements ActionListener {
+public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener {
 	private JPanel northPanel, mainPanel, centerPanel;
 	private JLabel titleNorth;
 
@@ -43,6 +47,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 	private PlaceholderTextField searchNorth;
 	private JTable table;
 	private DefaultTableModel model;
+	private PhieuDat_Dao pdDao = new PhieuDat_Dao();
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -196,6 +201,8 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 		splitPane.setOpaque(false);
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
+		capNhat.addActionListener(this);
+		huyDon.addActionListener(this);
 		loadData();
 	}
 
@@ -257,12 +264,67 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		Object o = e.getSource();
+		if (o.equals(capNhat)) {
+			suaTrangThai();
+		} else if (o.equals(huyDon)) {
+			huyPhieuDat();
+		}
 
+	}
+
+	public void suaTrangThai() {
+		int viewRow = table.getSelectedRow();
+		if (viewRow == -1) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
+
+		}
+		int modelRow = table.convertRowIndexToModel(viewRow);
+		String ma = model.getValueAt(modelRow, 0).toString();
+		if (ma == null)
+			return;
+		TrangThaiPhieuDat[] options = { TrangThaiPhieuDat.DANG_XU_LY, TrangThaiPhieuDat.HOAN_TAT };
+		TrangThaiPhieuDat trangThai = (TrangThaiPhieuDat) JOptionPane.showInputDialog(this, "Chọn trạng thái:",
+				"Cập nhật trạng thái", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
+		if (trangThai == null)
+			return;
+		if (pdDao.updateTrangThai(ma, trangThai)) {
+			JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+			loadData();
+		} else {
+			JOptionPane.showMessageDialog(this, "Thất bại!");
+		}
+
+	}
+
+	private void huyPhieuDat() {
+		int viewRow = table.getSelectedRow();
+		if (viewRow == -1) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
+
+		}
+		int modelRow = table.convertRowIndexToModel(viewRow);
+		String maPhieuDat = model.getValueAt(modelRow, 0).toString();
+		if (maPhieuDat == null)
+			return;
+		if (maPhieuDat == null)
+			return;
+
+		int confirm = JOptionPane.showConfirmDialog(this, "Hủy phiếu này?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+		if (confirm != JOptionPane.YES_OPTION)
+			return;
+
+		if (pdDao.huyPhieuDat(maPhieuDat)) {
+			JOptionPane.showMessageDialog(this, "Đã chuyển sang CANCELLED");
+			loadData();
+		}
 	}
 
 	public void loadData() {
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-		PhieuDat_Dao pdDao = new PhieuDat_Dao();
+		model.setRowCount(0);
+
 		ArrayList<PhieuDatHang> listpd = pdDao.getallPhieuDat();
 		for (PhieuDatHang pd : listpd) {
 			String tenKH = (pd.getKhachHang() != null) ? pd.getKhachHang().getTenKhachHang() : "Khách lẻ";
@@ -272,6 +334,36 @@ public class FrmPhieuDat extends JPanel implements ActionListener {
 			model.addRow(rowData);
 		}
 		table.setModel(model);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+
 	}
 
 }

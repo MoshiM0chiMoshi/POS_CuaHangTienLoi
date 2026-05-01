@@ -109,4 +109,23 @@ public class PhieuDat_Dao {
 
 	}
 
+	public boolean updateTrangThai(String maPhieuDat, TrangThaiPhieuDat trangThaiMoi) {
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		int n = 0;
+
+		String sql = "UPDATE PhieuDatHang SET trangThai = ? WHERE maPhieuDat = ?";
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, trangThaiMoi.name()); // QUAN TRỌNG
+			ps.setString(2, maPhieuDat);
+			n = ps.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return n > 0;
+	}
+
+	public boolean huyPhieuDat(String maPhieuDat) {
+		return updateTrangThai(maPhieuDat, TrangThaiPhieuDat.DA_HUY);
+	}
 }
