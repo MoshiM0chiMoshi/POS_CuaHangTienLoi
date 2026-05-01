@@ -203,6 +203,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		headerPanel2Right.setOpaque(false);
 		capNhat.addActionListener(this);
 		huyDon.addActionListener(this);
+		searchNorth.addActionListener(e -> timPhieuDat());
 		loadData();
 	}
 
@@ -334,6 +335,32 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 			model.addRow(rowData);
 		}
 		table.setModel(model);
+	}
+
+	public void timPhieuDat() {
+		String ma = searchNorth.getText().trim();
+		if (ma.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nhân viên!");
+			searchNorth.requestFocus();
+			return;
+		}
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		for (int i = 0; i < model.getRowCount(); i++) {
+			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã NV
+
+			if (ma.equalsIgnoreCase(maTrongBang)) {
+
+				table.setRowSelectionInterval(i, i);
+
+				table.scrollRectToVisible(table.getCellRect(i, 0, true));
+
+				table.requestFocus();
+
+				return;
+			}
+		}
+		JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên!");
+		searchNorth.requestFocus();
 	}
 
 	@Override
