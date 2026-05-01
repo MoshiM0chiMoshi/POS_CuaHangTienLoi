@@ -5,6 +5,8 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -16,8 +18,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+
+import com.pos.tienloi.dao.HoaDon_Dao;
+import com.pos.tienloi.dao.PhieuDat_Dao;
+import com.pos.tienloi.model.HoaDon;
+import com.pos.tienloi.model.PhieuDatHang;
 
 public class FrmDashBoard extends JPanel {
 	private JPanel northPanel, northLeft, northRight;
@@ -27,6 +33,10 @@ public class FrmDashBoard extends JPanel {
 	private JLabel titleNorth;
 	private JTextField search;
 	private JLabel banChayTitle;
+	private HoaDon_Dao hdDao = new HoaDon_Dao();
+	private PhieuDat_Dao pdDao = new PhieuDat_Dao();
+	private DefaultTableModel modelHoaDon, modelPhieuDat;
+	private JTable tableHoaDon, tablePhieuDat;
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -124,15 +134,12 @@ public class FrmDashBoard extends JPanel {
 
 		// Dữ liệu mẫu cho table
 		String[] cols1 = { "Mã HD", "Ngày Lập", "Tổng Tiền" };
-		Object[][] data1 = { { "HD001", "29/12/2023", "$1,000" }, { "HD002", "29/12/2023", "$1,500" },
-				{ "HD003", "29/12/2023", "$1,600" } };
-		JPanel recentInvoicePanel = createTableCard("Hóa đơn gần đây", cols1, data1);
+
+		JPanel recentInvoicePanel = createTableCard1("Hóa đơn gần đây", cols1);
 
 		String[] cols2 = { "Mã PĐ", "Ngày Đặt", "Trạng Thái" };
-		Object[][] data2 = { { "PDP01", "29/12/2023", "CHO_DUYET" }, { "PDP02", "29/12/2023", "DANG_XU_LY" },
-				{ "PDP03", "29/12/2023", "HOAN_TAT" } };
 
-		JPanel recentPhieuDat = createTableCard("Phiếu đặt hàng mới", cols2, data2);
+		JPanel recentPhieuDat = createTableCard2("Phiếu đặt hàng mới", cols2);
 
 		JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerMainLeftPanel, centerMainRightPanel);
 		pane.setResizeWeight(0.1);
@@ -161,6 +168,8 @@ public class FrmDashBoard extends JPanel {
 		mainPanel.add(northPanel, BorderLayout.NORTH);
 
 		add(mainPanel, BorderLayout.CENTER);
+		loadDataHoaDon();
+		loadDataPhieuDat();
 	}
 
 	private JPanel createCard(String title, String value) {
@@ -184,7 +193,7 @@ public class FrmDashBoard extends JPanel {
 		return card;
 	}
 
-	private JPanel createTableCard(String title, String[] columns, Object[][] data) {
+	private JPanel createTableCard1(String title, String[] columns) {
 		JPanel card = new JPanel(new BorderLayout(0, 10));
 		card.setBackground(Color.WHITE);
 		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
@@ -194,23 +203,18 @@ public class FrmDashBoard extends JPanel {
 		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
 		card.add(lblTitle, BorderLayout.NORTH);
 
-		DefaultTableModel model = new DefaultTableModel(data, columns) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				return false;
-			}
-		};
+		modelHoaDon = new DefaultTableModel(columns, 0);
 
-		JTable table = new JTable(model);
-		table.setRowHeight(30);
-		table.setFont(new Font("Segoe UI", Font.PLAIN, 20));
-		table.setSelectionBackground(HOVER_COLOR);
-		table.setShowGrid(true);
-		table.setGridColor(new Color(220, 220, 220));
-		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
-		table.getTableHeader().setReorderingAllowed(false);
+		tableHoaDon = new JTable(modelHoaDon);
+		tableHoaDon.setRowHeight(30);
+		tableHoaDon.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+		tableHoaDon.setSelectionBackground(HOVER_COLOR);
+		tableHoaDon.setShowGrid(true);
+		tableHoaDon.setGridColor(new Color(220, 220, 220));
+		tableHoaDon.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+		tableHoaDon.getTableHeader().setReorderingAllowed(false);
 
-		JScrollPane scrollPane = new JScrollPane(table);
+		JScrollPane scrollPane = new JScrollPane(tableHoaDon);
 		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		card.add(scrollPane, BorderLayout.CENTER);
@@ -218,7 +222,60 @@ public class FrmDashBoard extends JPanel {
 		return card;
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> new FrmDashBoard().setVisible(true));
+	private JPanel createTableCard2(String title, String[] columns) {
+		JPanel card = new JPanel(new BorderLayout(0, 10));
+		card.setBackground(Color.WHITE);
+		card.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(TEXT_Color),
+				BorderFactory.createEmptyBorder(15, 30, 15, 15)));
+
+		JLabel lblTitle = new JLabel(title);
+		lblTitle.setFont(new Font("Segoe UI", Font.BOLD, 22));
+		card.add(lblTitle, BorderLayout.NORTH);
+
+		modelPhieuDat = new DefaultTableModel(columns, 0);
+
+		tablePhieuDat = new JTable(modelPhieuDat);
+		tablePhieuDat.setRowHeight(30);
+		tablePhieuDat.setFont(new Font("Segoe UI", Font.PLAIN, 20));
+		tablePhieuDat.setSelectionBackground(HOVER_COLOR);
+		tablePhieuDat.setShowGrid(true);
+		tablePhieuDat.setGridColor(new Color(220, 220, 220));
+		tablePhieuDat.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
+		tablePhieuDat.getTableHeader().setReorderingAllowed(false);
+
+		JScrollPane scrollPane = new JScrollPane(tablePhieuDat);
+		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
+		scrollPane.setBorder(BorderFactory.createEmptyBorder());
+		card.add(scrollPane, BorderLayout.CENTER);
+
+		return card;
+	}
+
+	private void loadDataHoaDon() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		modelHoaDon.setRowCount(0);
+
+		ArrayList<HoaDon> listhd = hdDao.get3HoaDonGanNhat();
+		for (HoaDon hd : listhd) {
+
+			String[] rowData = { hd.getMaHoaDon(), sdf.format(hd.getNgayLap()), hd.getTongTien() + "", };
+			modelHoaDon.addRow(rowData);
+		}
+		tableHoaDon.setModel(modelHoaDon);
+
+	}
+
+	private void loadDataPhieuDat() {
+		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		modelPhieuDat.setRowCount(0);
+
+		ArrayList<PhieuDatHang> listpd = pdDao.get3PhieuDatGanNhat();
+		for (PhieuDatHang pd : listpd) {
+
+			String[] rowData = { pd.getMaPhieuDat(), sdf.format(pd.getNgayDat()), pd.getTrangThai().name() };
+			modelPhieuDat.addRow(rowData);
+		}
+		tablePhieuDat.setModel(modelPhieuDat);
+
 	}
 }

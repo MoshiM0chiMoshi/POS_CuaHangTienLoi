@@ -137,4 +137,40 @@ public class HoaDon_Dao {
 		return nextMaHD;
 	}
 
+	public ArrayList<HoaDon> get3HoaDonGanNhat() {
+		ArrayList<HoaDon> dshd = new ArrayList<HoaDon>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		ChiTietHoaDon_Dao cthdDao = new ChiTietHoaDon_Dao();
+
+		String sql = "SELECT TOP 3 hd.*, kh.tenKhachHang, nv.tenNV " + "FROM HoaDon hd "
+				+ "LEFT JOIN KhachHang kh ON hd.sdtKhachHang = kh.sdt " + "LEFT JOIN NhanVien nv ON hd.maNV = nv.maNV "
+				+ "ORDER BY hd.ngayLap DESC, hd.maHoaDon DESC";
+
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+
+			while (rs.next()) {
+				HoaDon hd = new HoaDon();
+
+				hd.setMaHoaDon(rs.getString("maHoaDon"));
+				hd.setNgayLap(rs.getDate("ngayLap"));
+
+				String trangThaiStr = rs.getString("trangThai");
+				if (trangThaiStr != null && !trangThaiStr.isEmpty()) {
+					hd.setTrangThai(TrangThaiHoaDon.valueOf(trangThaiStr));
+				}
+
+				// Chi tiết hóa đơn
+				hd.setListChiTietHoaDon(cthdDao.getChiTietByMaHD(hd.getMaHoaDon()));
+
+				dshd.add(hd);
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return dshd;
+	}
+
 }

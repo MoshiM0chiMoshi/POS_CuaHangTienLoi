@@ -128,4 +128,39 @@ public class PhieuDat_Dao {
 	public boolean huyPhieuDat(String maPhieuDat) {
 		return updateTrangThai(maPhieuDat, TrangThaiPhieuDat.DA_HUY);
 	}
+
+	public ArrayList<PhieuDatHang> get3PhieuDatGanNhat() {
+		ArrayList<PhieuDatHang> dspd = new ArrayList<PhieuDatHang>();
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		String sql = "SELECT TOP 3 pd.*, kh.tenKhachHang, nv.tenNV " + "FROM PhieuDatHang pd "
+				+ "LEFT JOIN KhachHang kh ON pd.sdtKhachHang = kh.sdt " + "LEFT JOIN NhanVien nv ON pd.maNV = nv.maNV "
+				+ "ORDER BY pd.ngayDat DESC, pd.maPhieuDat DESC";
+
+		ChiTietPhieuDat_Dao chiTiet = new ChiTietPhieuDat_Dao();
+
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery();) {
+			while (rs.next()) {
+				PhieuDatHang pd = new PhieuDatHang();
+				pd.setMaPhieuDat(rs.getString("maPhieuDat"));
+				pd.setNgayDat(rs.getDate("ngayDat"));
+
+				String trangThaiStr = rs.getString("trangThai");
+				if (trangThaiStr != null && !trangThaiStr.isBlank()) {
+					pd.setTrangThai(TrangThaiPhieuDat.valueOf(trangThaiStr));
+				}
+
+				pd.setListChiTietPhieu(chiTiet.getChiTietByMaHD(pd.getMaPhieuDat()));
+
+				dspd.add(pd);
+
+			}
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+
+		return dspd;
+
+	}
 }
