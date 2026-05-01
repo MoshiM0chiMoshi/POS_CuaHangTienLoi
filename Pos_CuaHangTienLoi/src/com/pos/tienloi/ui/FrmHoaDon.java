@@ -19,6 +19,7 @@ import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
@@ -178,6 +179,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		headerPanel2.setOpaque(false);
 		headerPanel2Right.setOpaque(false);
 		loadData();
+		searchNorth.addActionListener(e -> timPhieuDat());
 	}
 
 	private JPanel createTableCard(String[] columns, Object[][] data) {
@@ -266,6 +268,32 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		}
 		table.setModel(model);
 
+	}
+
+	public void timPhieuDat() {
+		String ma = searchNorth.getText().trim();
+		if (ma.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nhân viên!");
+			searchNorth.requestFocus();
+			return;
+		}
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
+		for (int i = 0; i < model.getRowCount(); i++) {
+			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã NV
+
+			if (ma.equalsIgnoreCase(maTrongBang)) {
+
+				table.setRowSelectionInterval(i, i);
+
+				table.scrollRectToVisible(table.getCellRect(i, 0, true));
+
+				table.requestFocus();
+
+				return;
+			}
+		}
+		JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên!");
+		searchNorth.requestFocus();
 	}
 
 }
