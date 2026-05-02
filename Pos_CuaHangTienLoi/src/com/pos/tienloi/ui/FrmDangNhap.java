@@ -1,12 +1,33 @@
 package com.pos.tienloi.ui;
 
-import javax.swing.*;
-import javax.swing.border.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.Image;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JSplitPane;
+import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
+import javax.swing.border.EmptyBorder;
+
+import com.pos.tienloi.dao.TaiKhoan_Dao;
 import com.pos.tienloi.ui.components.ImagePanel;
-
-import java.awt.*;
-
 
 public class FrmDangNhap extends JFrame {
 
@@ -17,6 +38,8 @@ public class FrmDangNhap extends JFrame {
 	private JButton loginBtn;
 	private JLabel title;
 	private JPanel rowA, rowB, rowC, rowHeader;
+	// Khai báo DAO để kiểm tra thông tin
+	private TaiKhoan_Dao taiKhoanDao = new TaiKhoan_Dao();
 
 	public FrmDangNhap() {
 		setTitle("Đăng Nhập - Pos");
@@ -74,23 +97,22 @@ public class FrmDangNhap extends JFrame {
 		// Tạo icon
 		ImageIcon userIcon = new ImageIcon(getClass().getResource("/images/User.png"));
 		Image imgUser = userIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		
+
 		ImageIcon lockIcon = new ImageIcon(getClass().getResource("/images/lock.png"));
 		Image imgLock = lockIcon.getImage().getScaledInstance(30, 30, Image.SCALE_SMOOTH);
-		
+
 		// Khởi Tạo Jpannel
 		rowHeader = new JPanel();
 		rowA = new JPanel();
 		rowB = new JPanel();
 		rowC = new JPanel();
-		
+
 		// Set nền của pannel bằng false
 		rowA.setOpaque(false);
 		rowB.setOpaque(false);
 		rowC.setOpaque(false);
 		rowHeader.setOpaque(false);
-		
-		
+
 		// add components vào các pannel
 		rowHeader.add(title);
 		rowA = buildInputRow(new ImageIcon(imgUser), userTxt);
@@ -111,20 +133,47 @@ public class FrmDangNhap extends JFrame {
 		splitPane.setResizeWeight(0.3);
 		splitPane.setDividerSize(0);
 		add(splitPane, BorderLayout.CENTER);
+
+		// Trong initUI(), thêm ActionListener cho loginBtn
+		loginBtn.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String username = userTxt.getText().trim();
+				String password = new String(passwordTxt.getPassword());
+
+				// Kiểm tra logic đăng nhập qua DAO[cite: 3]
+				// Giả sử bạn đã bổ sung hàm kiemTraDangNhap như hướng dẫn trước
+				if (taiKhoanDao.kiemTraDangNhap(username, password) != null) {
+					JOptionPane.showMessageDialog(null, "Đăng nhập thành công!");
+
+					// 1. Khởi tạo màn hình chính
+					SwingUtilities.invokeLater(() -> {
+						MainFrame mainApp = new MainFrame();
+						mainApp.setVisible(true);
+					});
+
+					// 2. Đóng màn hình đăng nhập hiện tại
+					dispose();
+				} else {
+					JOptionPane.showMessageDialog(null, "Tài khoản hoặc mật khẩu sai!", "Lỗi",
+							JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
 	}
 
 	private JPanel buildInputRow(Icon icon, JComponent field) {
-	    JPanel row = new JPanel();
-	    row.setOpaque(false);
-	    row.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 0));
-	    row.setMaximumSize(new Dimension(380, 58));
+		JPanel row = new JPanel();
+		row.setOpaque(false);
+		row.setLayout(new FlowLayout(FlowLayout.LEFT, 15, 0));
+		row.setMaximumSize(new Dimension(380, 58));
 
-	    JLabel iconLabel = new JLabel(icon);
-	    iconLabel.setPreferredSize(new Dimension(30, 30));
+		JLabel iconLabel = new JLabel(icon);
+		iconLabel.setPreferredSize(new Dimension(30, 30));
 
-	    row.add(iconLabel);
-	    row.add(field);
-	    return row;
+		row.add(iconLabel);
+		row.add(field);
+		return row;
 	}
 
 	public static void main(String[] args) {

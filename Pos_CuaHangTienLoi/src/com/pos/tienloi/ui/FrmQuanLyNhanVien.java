@@ -249,20 +249,14 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
+		int row = table.getSelectedRow();
+		if (row == -1) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
+			return;
+		}
 		if (cmd.startsWith("EDIT")) {
-			int row = table.getSelectedRow();
-			if (row == -1) {
-				JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
-				return;
-			}
 			xuLyEdit(row);
-
 		} else if (cmd.startsWith("DELETE")) {
-			int row = table.getSelectedRow();
-			if (row == -1) {
-				JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
-				return;
-			}
 			xuLyXoa(row);
 		} else if (e.getSource().equals(themBtn)) {
 			moFormThem();
@@ -277,9 +271,19 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		if (confirm == JOptionPane.YES_OPTION) {
 			int modelRow = table.convertRowIndexToModel(row);
 			String ma = table.getModel().getValueAt(modelRow, 0).toString();
+			nvDao = new NhanVien_Dao();
+			tkDao = new TaiKhoan_Dao();
+			tkDao.xoaTaiKhoan(ma);
+			boolean isDeleted = nvDao.xoaNhanVien(ma);
+			if (isDeleted) {
+				model.removeRow(modelRow);
+				JOptionPane.showMessageDialog(this, "Đã xóa nhân viên mã: " + ma);
+			} else {
+				JOptionPane.showMessageDialog(this,
+						"Xóa thất bại! Nhân viên có thể đang liên quan đến các dữ liệu khác ", "Lỗi",
+						JOptionPane.ERROR_MESSAGE);
+			}
 
-			// TODO: DAO.delete(ma)
-			model.removeRow(modelRow);
 		}
 	}
 

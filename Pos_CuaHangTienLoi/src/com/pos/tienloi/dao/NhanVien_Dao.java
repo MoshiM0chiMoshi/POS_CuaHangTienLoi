@@ -97,4 +97,17 @@ public class NhanVien_Dao {
 		return false;
 	}
 
+	public boolean xoaNhanVien(String maNV) {
+		String sql = "DELETE FROM NhanVien WHERE maNV = ?";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, maNV);
+			return ps.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
 }

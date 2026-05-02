@@ -93,4 +93,54 @@ public class TaiKhoan_Dao {
 		return false;
 	}
 
+	public boolean xoaTaiKhoan(String maNV) {
+		String sql = "DELETE FROM TaiKhoan WHERE maNV = ?";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, maNV);
+			return ps.executeUpdate() > 0;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+
+	// Bổ sung vào class TaiKhoan_Dao
+	public TaiKhoan kiemTraDangNhap(String maNV, String matKhau) {
+		TaiKhoan tk = null;
+		String sql = """
+				SELECT tk.*, vt.tenVaiTro, nv.tenNV
+				FROM TaiKhoan tk
+				JOIN VaiTro vt ON tk.maVaiTro = vt.maVaiTro
+				JOIN NhanVien nv ON tk.maNV = nv.maNV
+				WHERE tk.maNV = ? AND tk.matKhau = ?
+				""";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+			ps.setString(1, maNV);
+			ps.setString(2, matKhau);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				if (rs.next()) {
+					NhanVien nv = new NhanVien();
+					nv.setMaNV(rs.getString("maNV"));
+					nv.setTenNV(rs.getString("tenNV"));
+
+					VaiTro vt = new VaiTro();
+					vt.setTenVaiTro(rs.getString("tenVaiTro"));
+
+					tk = new TaiKhoan();
+					tk.setNhanVien(nv);
+					tk.setMatKhau(rs.getString("matKhau"));
+					tk.setVaiTro(vt);
+				}
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return tk;
+	}
+
 }
