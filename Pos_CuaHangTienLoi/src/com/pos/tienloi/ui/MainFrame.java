@@ -63,12 +63,9 @@ public class MainFrame extends JFrame {
 		 * ConnectDB.getInstance().connect(); SwingUtilities.invokeLater(() -> new //
 		 * Nếu không muốn đăng nhập MainFrame().setVisible(true));
 		 */
-<<<<<<< HEAD
 
 		// Tài khoản ('NV001', 'admin123', 'VT001'),
-=======
-		
->>>>>>> 636ce5c9b8c168aca4d46480ddf24b4174d824ec
+
 		try {
 			com.pos.tienloi.connectDB.ConnectDB.getInstance().connect();
 		} catch (Exception e) {
