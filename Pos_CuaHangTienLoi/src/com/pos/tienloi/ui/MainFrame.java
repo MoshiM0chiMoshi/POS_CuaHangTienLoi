@@ -59,7 +59,10 @@ public class MainFrame extends JFrame {
 	}
 
 	public static void main(String[] args) {
-
+		/*
+		 * ConnectDB.getInstance().connect(); SwingUtilities.invokeLater(() -> new //
+		 * Nếu không muốn đăng nhập MainFrame().setVisible(true));
+		 */
 		try {
 			com.pos.tienloi.connectDB.ConnectDB.getInstance().connect();
 		} catch (Exception e) {
