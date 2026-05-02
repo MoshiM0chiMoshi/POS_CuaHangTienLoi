@@ -340,13 +340,13 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 	public void timPhieuDat() {
 		String ma = searchNorth.getText().trim();
 		if (ma.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nhân viên!");
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã phiếu đặt hàng");
 			searchNorth.requestFocus();
 			return;
 		}
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã NV
+			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã phiếu đặt
 
 			if (ma.equalsIgnoreCase(maTrongBang)) {
 
@@ -359,7 +359,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 				return;
 			}
 		}
-		JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên!");
+		JOptionPane.showMessageDialog(this, "Không tìm thấy phiếu đặt hàng!");
 		searchNorth.requestFocus();
 	}
 
