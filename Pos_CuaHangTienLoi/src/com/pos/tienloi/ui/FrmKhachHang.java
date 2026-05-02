@@ -296,17 +296,17 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 	}
 
 	public void timPhieuDat() {
-		String ma = searchNorth.getText().trim();
-		if (ma.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nhân viên!");
+		String sdt = searchNorth.getText().trim();
+		if (sdt.isEmpty()) {
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập số điện thoại");
 			searchNorth.requestFocus();
 			return;
 		}
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã NV
+			String sdtTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là sdt
 
-			if (ma.equalsIgnoreCase(maTrongBang)) {
+			if (sdt.equalsIgnoreCase(sdtTrongBang)) {
 
 				table.setRowSelectionInterval(i, i);
 
@@ -317,7 +317,7 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 				return;
 			}
 		}
-		JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên!");
+		JOptionPane.showMessageDialog(this, "Không tìm thấy khách hàng");
 		searchNorth.requestFocus();
 	}
 }

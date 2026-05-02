@@ -468,13 +468,13 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	public void timPhieuDat() {
 		String ma = searchNorth.getText().trim();
 		if (ma.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nhân viên!");
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã sản phẩm");
 			searchNorth.requestFocus();
 			return;
 		}
 		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã NV
+			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã sản phẩm
 
 			if (ma.equalsIgnoreCase(maTrongBang)) {
 
@@ -487,7 +487,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				return;
 			}
 		}
-		JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên!");
+		JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm!");
 		searchNorth.requestFocus();
 	}
 
