@@ -78,11 +78,10 @@ public class FrmThemKhachHang extends JDialog implements ActionListener {
 
 		btnXoaTrang = new JButton("Xóa trắng");
 		btnXoaTrang.setFont(new Font("Segoe UI", Font.BOLD, 14));
-		
+
 		btnHuy = new JButton("Hủy");
 		btnHuy.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
-		
 		btnLuu = new JButton(isEdit ? "Cập nhật" : "Xác nhận");
 		btnLuu.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnLuu.setBackground(Color.decode("#4A90E2"));
@@ -121,12 +120,12 @@ public class FrmThemKhachHang extends JDialog implements ActionListener {
 			xuLyLuu();
 		} else if (source.equals(btnHuy)) {
 			xuLyHuy();
-		}
-		else if(source.equals(btnXoaTrang)) {
+		} else if (source.equals(btnXoaTrang)) {
 			xuLyXoaTrang();
 		}
 
 	}
+
 	private void xuLyXoaTrang() {
 		txtTen.setText("");
 		txtSDT.setText("");
@@ -140,7 +139,7 @@ public class FrmThemKhachHang extends JDialog implements ActionListener {
 		String sdt = txtSDT.getText();
 		String soHoaDon = txtSoHoaDon.getText();
 		String diemTichLuy = txtDiemTichLuy.getText();
-		if (!ten.matches("^([A-Z][a-z]+)( [A-Z][a-z]+)+$") || ten.isEmpty()) {
+		if (!ten.matches("^([A-ZÀ-Ỹ][a-zà-ỹ]+)( [A-ZÀ-Ỹ][a-zà-ỹ]+)+$") || ten.isEmpty()) {
 			JOptionPane.showMessageDialog(this,
 					"Tên khách hàng phải bắt đầu bằng chữ hoa và ít nhất 2 từ và không rỗng");
 			requestFocus();
