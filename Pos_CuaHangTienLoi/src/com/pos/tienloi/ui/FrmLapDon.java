@@ -288,7 +288,7 @@ public class FrmLapDon extends JPanel {
 		updateCartUI();
 	}
 
-	private void updateCartUI() {
+	public void updateCartUI() {
 		pnlCartContainer.removeAll();
 		double total = 0;
 

@@ -31,6 +31,9 @@ public class MainFrame extends JFrame {
 		FrmHoaDon frmHoaDon = new FrmHoaDon();
 		FrmPhieuDat frmPhieuDat = new FrmPhieuDat();
 		FrmKhachHang frmKhachHang = new FrmKhachHang();
+		FrmQuanLyNhanVien frmQuanLyNhanVien = new FrmQuanLyNhanVien();
+		FrmDashBoard frmDashBoard = new FrmDashBoard();
+		FrmSanPham frmSanPham = new FrmSanPham();
 		frmLapDon.setOrderSuccessListener(new FrmLapDon.OnOrderSuccessListener() {
 			@Override
 			public void onSuccess() {
@@ -41,13 +44,20 @@ public class MainFrame extends JFrame {
 			}
 		});
 
-		contentPanel.add(new FrmLapDon(), "lapdon");
-		contentPanel.add(new FrmDashBoard(), "dashboard");
-		contentPanel.add(new FrmKhachHang(), "khachhang");
-		contentPanel.add(new FrmSanPham(), "sanpham");
-		contentPanel.add(new FrmHoaDon(), "hoadon");
-		contentPanel.add(new FrmPhieuDat(), "phieudat");
-		contentPanel.add(new FrmQuanLyNhanVien(), "qlnhanvien");
+		frmSanPham.setProductChangeListener(new FrmSanPham.OnProductChangeListener() {
+			@Override
+			public void onChange() {
+				frmLapDon.updateCartUI();
+			}
+		});
+
+		contentPanel.add(frmLapDon, "lapdon");
+		contentPanel.add(frmDashBoard, "dashboard");
+		contentPanel.add(frmKhachHang, "khachhang");
+		contentPanel.add(frmSanPham, "sanpham");
+		contentPanel.add(frmHoaDon, "hoadon");
+		contentPanel.add(frmPhieuDat, "phieudat");
+		contentPanel.add(frmQuanLyNhanVien, "qlnhanvien");
 
 		add(contentPanel, BorderLayout.CENTER);
 

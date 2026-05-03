@@ -321,6 +321,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				String ma = table.getModel().getValueAt(modelRow, 1).toString();
 				if (spDao.softDelete(ma)) {
 					loadData();
+					productChangeListener.onChange();
 
 				}
 			}
@@ -383,6 +384,8 @@ public class FrmSanPham extends JPanel implements ActionListener {
 					model.setValueAt(dmMoi.getTenDanhMuc(), modelRow, 6);
 
 					JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+					if (productChangeListener != null)
+						productChangeListener.onChange();
 				} else {
 					JOptionPane.showMessageDialog(this, "Cập nhật thất bại!");
 				}
@@ -428,6 +431,8 @@ public class FrmSanPham extends JPanel implements ActionListener {
 							null, null, anh });
 
 					JOptionPane.showMessageDialog(this, "Thêm sản phẩm thành công!");
+					if (productChangeListener != null)
+						productChangeListener.onChange();
 				} else {
 					JOptionPane.showMessageDialog(this, "Thêm sản phẩm thất bại!");
 				}
@@ -530,6 +535,17 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				sorter.setRowFilter(null);
 			}
 		}
+	}
+
+	// Thêm interface để lắng nghe sự thay đổi sản phẩm
+	public interface OnProductChangeListener {
+		void onChange();
+	}
+
+	private OnProductChangeListener productChangeListener;
+
+	public void setProductChangeListener(OnProductChangeListener listener) {
+		this.productChangeListener = listener;
 	}
 
 }
