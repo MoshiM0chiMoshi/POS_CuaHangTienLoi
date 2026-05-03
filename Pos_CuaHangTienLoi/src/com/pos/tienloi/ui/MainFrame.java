@@ -47,7 +47,7 @@ public class MainFrame extends JFrame {
 		frmSanPham.setProductChangeListener(new FrmSanPham.OnProductChangeListener() {
 			@Override
 			public void onChange() {
-				frmLapDon.updateCartUI();
+				frmLapDon.loadProductsToUI();
 			}
 		});
 

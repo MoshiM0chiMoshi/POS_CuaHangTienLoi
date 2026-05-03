@@ -219,7 +219,7 @@ public class FrmLapDon extends JPanel {
 
 	// LOGIC NGHIỆP VỤ
 
-	private void loadProductsToUI() {
+	public void loadProductsToUI() {
 		pnlProductContainer.removeAll();
 		ArrayList<SanPham> dsSanPham = spDao.getAllSanPham();
 
