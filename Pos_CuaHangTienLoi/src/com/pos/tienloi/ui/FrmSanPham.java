@@ -413,15 +413,12 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				DanhMuc dm = dialog.getDanhMuc(); // ✅ đã là object
 				Thue thue = dialog.getThue(); // ✅ đã là object
 
-				// ===== TẠO OBJECT =====
 				SanPham sp = new SanPham(anh, ma, ten, tonKho, gia, thue, dm);
 
-				// ===== GỌI DAO =====
 				SanPham_Dao dao = new SanPham_Dao();
 				boolean kq = dao.create(sp);
 
 				if (kq) {
-					// ===== HIỂN THỊ TABLE =====
 					ImageIcon icon = new ImageIcon(anh);
 					Image img = icon.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
 
@@ -438,7 +435,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				}
 
 			} catch (Exception e) {
-				JOptionPane.showMessageDialog(this, "Lỗi dữ liệu!");
+				JOptionPane.showMessageDialog(this, "Lỗi dữ liệu! Có thể là trùng mã SP");
 				e.printStackTrace();
 			}
 		}

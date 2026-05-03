@@ -135,7 +135,7 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		buttonPanel.add(btnXoaTrang);
 		buttonPanel.add(btnHuy);
 		buttonPanel.add(btnLuu);
-		
+
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		add(mainPanel);
@@ -156,11 +156,10 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 			xuLyChonAnh();
 		} else if (e.getSource() == btnLuu) {
 			xuLyLuu();
-		} 
-		else if(e.getSource()==btnXoaTrang){
+		} else if (e.getSource() == btnXoaTrang) {
 			xuLyXoaTrang();
 		}
-		
+
 		else {
 			dispose();
 		}
@@ -173,12 +172,13 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 		txtTonKho.setText("");
 		duongDanAnh = "";
 
-	    lblHinhAnh.setIcon(null);
-	    lblHinhAnh.setText("Chưa có ảnh");
+		lblHinhAnh.setIcon(null);
+		lblHinhAnh.setText("Chưa có ảnh");
 
-	    cbxDanhMuc.setSelectedIndex(0);
-	    cbxThue.setSelectedIndex(0);
+		cbxDanhMuc.setSelectedIndex(0);
+		cbxThue.setSelectedIndex(0);
 	}
+
 	private void xuLyChonAnh() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Image", "jpg", "png"));
@@ -196,19 +196,48 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 
 	private void xuLyLuu() {
 		try {
-			if (txtMa.getText().trim().isEmpty())
-				throw new Exception("Mã rỗng");
-			if (txtTen.getText().trim().isEmpty())
-				throw new Exception("Tên rỗng");
+			if (txtMa.getText().trim().isEmpty() || !txtMa.getText().matches("^SP[0-9]{3}")) {
+				JOptionPane.showMessageDialog(this,
+						"Mã nhân viên phải theo form: Bắt đầu là SP kèm theo sau là 3 chữ số và không rỗng vd SP001");
+				requestFocus();
+				return;
+			}
+
+			if (txtTen.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Tên sản phẩm không được rỗng");
+				requestFocus();
+				return;
+			}
+
+			if (!txtTonKho.getText().matches("\\d+")) {
+				JOptionPane.showMessageDialog(this, "Tồn kho phải là số nguyên >= 0");
+				txtTonKho.requestFocus();
+				return;
+			}
+
+			if (!txtGia.getText().matches("\\d+")) {
+				JOptionPane.showMessageDialog(this, "Giá phải là số > 0");
+				txtGia.requestFocus();
+				return;
+			}
+
+			if (txtTonKho.getText().trim().isEmpty() || txtGia.getText().trim().isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Tồn kho và giá không được rỗng");
+				return;
+			}
 
 			int ton = Integer.parseInt(txtTonKho.getText());
 			double gia = Double.parseDouble(txtGia.getText());
 
-			if (ton < 0 || gia <= 0)
-				throw new Exception("Sai số");
+			if (ton < 0 || gia <= 0) {
+				JOptionPane.showMessageDialog(this, "Tồn kho và giá tiền phải là số");
+				return;
+			}
 
-			if (duongDanAnh.isEmpty())
-				throw new Exception("Chưa chọn ảnh");
+			if (!isEdit && duongDanAnh.isEmpty()) {
+				JOptionPane.showMessageDialog(this, "Chưa chọn ảnh");
+				return;
+			}
 
 			isSaved = true;
 			dispose();
