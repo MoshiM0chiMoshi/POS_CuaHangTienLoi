@@ -66,19 +66,6 @@ public class KhachHang {
 		this.soHoaDon = soHoaDon;
 	}
 
-	/*
-	 * public void tangSoHoaDon() { this.soHoaDon++; }
-	 * 
-	 * 
-	 * public void congDiemTichLuy(int diem) { if (diem < 0) { throw new
-	 * IllegalArgumentException("Điểm cộng không được âm"); } this.diemTichLuy +=
-	 * diem; }
-	 * 
-	 * public void truDiemTichLuy(int diem) { if (diem < 0) { throw new
-	 * IllegalArgumentException("Điểm trừ không được âm"); } this.diemTichLuy =
-	 * Math.max(0, this.diemTichLuy - diem); }
-	 */
-
 	@Override
 	public String toString() {
 		return "KhachHang{" + "sdt='" + sdt + '\'' + ", tenKhachHang='" + tenKhachHang + '\'' + ", diemTichLuy="
