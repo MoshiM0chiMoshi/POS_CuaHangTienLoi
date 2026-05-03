@@ -34,6 +34,7 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 	private VaiTro_Dao vt_Dao;
 	private boolean isEdit = false;
 	private boolean isSaved = false;
+	private JButton btnXoaTrang;
 
 	public FrmThemNhanVien(Window parent) {
 		this(parent, false);
@@ -96,14 +97,19 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 		JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 10));
 		buttonPanel.setBackground(Color.WHITE);
 
+		btnXoaTrang = new JButton("Xóa trắng");
+		btnXoaTrang.setFont(new Font("Segoe UI", Font.BOLD, 14));
+		
 		btnHuy = new JButton("Hủy");
 		btnHuy.setFont(new Font("Segoe UI", Font.BOLD, 14));
 
+		
 		btnLuu = new JButton(isEdit ? "Cập nhật" : "Xác nhận");
 		btnLuu.setFont(new Font("Segoe UI", Font.BOLD, 14));
 		btnLuu.setBackground(Color.decode("#4A90E2"));
 		btnLuu.setForeground(Color.WHITE);
 
+		buttonPanel.add(btnXoaTrang);
 		buttonPanel.add(btnHuy);
 		buttonPanel.add(btnLuu);
 
@@ -112,11 +118,11 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 		add(mainPanel);
 
 		if (isEdit) {
-			txtMa.setEditable(false);
+			txtSDT.setEditable(false);
 		}
 
+		btnXoaTrang.addActionListener(this);
 		btnLuu.addActionListener(this);
-		btnHuy.addActionListener(this);
 	}
 
 	private JLabel createLabel(String text, Font font) {
@@ -135,9 +141,20 @@ public class FrmThemNhanVien extends JDialog implements ActionListener {
 		} else if (source.equals(btnHuy)) {
 			xuLyHuy();
 		}
+		else if (source.equals(btnXoaTrang)) {
+			xuLyXoaTrang();
+		}
 
 	}
 
+	private void xuLyXoaTrang() {
+		txtMa.setText("");
+		txtTen.setText("");
+		txtSDT.setText("");
+		txtMatKhau.setText("");
+		txtXacNhan.setText("");
+		cbxVaiTro.setSelectedIndex(0);
+	}
 	private void xuLyLuu() {
 
 		String ma = txtMa.getText();

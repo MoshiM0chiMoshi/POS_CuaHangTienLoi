@@ -25,8 +25,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.pos.tienloi.dao.HoaDon_Dao;
 import com.pos.tienloi.model.HoaDon;
@@ -47,6 +49,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
+	private TableRowSorter sorter;
 
 	public FrmHoaDon() {
 
@@ -237,6 +240,8 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
+		sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
@@ -275,26 +280,21 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		String ma = searchNorth.getText().trim();
 		if (ma.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã hóa đơn");
+			sorter.setRowFilter(null);
 			searchNorth.requestFocus();
+			
 			return;
 		}
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã hóa đơn
-
-			if (ma.equalsIgnoreCase(maTrongBang)) {
-
-				table.setRowSelectionInterval(i, i);
-
-				table.scrollRectToVisible(table.getCellRect(i, 0, true));
-
-				table.requestFocus();
-
-				return;
-			}
-		}
-		JOptionPane.showMessageDialog(this, "Không tìm thấy hóa đơn");
-		searchNorth.requestFocus();
+		try{
+            String filter = "(?i)"+ma;
+            sorter.setRowFilter(RowFilter.regexFilter(filter,0));
+            if (table.getRowCount()==0){
+                JOptionPane.showMessageDialog(this,"Không tìm thấy");
+                sorter.setRowFilter(null);
+            }
+        }catch (Exception e){
+            sorter.setRowFilter(null);
+        }
 	}
 
 }

@@ -28,8 +28,10 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.pos.tienloi.dao.PhieuDat_Dao;
 import com.pos.tienloi.model.PhieuDatHang;
@@ -53,6 +55,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
 	private JButton capNhat, huyDon;
+	private TableRowSorter sorter;
 
 	public FrmPhieuDat() {
 
@@ -247,7 +250,8 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		table.getColumnModel().getColumn(7).setPreferredWidth(80);
 		table.getColumnModel().getColumn(7).setMaxWidth(80);
 
-		;
+		sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
 
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
@@ -342,25 +346,19 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		if (ma.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã phiếu đặt hàng");
 			searchNorth.requestFocus();
+			sorter.setRowFilter(null);
 			return;
 		}
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã phiếu đặt
-
-			if (ma.equalsIgnoreCase(maTrongBang)) {
-
-				table.setRowSelectionInterval(i, i);
-
-				table.scrollRectToVisible(table.getCellRect(i, 0, true));
-
-				table.requestFocus();
-
-				return;
-			}
-		}
-		JOptionPane.showMessageDialog(this, "Không tìm thấy phiếu đặt hàng!");
-		searchNorth.requestFocus();
+		try{
+            String filter = "(?i)"+ma;
+            sorter.setRowFilter(RowFilter.regexFilter(filter,0));
+            if (table.getRowCount()==0){
+                JOptionPane.showMessageDialog(this,"Không tìm thấy phiếu đặt hàng");
+                sorter.setRowFilter(null);
+            }
+        }catch (Exception e){
+            sorter.setRowFilter(null);
+        }
 	}
 
 	@Override
