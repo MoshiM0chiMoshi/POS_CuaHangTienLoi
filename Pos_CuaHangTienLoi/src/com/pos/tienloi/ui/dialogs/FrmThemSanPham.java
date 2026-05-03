@@ -44,6 +44,7 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 	private boolean isSaved = false;
 
 	private String duongDanAnh = "";
+	private JButton btnXoaTrang;
 
 	public FrmThemSanPham(Window parent) {
 		this(parent, false);
@@ -130,14 +131,16 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 
 		btnHuy = new JButton("Hủy");
 		btnLuu = new JButton("Lưu");
-
+		btnXoaTrang = new JButton("Xóa trắng");
+		buttonPanel.add(btnXoaTrang);
 		buttonPanel.add(btnHuy);
 		buttonPanel.add(btnLuu);
-
+		
 		mainPanel.add(buttonPanel, BorderLayout.SOUTH);
 
 		add(mainPanel);
 
+		btnXoaTrang.addActionListener(this);
 		btnChonAnh.addActionListener(this);
 		btnLuu.addActionListener(this);
 		btnHuy.addActionListener(this);
@@ -153,11 +156,29 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 			xuLyChonAnh();
 		} else if (e.getSource() == btnLuu) {
 			xuLyLuu();
-		} else {
+		} 
+		else if(e.getSource()==btnXoaTrang){
+			xuLyXoaTrang();
+		}
+		
+		else {
 			dispose();
 		}
 	}
 
+	private void xuLyXoaTrang() {
+		txtMa.setText("");
+		txtTen.setText("");
+		txtGia.setText("");
+		txtTonKho.setText("");
+		duongDanAnh = "";
+
+	    lblHinhAnh.setIcon(null);
+	    lblHinhAnh.setText("Chưa có ảnh");
+
+	    cbxDanhMuc.setSelectedIndex(0);
+	    cbxThue.setSelectedIndex(0);
+	}
 	private void xuLyChonAnh() {
 		JFileChooser fileChooser = new JFileChooser();
 		fileChooser.setFileFilter(new FileNameExtensionFilter("Image", "jpg", "png"));

@@ -24,8 +24,10 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.pos.tienloi.dao.SanPham_Dao;
 import com.pos.tienloi.model.DanhMuc;
@@ -52,6 +54,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
 	private final Color EDIT_COLOR = Color.decode("#F4B400");
 	private final Color DELETE_COLOR = Color.decode("#DC3545");
+	private TableRowSorter sorter;
 
 	public FrmSanPham() {
 
@@ -258,6 +261,9 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
 
+		sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+        
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		scrollPane.setBackground(Color.WHITE);
@@ -470,25 +476,19 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		if (ma.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã sản phẩm");
 			searchNorth.requestFocus();
+			sorter.setRowFilter(null);
 			return;
 		}
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString(); // cột 0 là mã sản phẩm
-
-			if (ma.equalsIgnoreCase(maTrongBang)) {
-
-				table.setRowSelectionInterval(i, i);
-
-				table.scrollRectToVisible(table.getCellRect(i, 0, true));
-
-				table.requestFocus();
-
-				return;
-			}
-		}
-		JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm!");
-		searchNorth.requestFocus();
+		try{
+            String filter = "(?i)"+ma;
+            sorter.setRowFilter(RowFilter.regexFilter(filter,1));
+            if (table.getRowCount()==0){
+                JOptionPane.showMessageDialog(this,"Không tìm thấy sản phẩm");
+                sorter.setRowFilter(null);
+            }
+        }catch (Exception e){
+            sorter.setRowFilter(null);
+        }
 	}
 
 }

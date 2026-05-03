@@ -25,9 +25,11 @@ import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableRowSorter;
 
 import com.pos.tienloi.dao.NhanVien_Dao;
 import com.pos.tienloi.dao.TaiKhoan_Dao;
@@ -54,6 +56,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 	private final Color HOVER_COLOR = Color.decode("#4A90E2");
 	private final Color EDIT_COLOR = Color.decode("#F4B400");
 	private final Color DELETE_COLOR = Color.decode("#DC3545");
+	private TableRowSorter sorter;
 
 	public FrmQuanLyNhanVien() {
 		setLayout(new BorderLayout());
@@ -96,15 +99,36 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		btnFilter.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		// Place holder cho filter của popup Menu
+		// Popup menu filter role
 		JPopupMenu popupMenu = new JPopupMenu();
-		popupMenu.add(new JMenuItem("Admin"));
-		popupMenu.add(new JMenuItem("Staff"));
+
+		JMenuItem itemAll = new JMenuItem("All");
+		JMenuItem itemAdmin = new JMenuItem("Admin");
+		JMenuItem itemStaff = new JMenuItem("Staff");
+
+		popupMenu.add(itemAll);
+		popupMenu.add(itemAdmin);
+		popupMenu.add(itemStaff);
 
 		btnFilter.addActionListener(e -> {
-
 			popupMenu.show(btnFilter, 0, btnFilter.getHeight());
 		});
 
+		// Filter tất cả
+		itemAll.addActionListener(e -> {
+			sorter.setRowFilter(null);
+		});
+
+		// Filter Admin
+		itemAdmin.addActionListener(e -> {
+			sorter.setRowFilter(RowFilter.regexFilter("Quản lý", 3));
+		});
+
+		// Filter Staff
+		itemStaff.addActionListener(e -> {
+			sorter.setRowFilter(RowFilter.regexFilter("(Nhân viên bán hàng)|(Nhân viên kho)", 3));
+		});
+		
 		// Khai báo - customer - thêm cách components
 		searchNorth = new PlaceholderTextField("Tìm kiếm theo mã NV...");
 		searchNorth.setColumns(35);
@@ -235,6 +259,9 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
 
+		sorter = new TableRowSorter<>(model);
+        table.setRowSorter(sorter);
+        
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		scrollPane.setBackground(Color.WHITE);
@@ -372,25 +399,19 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 		if (ma.isEmpty()) {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nhân viên!");
 			searchNorth.requestFocus();
+			sorter.setRowFilter(null);
 			return;
 		}
-		DefaultTableModel model = (DefaultTableModel) table.getModel();
-		for (int i = 0; i < model.getRowCount(); i++) {
-			String maTrongBang = model.getValueAt(i, 0).toString();
-
-			if (ma.equalsIgnoreCase(maTrongBang)) {
-
-				table.setRowSelectionInterval(i, i);
-
-				table.scrollRectToVisible(table.getCellRect(i, 0, true));
-
-				table.requestFocus();
-
-				return;
-			}
-		}
-		JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên!");
-		searchNorth.requestFocus();
+		try{
+            String filter = "(?i)"+ma;
+            sorter.setRowFilter(RowFilter.regexFilter(filter,0));
+            if (table.getRowCount()==0){
+                JOptionPane.showMessageDialog(this,"Không tìm thấy nhân viên");
+                sorter.setRowFilter(null);
+            }
+        }catch (Exception e){
+            sorter.setRowFilter(null);
+        }
 	}
 
 }

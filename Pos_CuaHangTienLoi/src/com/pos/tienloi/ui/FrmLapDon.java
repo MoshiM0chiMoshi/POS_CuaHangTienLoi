@@ -128,7 +128,7 @@ public class FrmLapDon extends JPanel {
 		pnlCustomer.setBorder(new TitledBorder(null, "Khách Hàng", TitledBorder.DEFAULT_JUSTIFICATION,
 				TitledBorder.DEFAULT_POSITION, new Font("Arial", Font.BOLD, 16)));
 
-		txtSearchPhone = new PlaceholderTextField("Tìm khách hàng");
+		txtSearchPhone = new PlaceholderTextField("Tìm khách hàng(nhập sdt)");
 
 		txtSearchPhone.setFont(new Font("Arial", Font.PLAIN, 14));
 
