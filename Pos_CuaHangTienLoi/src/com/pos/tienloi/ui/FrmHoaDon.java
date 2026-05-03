@@ -18,10 +18,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -83,18 +81,6 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		// Tạo ra Filter
 		ImageIcon filterIcon = new ImageIcon(getClass().getResource("/images/filterArrow.png"));
 
-		// Button filter Date
-		JButton btnDate = new JButton("Date");
-		btnDate.setIcon(filterIcon);
-		btnDate.setHorizontalTextPosition(SwingConstants.LEFT);
-		btnDate.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnDate.setForeground(TEXT_Color);
-		btnDate.setBackground(NORMAL_COLOR);
-		btnDate.setFocusPainted(false);
-		btnDate.setOpaque(true);
-		btnDate.setPreferredSize(new Dimension(105, 55));
-		btnDate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
 		// Button filter Status
 		JButton btnFilter = new JButton("Status");
 		btnFilter.setIcon(filterIcon);
@@ -108,14 +94,14 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		btnFilter.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		// Place holder cho filter của popup Menu
-		JPopupMenu popupMenu = new JPopupMenu();
-		popupMenu.add(new JMenuItem("Active"));
-		popupMenu.add(new JMenuItem("Inactive"));
-
-		btnFilter.addActionListener(e -> {
-
-			popupMenu.show(btnFilter, 0, btnFilter.getHeight());
-		});
+		/*
+		 * JPopupMenu popupMenu = new JPopupMenu(); popupMenu.add(new
+		 * JMenuItem("Active")); popupMenu.add(new JMenuItem("Inactive"));
+		 * 
+		 * btnFilter.addActionListener(e -> {
+		 * 
+		 * popupMenu.show(btnFilter, 0, btnFilter.getHeight()); });
+		 */
 
 		// Khai báo - customer - thêm cách components
 		searchNorth = new PlaceholderTextField("Tìm kiếm Phiếu Đặt...");
@@ -126,8 +112,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		searchNorth.setPreferredSize(new Dimension(250, 60));
 		headerPanel2Right = new JPanel(new BorderLayout());
 
-		headerPanel2Left.add(btnDate);
-		headerPanel2Left.add(btnFilter);
+		// headerPanel2Left.add(btnFilter);
 
 		// Sử dụng jsplit panel để chia hàng 2 ra trái phải
 		splitPane = new JSplitPane(splitPane.HORIZONTAL_SPLIT, headerPanel2Left, headerPanel2Right);
@@ -241,7 +226,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
 		sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
+		table.setRowSorter(sorter);
 
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
@@ -282,19 +267,19 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã hóa đơn");
 			sorter.setRowFilter(null);
 			searchNorth.requestFocus();
-			
+
 			return;
 		}
-		try{
-            String filter = "(?i)"+ma;
-            sorter.setRowFilter(RowFilter.regexFilter(filter,0));
-            if (table.getRowCount()==0){
-                JOptionPane.showMessageDialog(this,"Không tìm thấy");
-                sorter.setRowFilter(null);
-            }
-        }catch (Exception e){
-            sorter.setRowFilter(null);
-        }
+		try {
+			String filter = "(?i)" + ma;
+			sorter.setRowFilter(RowFilter.regexFilter(filter, 0));
+			if (table.getRowCount() == 0) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy");
+				sorter.setRowFilter(null);
+			}
+		} catch (Exception e) {
+			sorter.setRowFilter(null);
+		}
 	}
 
 }

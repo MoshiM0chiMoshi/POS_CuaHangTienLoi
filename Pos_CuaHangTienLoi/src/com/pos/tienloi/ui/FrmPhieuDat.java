@@ -89,18 +89,6 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		// Tạo ra Filter
 		ImageIcon filterIcon = new ImageIcon(getClass().getResource("/images/filterArrow.png"));
 
-		// Button filter Date
-		JButton btnDate = new JButton("Date");
-		btnDate.setIcon(filterIcon);
-		btnDate.setHorizontalTextPosition(SwingConstants.LEFT);
-		btnDate.setFont(new Font("Segoe UI", Font.BOLD, 15));
-		btnDate.setForeground(TEXT_Color);
-		btnDate.setBackground(NORMAL_COLOR);
-		btnDate.setFocusPainted(false);
-		btnDate.setOpaque(true);
-		btnDate.setPreferredSize(new Dimension(105, 55));
-		btnDate.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
 		// Button filter Status
 		JButton btnFilter = new JButton("Status");
 		btnFilter.setIcon(filterIcon);
@@ -114,12 +102,27 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		btnFilter.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
 		// Place holder cho filter của popup Menu
+		// Place holder cho filter của popup Menu
 		JPopupMenu popupMenu = new JPopupMenu();
-		popupMenu.add(new JMenuItem("Active"));
-		popupMenu.add(new JMenuItem("Inactive"));
+
+		String[] statusList = { "TẤT CẢ", "HOAN_TAT", "DANG_XU_LY", "CHO_DUYET", "DA_HUY" };
+
+		for (String status : statusList) {
+			JMenuItem item = new JMenuItem(status);
+			item.addActionListener(e -> {
+
+				if (status.equals("TẤT CẢ")) {
+					btnFilter.setText("Status");
+				} else {
+					btnFilter.setText(status);
+				}
+				// Gọi hàm lọc
+				locTheoTrangThai(status);
+			});
+			popupMenu.add(item);
+		}
 
 		btnFilter.addActionListener(e -> {
-
 			popupMenu.show(btnFilter, 0, btnFilter.getHeight());
 		});
 
@@ -132,7 +135,6 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		searchNorth.setPreferredSize(new Dimension(250, 60));
 		headerPanel2Right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 15, 0));
 
-		headerPanel2Left.add(btnDate);
 		headerPanel2Left.add(btnFilter);
 
 		headerPanel2Right.add(capNhat = new JButton("Trạng Thái"));
@@ -251,7 +253,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		table.getColumnModel().getColumn(7).setMaxWidth(80);
 
 		sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
+		table.setRowSorter(sorter);
 
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
@@ -344,21 +346,45 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 	public void timPhieuDat() {
 		String ma = searchNorth.getText().trim();
 		if (ma.isEmpty()) {
-			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã phiếu đặt hàng");
+			JOptionPane.showMessageDialog(this, "Vui lòng nhập mã nhân viên!");
 			searchNorth.requestFocus();
 			sorter.setRowFilter(null);
 			return;
 		}
-		try{
-            String filter = "(?i)"+ma;
-            sorter.setRowFilter(RowFilter.regexFilter(filter,0));
-            if (table.getRowCount()==0){
-                JOptionPane.showMessageDialog(this,"Không tìm thấy phiếu đặt hàng");
-                sorter.setRowFilter(null);
-            }
-        }catch (Exception e){
-            sorter.setRowFilter(null);
-        }
+		try {
+			String filter = "(?i)" + ma;
+			sorter.setRowFilter(RowFilter.regexFilter(filter, 0));
+			if (table.getRowCount() == 0) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy nhân viên");
+				sorter.setRowFilter(null);
+			}
+		} catch (Exception e) {
+			sorter.setRowFilter(null);
+		}
+	}
+
+	public void locTheoTrangThai(String trangThai) {
+		if (sorter == null)
+			return;
+
+		if (trangThai.equals("TẤT CẢ")) {
+
+			sorter.setRowFilter(null);
+		} else {
+			try {
+
+				String filter = "^" + trangThai + "$";
+				sorter.setRowFilter(RowFilter.regexFilter(filter, 5));
+
+				if (table.getRowCount() == 0) {
+
+					JOptionPane.showMessageDialog(this, "Không có phiếu đặt nào ở trạng thái ");
+
+				}
+			} catch (Exception e) {
+				sorter.setRowFilter(null);
+			}
+		}
 	}
 
 	@Override

@@ -19,8 +19,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
@@ -94,6 +96,23 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		btnFilter.setBorderPainted(false);
 		btnFilter.setContentAreaFilled(false);
 		btnFilter.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+		JPopupMenu popupMenu = new JPopupMenu();
+
+		String[] statusList = { "TẤT CẢ", "Thực phẩm tươi sống", "Đồ uống", "Hóa mỹ phẩm", "Đồ ăn nhẹ" };
+
+		for (String status : statusList) {
+			JMenuItem item = new JMenuItem(status);
+			item.addActionListener(e -> {
+
+				locTheoTrangThai(status);
+			});
+			popupMenu.add(item);
+		}
+
+		btnFilter.addActionListener(e -> {
+			popupMenu.show(btnFilter, 0, btnFilter.getHeight());
+		});
 
 		// Khai báo - customer - thêm cách components
 		searchNorth = new PlaceholderTextField("Tìm kiếm Sản Phẩm...");
@@ -262,8 +281,8 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		table.getTableHeader().setReorderingAllowed(false);
 
 		sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
-        
+		table.setRowSorter(sorter);
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		scrollPane.setBackground(Color.WHITE);
@@ -479,16 +498,38 @@ public class FrmSanPham extends JPanel implements ActionListener {
 			sorter.setRowFilter(null);
 			return;
 		}
-		try{
-            String filter = "(?i)"+ma;
-            sorter.setRowFilter(RowFilter.regexFilter(filter,1));
-            if (table.getRowCount()==0){
-                JOptionPane.showMessageDialog(this,"Không tìm thấy sản phẩm");
-                sorter.setRowFilter(null);
-            }
-        }catch (Exception e){
-            sorter.setRowFilter(null);
-        }
+		try {
+			String filter = "(?i)" + ma;
+			sorter.setRowFilter(RowFilter.regexFilter(filter, 1));
+			if (table.getRowCount() == 0) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy sản phẩm");
+				sorter.setRowFilter(null);
+			}
+		} catch (Exception e) {
+			sorter.setRowFilter(null);
+		}
+	}
+
+	public void locTheoTrangThai(String doanhMuc) {
+		if (sorter == null)
+			return;
+
+		if (doanhMuc.equals("TẤT CẢ")) {
+
+			sorter.setRowFilter(null);
+		} else {
+			try {
+
+				String filter = "^" + doanhMuc + "$";
+				sorter.setRowFilter(RowFilter.regexFilter(filter, 6));
+
+				if (table.getRowCount() == 0) {
+
+				}
+			} catch (Exception e) {
+				sorter.setRowFilter(null);
+			}
+		}
 	}
 
 }
