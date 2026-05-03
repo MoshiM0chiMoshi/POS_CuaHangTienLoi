@@ -52,7 +52,7 @@ public class SideBar extends JPanel {
 		add(Box.createVerticalStrut(10));
 		add(createButton(null, "List Nhân Viên", "qlnhanvien"));
 		add(Box.createVerticalStrut(80));
-		add(createButton(null, "Log Out", "qlnhanvien"));
+		add(createButton(null, "Log Out", "logout"));
 
 	}
 
@@ -69,6 +69,10 @@ public class SideBar extends JPanel {
 		btn.setBorderPainted(false);
 		btn.setOpaque(true);
 		btn.setMargin(new java.awt.Insets(0, 0, 0, 0));
+
+		if (panelName.equalsIgnoreCase("logout")) {
+			btn.addActionListener(e -> handleLogout());
+		}
 
 		if (img != null) {
 			btn.setIcon(img);
@@ -91,6 +95,18 @@ public class SideBar extends JPanel {
 		}
 
 		return btn;
+	}
+
+	private void handleLogout() {
+		int confirm = javax.swing.JOptionPane.showConfirmDialog(this, "Bạn có chắc muốn đăng xuất không?",
+				"Xác nhận đăng xuất", javax.swing.JOptionPane.YES_NO_OPTION);
+
+		if (confirm == javax.swing.JOptionPane.YES_OPTION) {
+			// Đóng MainFrame
+			mainFrame.dispose();
+
+			new com.pos.tienloi.ui.FrmDangNhap().setVisible(true);
+		}
 	}
 
 }

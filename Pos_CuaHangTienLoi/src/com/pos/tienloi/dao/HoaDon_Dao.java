@@ -173,4 +173,19 @@ public class HoaDon_Dao {
 		return dshd;
 	}
 
+	public int getTotalHoaDon() {
+		int total = 0;
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		String sql = "SELECT COUNT(*) FROM HoaDon";
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return total;
+	}
+
 }

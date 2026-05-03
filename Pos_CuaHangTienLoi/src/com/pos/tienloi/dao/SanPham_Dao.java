@@ -105,4 +105,48 @@ public class SanPham_Dao {
 		}
 	}
 
+	public int getTotalSanPham() {
+		int total = 0;
+		String sql = "SELECT COUNT(*) FROM SanPham WHERE trangThai = 1";
+		ConnectDB.getInstance();
+		Connection con = ConnectDB.getConnection();
+		try (PreparedStatement ps = con.prepareStatement(sql); ResultSet rs = ps.executeQuery()) {
+			if (rs.next()) {
+				total = rs.getInt(1);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return total;
+	}
+
+	public ArrayList<String> getTopSanPhamBanChay(int limit) {
+		ArrayList<String> topSP = new ArrayList<>();
+		Connection con = ConnectDB.getInstance().getConnection();
+		String sql = """
+				SELECT TOP (?) sp.tenSP
+				FROM ChiTietHoaDon cthd
+				JOIN SanPham sp ON cthd.maSP = sp.maSP
+				GROUP BY sp.maSP, sp.tenSP
+				ORDER BY SUM(cthd.soLuong) DESC
+				""";
+
+		// Kết nối được lấy trực tiếp từ Singleton ConnectDB đã thiết lập
+		try (PreparedStatement ps = con.prepareStatement(sql)) {
+
+			// Gán giá trị cho tham số limit
+			ps.setInt(1, limit);
+
+			try (ResultSet rs = ps.executeQuery()) {
+				while (rs.next()) {
+					topSP.add(rs.getString("tenSP"));
+				}
+			}
+		} catch (SQLException e) {
+			// Log lỗi chi tiết để dễ dàng debug trong quá trình phát triển
+			e.printStackTrace();
+		}
+		return topSP;
+	}
+
 }

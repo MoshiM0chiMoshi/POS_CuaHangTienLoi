@@ -21,7 +21,9 @@ import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
 import com.pos.tienloi.dao.HoaDon_Dao;
+import com.pos.tienloi.dao.KhachHang_Dao;
 import com.pos.tienloi.dao.PhieuDat_Dao;
+import com.pos.tienloi.dao.SanPham_Dao;
 import com.pos.tienloi.model.HoaDon;
 import com.pos.tienloi.model.PhieuDatHang;
 
@@ -33,10 +35,21 @@ public class FrmDashBoard extends JPanel {
 	private JLabel titleNorth;
 	private JTextField search;
 	private JLabel banChayTitle;
+
+	// Khai báo các đối tượng DAO
 	private HoaDon_Dao hdDao = new HoaDon_Dao();
 	private PhieuDat_Dao pdDao = new PhieuDat_Dao();
+	private KhachHang_Dao khDao = new KhachHang_Dao();
+	private SanPham_Dao spDao = new SanPham_Dao();
+
 	private DefaultTableModel modelHoaDon, modelPhieuDat;
 	private JTable tableHoaDon, tablePhieuDat;
+
+	// Các JLabel giữ tham chiếu để cập nhật số liệu động
+	private JLabel lblTotalCustomersVal;
+	private JLabel lblTotalProductsVal;
+	private JLabel lblTotalOrdersVal;
+	private JPanel pnlBanChayList;
 
 	private final Color NORMAL_COLOR = Color.decode("#EAF4FF");
 	private final Color TEXT_Color = Color.decode("#1F3A5F");
@@ -47,7 +60,6 @@ public class FrmDashBoard extends JPanel {
 		setSize(1300, 800);
 
 		initUI();
-
 	}
 
 	public void initUI() {
@@ -89,12 +101,16 @@ public class FrmDashBoard extends JPanel {
 		centerNorthPanel.setLayout(new BoxLayout(centerNorthPanel, BoxLayout.X_AXIS));
 		centerNorthPanel.setBorder(BorderFactory.createEmptyBorder(-20, 20, 10, 20));
 
-		centerNorthPanel.add(createCard("Total Customers", "50"));
-		centerNorthPanel.add(Box.createHorizontalStrut(15));
+		// Khởi tạo các JLabel để chứa số liệu thống kê
+		lblTotalCustomersVal = new JLabel("0");
+		lblTotalProductsVal = new JLabel("0");
+		lblTotalOrdersVal = new JLabel("0");
 
-		centerNorthPanel.add(createCard("Total Products", "30"));
+		centerNorthPanel.add(createCard("Total Customers", lblTotalCustomersVal));
 		centerNorthPanel.add(Box.createHorizontalStrut(15));
-		centerNorthPanel.add(createCard("Total Orders", "150"));
+		centerNorthPanel.add(createCard("Total Products", lblTotalProductsVal));
+		centerNorthPanel.add(Box.createHorizontalStrut(15));
+		centerNorthPanel.add(createCard("Total Orders", lblTotalOrdersVal));
 
 		// Bên trong Center Panel nhưng chiếm ở dưới - Center Main Panel
 		centerMainPanel = new JPanel();
@@ -112,19 +128,14 @@ public class FrmDashBoard extends JPanel {
 		banChayTitle = new JLabel("Sản phẩm bán chạy");
 		banChayTitle.setFont(new Font("Segoe UI", Font.BOLD, 25));
 
-		JLabel mainItem = new JLabel("Cake");
-		mainItem.setFont(new Font("Segoe UI", Font.BOLD, 18));
-
-		String[] items = { "Cake", "Bread", "Cookie", "Pastry" };
-
 		centerMainLeftPanel.add(banChayTitle);
 		centerMainLeftPanel.add(Box.createVerticalStrut(15));
-		for (String x : items) {
-			JLabel lbl = new JLabel(x);
-			lbl.setFont(new Font("Segoe UI", Font.BOLD, 25));
-			centerMainLeftPanel.add(lbl);
-			centerMainLeftPanel.add(Box.createVerticalStrut(15));
-		}
+
+		// Panel chứa danh sách sản phẩm động
+		pnlBanChayList = new JPanel();
+		pnlBanChayList.setLayout(new BoxLayout(pnlBanChayList, BoxLayout.Y_AXIS));
+		pnlBanChayList.setBackground(Color.WHITE);
+		centerMainLeftPanel.add(pnlBanChayList);
 		centerMainLeftPanel.add(Box.createVerticalStrut(15));
 
 		// Bên trong centerMainPanel - Panel bên phải
@@ -134,11 +145,9 @@ public class FrmDashBoard extends JPanel {
 
 		// Dữ liệu mẫu cho table
 		String[] cols1 = { "Mã HD", "Ngày Lập", "Tổng Tiền" };
-
 		JPanel recentInvoicePanel = createTableCard1("Hóa đơn gần đây", cols1);
 
 		String[] cols2 = { "Mã PĐ", "Ngày Đặt", "Trạng Thái" };
-
 		JPanel recentPhieuDat = createTableCard2("Phiếu đặt hàng mới", cols2);
 
 		JSplitPane pane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, centerMainLeftPanel, centerMainRightPanel);
@@ -153,13 +162,11 @@ public class FrmDashBoard extends JPanel {
 		centerMainPanel.add(pane);
 
 		// màu nền cho các jPanel
-
 		pane.setBackground(Color.white);
 		mainPanel.setBackground(Color.white);
 		centerPanel.setBackground(Color.white);
 		northPanel.setOpaque(false);
 		centerNorthPanel.setOpaque(false);
-
 		centerMainLeftPanel.setBackground(Color.WHITE);
 
 		centerPanel.add(centerNorthPanel, BorderLayout.NORTH);
@@ -168,11 +175,14 @@ public class FrmDashBoard extends JPanel {
 		mainPanel.add(northPanel, BorderLayout.NORTH);
 
 		add(mainPanel, BorderLayout.CENTER);
+
+		// Render dữ liệu lên UI
 		loadDataHoaDon();
 		loadDataPhieuDat();
+		loadThongKe();
 	}
 
-	private JPanel createCard(String title, String value) {
+	private JPanel createCard(String title, JLabel lblValue) {
 		JPanel card = new JPanel();
 		card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 		card.setPreferredSize(new Dimension(0, 200));
@@ -183,7 +193,6 @@ public class FrmDashBoard extends JPanel {
 		JLabel lblTitle = new JLabel(title);
 		lblTitle.setFont(new Font("Segoe UI", Font.PLAIN, 20));
 
-		JLabel lblValue = new JLabel(value);
 		lblValue.setFont(new Font("Segoe UI", Font.BOLD, 22));
 
 		card.add(lblTitle);
@@ -215,7 +224,7 @@ public class FrmDashBoard extends JPanel {
 		tableHoaDon.getTableHeader().setReorderingAllowed(false);
 
 		JScrollPane scrollPane = new JScrollPane(tableHoaDon);
-		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
+		scrollPane.setPreferredSize(new Dimension(0, 200));
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		card.add(scrollPane, BorderLayout.CENTER);
 
@@ -244,7 +253,7 @@ public class FrmDashBoard extends JPanel {
 		tablePhieuDat.getTableHeader().setReorderingAllowed(false);
 
 		JScrollPane scrollPane = new JScrollPane(tablePhieuDat);
-		scrollPane.setPreferredSize(new Dimension(0, 200)); // hoặc 200-250
+		scrollPane.setPreferredSize(new Dimension(0, 200));
 		scrollPane.setBorder(BorderFactory.createEmptyBorder());
 		card.add(scrollPane, BorderLayout.CENTER);
 
@@ -256,13 +265,13 @@ public class FrmDashBoard extends JPanel {
 		modelHoaDon.setRowCount(0);
 
 		ArrayList<HoaDon> listhd = hdDao.get3HoaDonGanNhat();
-		for (HoaDon hd : listhd) {
-
-			String[] rowData = { hd.getMaHoaDon(), sdf.format(hd.getNgayLap()), hd.getTongTien() + "", };
-			modelHoaDon.addRow(rowData);
+		if (listhd != null) {
+			for (HoaDon hd : listhd) {
+				String[] rowData = { hd.getMaHoaDon(), sdf.format(hd.getNgayLap()), hd.getTongTien() + "" };
+				modelHoaDon.addRow(rowData);
+			}
 		}
 		tableHoaDon.setModel(modelHoaDon);
-
 	}
 
 	private void loadDataPhieuDat() {
@@ -270,12 +279,68 @@ public class FrmDashBoard extends JPanel {
 		modelPhieuDat.setRowCount(0);
 
 		ArrayList<PhieuDatHang> listpd = pdDao.get3PhieuDatGanNhat();
-		for (PhieuDatHang pd : listpd) {
-
-			String[] rowData = { pd.getMaPhieuDat(), sdf.format(pd.getNgayDat()), pd.getTrangThai().name() };
-			modelPhieuDat.addRow(rowData);
+		if (listpd != null) {
+			for (PhieuDatHang pd : listpd) {
+				String[] rowData = { pd.getMaPhieuDat(), sdf.format(pd.getNgayDat()), pd.getTrangThai().name() };
+				modelPhieuDat.addRow(rowData);
+			}
 		}
 		tablePhieuDat.setModel(modelPhieuDat);
+	}
 
+	// Hàm công khai (public) để MainFrame có thể gọi khi cần refresh lại dữ liệu
+	// Dashboard
+	public void loadThongKe() {
+		// Gọi các hàm thống kê từ DAO
+		try {
+			// Sử dụng size() của mảng nếu DAO chưa cập nhật hàm COUNT
+			int totalKhachHang = khDao.getallKhachHang().size();
+			lblTotalCustomersVal.setText(String.valueOf(totalKhachHang));
+		} catch (Exception e) {
+			lblTotalCustomersVal.setText("0");
+		}
+
+		try {
+			int totalSanPham = spDao.getAllSanPham().size();
+			lblTotalProductsVal.setText(String.valueOf(totalSanPham));
+		} catch (Exception e) {
+			lblTotalProductsVal.setText("0");
+		}
+
+		try {
+			lblTotalOrdersVal.setText(String.valueOf(hdDao.getTotalHoaDon()));
+		} catch (Exception e) {
+			lblTotalOrdersVal.setText("0");
+		}
+
+		// Cập nhật danh sách sản phẩm bán chạy
+		pnlBanChayList.removeAll();
+
+		try {
+			// Giả sử gọi hàm getTopSanPhamBanChay(5) trong SanPham_Dao
+			ArrayList<String> topSP = spDao.getTopSanPhamBanChay(5);
+
+			if (topSP == null || topSP.isEmpty()) {
+				JLabel lblEmpty = new JLabel("Chưa có dữ liệu bán hàng");
+				lblEmpty.setFont(new Font("Segoe UI", Font.ITALIC, 16));
+				pnlBanChayList.add(lblEmpty);
+			} else {
+				for (String spName : topSP) {
+					JLabel lbl = new JLabel("• " + spName);
+					lbl.setFont(new Font("Segoe UI", Font.BOLD, 20));
+					lbl.setForeground(TEXT_Color);
+					pnlBanChayList.add(lbl);
+					pnlBanChayList.add(Box.createVerticalStrut(15));
+				}
+			}
+		} catch (Exception e) {
+			JLabel lblError = new JLabel("Đang cập nhật...");
+			lblError.setFont(new Font("Segoe UI", Font.ITALIC, 16));
+			pnlBanChayList.add(lblError);
+		}
+
+		// Cập nhật lại layout UI
+		pnlBanChayList.revalidate();
+		pnlBanChayList.repaint();
 	}
 }
