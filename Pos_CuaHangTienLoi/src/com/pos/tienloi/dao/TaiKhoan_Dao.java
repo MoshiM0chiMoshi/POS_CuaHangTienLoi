@@ -106,7 +106,6 @@ public class TaiKhoan_Dao {
 		return false;
 	}
 
-	// Bổ sung vào class TaiKhoan_Dao
 	public TaiKhoan kiemTraDangNhap(String maNV, String matKhau) {
 		TaiKhoan tk = null;
 		String sql = """

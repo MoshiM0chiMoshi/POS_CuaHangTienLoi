@@ -298,13 +298,17 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
 		String cmd = e.getActionCommand();
+		int viewRow = table.getSelectedRow();
+		if (viewRow == -1) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
+
+		}
 		if (cmd.startsWith("EDIT")) {
-			int row = Integer.parseInt(cmd.split(":")[1]);
-			xuLyEdit(row);
+
+			xuLyEdit(viewRow);
 
 		} else if (cmd.startsWith("DELETE")) {
-			int row = Integer.parseInt(cmd.split(":")[1]);
-			xuLyXoa(row);
+			xuLyXoa(viewRow);
 		} else if (o.equals(themBtn)) {
 			moFormThem();
 		}
@@ -332,15 +336,12 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	private void xuLyEdit(int row) {
 		int modelRow = table.convertRowIndexToModel(row);
 
-		// 1. Lấy dữ liệu từ Table (lúc này các cột 5, 6 đang là String/Float)
 		String path = (String) table.getModel().getValueAt(modelRow, 9);
 		String ma = table.getModel().getValueAt(modelRow, 1).toString();
 		String ten = table.getModel().getValueAt(modelRow, 2).toString();
 		String tonkho = table.getModel().getValueAt(modelRow, 3).toString();
 		String gia = table.getModel().getValueAt(modelRow, 4).toString();
 
-		// Lưu ý: Cột 5 và 6 trên bảng đang hiển thị Text, ta sẽ xử lý chọn lại trong
-		// Dialog sau
 		String tenThue = table.getModel().getValueAt(modelRow, 5).toString();
 		String tenDM = table.getModel().getValueAt(modelRow, 6).toString();
 
@@ -353,7 +354,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 
 		if (dialog.isSaved()) {
 			try {
-				// 2. Lấy dữ liệu mới từ Dialog
+				// Lấy dữ liệu mới từ Dialog
 				String pathMoi = dialog.getDuongDanAnh();
 				String tenMoi = dialog.getTenSP();
 				int tonMoi = Integer.parseInt(dialog.getTonKho());
@@ -361,11 +362,9 @@ public class FrmSanPham extends JPanel implements ActionListener {
 				Thue thueMoi = dialog.getThue();
 				DanhMuc dmMoi = dialog.getDanhMuc();
 
-				// 3. Tạo đối tượng và CẬP NHẬT DATABASE
 				SanPham spMoi = new SanPham(pathMoi, ma, tenMoi, tonMoi, giaMoi, thueMoi, dmMoi);
 				SanPham_Dao dao = new SanPham_Dao();
 
-				// Bạn cần thêm hàm update trong SanPham_Dao (xem hướng dẫn bên dưới)
 				boolean isUpdated = dao.update(spMoi);
 
 				if (isUpdated) {
@@ -403,7 +402,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 
 		if (dialog.isSaved()) {
 			try {
-				// ===== LẤY DỮ LIỆU =====
+
 				String ma = dialog.getMaSP();
 				String ten = dialog.getTenSP();
 				int tonKho = Integer.parseInt(dialog.getTonKho());
@@ -456,15 +455,13 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		if (imgURL != null) {
 			temp = new ImageIcon(imgURL);
 		} else {
-			// 2. Nếu không có trong Resource, tải ảnh trực tiếp từ đường dẫn tuyệt đối trên
-			// ổ cứng
+
 			File imgFile = new File(fileName);
 			if (imgFile.exists()) {
 				temp = new ImageIcon(fileName);
 			}
 		}
 
-		// Nếu vẫn không tìm thấy ảnh (file bị xóa hoặc đổi tên) thì trả về null
 		if (temp == null) {
 			return null;
 		}

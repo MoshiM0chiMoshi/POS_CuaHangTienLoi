@@ -45,7 +45,7 @@ public class ButtonEditor extends DefaultCellEditor implements ActionListener {
 		fireEditingStopped();
 
 		if (listener != null) {
-			listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, action + ":" + row));
+			listener.actionPerformed(new ActionEvent(this, ActionEvent.ACTION_PERFORMED, action));
 		}
 	}
 }

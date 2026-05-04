@@ -189,8 +189,8 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 		table.getTableHeader().setFont(new Font("Segoe UI", Font.BOLD, 14));
 		table.getTableHeader().setReorderingAllowed(false);
 		sorter = new TableRowSorter<>(model);
-        table.setRowSorter(sorter);
-        
+		table.setRowSorter(sorter);
+
 		JScrollPane scrollPane = new JScrollPane(table);
 		scrollPane.getViewport().setBackground(Color.WHITE);
 		scrollPane.setBackground(Color.WHITE);
@@ -205,11 +205,14 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		int viewRow = table.getSelectedRow();
+		if (viewRow == -1) {
+			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
+
+		}
 		String cmd = e.getActionCommand();
 		if (cmd.startsWith("EDIT")) {
-			int row = Integer.parseInt(cmd.split(":")[1]);
-			xuLyEdit(row);
+			xuLyEdit(viewRow);
 		} else if (e.getSource().equals(themBtn)) {
 			moFormThem();
 		}
@@ -308,15 +311,15 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 			sorter.setRowFilter(null);
 			return;
 		}
-		try{
-            String filter = "(?i)"+sdt;
-            sorter.setRowFilter(RowFilter.regexFilter(filter,0));
-            if (table.getRowCount()==0){
-                JOptionPane.showMessageDialog(this,"Không tìm thấy");
-                sorter.setRowFilter(null);
-            }
-        }catch (Exception e){
-            sorter.setRowFilter(null);
-        }
+		try {
+			String filter = "(?i)" + sdt;
+			sorter.setRowFilter(RowFilter.regexFilter(filter, 0));
+			if (table.getRowCount() == 0) {
+				JOptionPane.showMessageDialog(this, "Không tìm thấy");
+				sorter.setRowFilter(null);
+			}
+		} catch (Exception e) {
+			sorter.setRowFilter(null);
+		}
 	}
 }

@@ -6,6 +6,7 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.SimpleDateFormat;
@@ -25,6 +26,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -241,7 +243,19 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
+		Object o = e.getSource();
+		String command = e.getActionCommand();
+		if (command != null && command.startsWith("DETAIL")) {
+			int viewRow = table.getSelectedRow();
+			if (viewRow != -1) {
+				int modelRow = table.convertRowIndexToModel(viewRow);
+				String maHD = model.getValueAt(modelRow, 0).toString();
+				Window parentWindow = SwingUtilities.getWindowAncestor(this);
+				com.pos.tienloi.ui.dialogs.FrmChiTietHoaDon dialog = new com.pos.tienloi.ui.dialogs.FrmChiTietHoaDon(
+						parentWindow, maHD);
+				dialog.setVisible(true);
+			}
+		}
 	}
 
 	public void loadData() {
@@ -254,7 +268,7 @@ public class FrmHoaDon extends JPanel implements ActionListener {
 			String tenNV = (hd.getNhanVien() != null) ? hd.getNhanVien().getTenNV() : "Không rõ";
 
 			String[] rowData = { hd.getMaHoaDon(), tenKH, sdf.format(hd.getNgayLap()), hd.getTrangThai() + "",
-					hd.getTongTien() + "", hd.getPhuongThuc() + "", tenNV };
+					hd.getTongTien() + "", hd.getPhuongThuc() + "", tenNV, "Detail" };
 			model.addRow(rowData);
 		}
 		table.setModel(model);

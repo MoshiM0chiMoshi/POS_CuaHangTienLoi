@@ -7,6 +7,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.Image;
+import java.awt.Window;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -30,6 +31,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.RowFilter;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableRowSorter;
 
@@ -39,6 +41,7 @@ import com.pos.tienloi.model.TrangThaiPhieuDat;
 import com.pos.tienloi.ui.components.ButtonEditor;
 import com.pos.tienloi.ui.components.ButtonRenderer;
 import com.pos.tienloi.ui.components.PlaceholderTextField;
+import com.pos.tienloi.ui.dialogs.FrmChiTietPhieuDat;
 
 public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener {
 	private JPanel northPanel, mainPanel, centerPanel;
@@ -252,6 +255,12 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 		table.getColumnModel().getColumn(7).setPreferredWidth(80);
 		table.getColumnModel().getColumn(7).setMaxWidth(80);
 
+		table.getColumnModel().getColumn(0).setPreferredWidth(80);
+		table.getColumnModel().getColumn(0).setMaxWidth(80);
+
+		table.getColumnModel().getColumn(4).setPreferredWidth(80);
+		table.getColumnModel().getColumn(4).setMaxWidth(80);
+
 		sorter = new TableRowSorter<>(model);
 		table.setRowSorter(sorter);
 
@@ -272,10 +281,16 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Object o = e.getSource();
-		if (o.equals(capNhat)) {
-			suaTrangThai();
-		} else if (o.equals(huyDon)) {
-			huyPhieuDat();
+		String command = e.getActionCommand();
+		if (command != null && command.startsWith("DETAIL")) {
+			int viewRow = table.getSelectedRow();
+			if (viewRow != -1) {
+				int modelRow = table.convertRowIndexToModel(viewRow);
+				String maPhieu = model.getValueAt(modelRow, 0).toString();
+				Window parentWindow = SwingUtilities.getWindowAncestor(this);
+				FrmChiTietPhieuDat dialog = new FrmChiTietPhieuDat(parentWindow, maPhieu);
+				dialog.setVisible(true);
+			}
 		}
 
 	}
@@ -337,7 +352,7 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 			String tenKH = (pd.getKhachHang() != null) ? pd.getKhachHang().getTenKhachHang() : "Khách lẻ";
 			String tenNV = (pd.getNhanVien() != null) ? pd.getNhanVien().getTenNV() : "Không rõ";
 			String[] rowData = { pd.getMaPhieuDat(), tenKH, sdf.format(pd.getNgayDat()), pd.getDiaChi(),
-					pd.getTongTien() + "", pd.getTrangThai() + "", tenNV };
+					pd.getTongTien() + "", pd.getTrangThai() + "", tenNV, "Detail" };
 			model.addRow(rowData);
 		}
 		table.setModel(model);

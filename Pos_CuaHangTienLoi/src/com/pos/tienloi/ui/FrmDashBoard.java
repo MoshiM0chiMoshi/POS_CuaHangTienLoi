@@ -288,12 +288,11 @@ public class FrmDashBoard extends JPanel {
 		tablePhieuDat.setModel(modelPhieuDat);
 	}
 
-	// Hàm công khai (public) để MainFrame có thể gọi khi cần refresh lại dữ liệu
 	// Dashboard
 	public void loadThongKe() {
 		// Gọi các hàm thống kê từ DAO
 		try {
-			// Sử dụng size() của mảng nếu DAO chưa cập nhật hàm COUNT
+
 			int totalKhachHang = khDao.getallKhachHang().size();
 			lblTotalCustomersVal.setText(String.valueOf(totalKhachHang));
 		} catch (Exception e) {
@@ -317,7 +316,6 @@ public class FrmDashBoard extends JPanel {
 		pnlBanChayList.removeAll();
 
 		try {
-			// Giả sử gọi hàm getTopSanPhamBanChay(5) trong SanPham_Dao
 			ArrayList<String> topSP = spDao.getTopSanPhamBanChay(5);
 
 			if (topSP == null || topSP.isEmpty()) {
