@@ -277,10 +277,7 @@ public class FrmQuanLyNhanVien extends JPanel implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String cmd = e.getActionCommand();
 		int row = table.getSelectedRow();
-		if (row == -1) {
-			JOptionPane.showMessageDialog(this, "Vui lòng chọn dòng cần sửa!");
-			return;
-		}
+		
 		if (cmd.startsWith("EDIT")) {
 			xuLyEdit(row);
 		} else if (cmd.startsWith("DELETE")) {

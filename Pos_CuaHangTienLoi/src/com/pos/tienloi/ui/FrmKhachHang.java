@@ -206,10 +206,7 @@ public class FrmKhachHang extends JPanel implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		int viewRow = table.getSelectedRow();
-		if (viewRow == -1) {
-			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
-
-		}
+		
 		String cmd = e.getActionCommand();
 		if (cmd.startsWith("EDIT")) {
 			xuLyEdit(viewRow);

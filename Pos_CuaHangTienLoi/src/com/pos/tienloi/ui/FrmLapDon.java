@@ -11,10 +11,12 @@ import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
@@ -84,7 +86,7 @@ public class FrmLapDon extends JPanel {
 		setBorder(new EmptyBorder(10, 10, 10, 10));
 		setBackground(new Color(249, 249, 249)); // Màu Trắng kem nhạt
 		initUi();
-		loadProductsToUI();
+		loadProductsToUI("");
 	}
 
 	public void initUi() {
@@ -215,20 +217,49 @@ public class FrmLapDon extends JPanel {
 
 		// Thêm Action cho nút
 		setupButtonActions();
+		txtSearchProduct.getDocument().addDocumentListener(new javax.swing.event.DocumentListener() {
+
+		    private void handleSearch() {
+		        loadProductsToUI(txtSearchProduct.getText().trim());
+		    }
+
+		    @Override
+		    public void insertUpdate(javax.swing.event.DocumentEvent e) {
+		        handleSearch();
+		    }
+
+		    @Override
+		    public void removeUpdate(javax.swing.event.DocumentEvent e) {
+		        handleSearch();
+		    }
+
+		    @Override
+		    public void changedUpdate(javax.swing.event.DocumentEvent e) {
+		        handleSearch();
+		    }
+		});
 	}
 
 	// LOGIC NGHIỆP VỤ
 
-	public void loadProductsToUI() {
-		pnlProductContainer.removeAll();
-		ArrayList<SanPham> dsSanPham = spDao.getAllSanPham();
+	public void loadProductsToUI(String keyword) {
+	    pnlProductContainer.removeAll();
+	    ArrayList<SanPham> dsSanPham = spDao.getAllSanPham();
 
-		for (SanPham sp : dsSanPham) {
-			JPanel card = createProductCard(sp);
-			pnlProductContainer.add(card);
-		}
-		pnlProductContainer.revalidate();
-		pnlProductContainer.repaint();
+	    String keywordNormalized = removeVietnameseAccents(keyword);
+
+	    for (SanPham sp : dsSanPham) {
+	        String tenSP = sp.getTenSP();
+	        String tenSPNormalized = removeVietnameseAccents(tenSP);
+
+	        if (keyword.isEmpty() || tenSPNormalized.contains(keywordNormalized)) {
+	            JPanel card = createProductCard(sp);
+	            pnlProductContainer.add(card);
+	        }
+	    }
+
+	    pnlProductContainer.revalidate();
+	    pnlProductContainer.repaint();
 	}
 
 	// Tạo 1 thẻ sản phẩm bên trái
@@ -579,6 +610,12 @@ public class FrmLapDon extends JPanel {
 
 	private OnOrderSuccessListener orderSuccessListener;
 
+	private String removeVietnameseAccents(String str) {
+	    String normalized = Normalizer.normalize(str, Normalizer.Form.NFD);
+	    Pattern pattern = Pattern.compile("\\p{InCombiningDiacriticalMarks}+");
+	    return pattern.matcher(normalized).replaceAll("").toLowerCase();
+	}
+	
 	public void setOrderSuccessListener(OnOrderSuccessListener listener) {
 		this.orderSuccessListener = listener;
 	}

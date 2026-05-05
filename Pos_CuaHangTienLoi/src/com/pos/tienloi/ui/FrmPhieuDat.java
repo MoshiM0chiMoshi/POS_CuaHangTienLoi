@@ -292,38 +292,63 @@ public class FrmPhieuDat extends JPanel implements ActionListener, MouseListener
 				dialog.setVisible(true);
 			}
 		}
+		else if(o.equals(huyDon)){
+			huyPhieuDat();
+		}
+		else if(o.equals(capNhat)) {
+			suaTrangThai();
+		}
 
 	}
 
 	public void suaTrangThai() {
-		int viewRow = table.getSelectedRow();
-		if (viewRow == -1) {
-			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
+	    int viewRow = table.getSelectedRow();
+	    if (viewRow == -1) {
+	        JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
+	        return;
+	    }
 
-		}
-		int modelRow = table.convertRowIndexToModel(viewRow);
-		String ma = model.getValueAt(modelRow, 0).toString();
-		if (ma == null)
-			return;
-		TrangThaiPhieuDat[] options = { TrangThaiPhieuDat.DANG_XU_LY, TrangThaiPhieuDat.HOAN_TAT };
-		TrangThaiPhieuDat trangThai = (TrangThaiPhieuDat) JOptionPane.showInputDialog(this, "Chọn trạng thái:",
-				"Cập nhật trạng thái", JOptionPane.QUESTION_MESSAGE, null, options, options[0]);
-		if (trangThai == null)
-			return;
-		if (pdDao.updateTrangThai(ma, trangThai)) {
-			JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
-			loadData();
-		} else {
-			JOptionPane.showMessageDialog(this, "Thất bại!");
-		}
+	    int modelRow = table.convertRowIndexToModel(viewRow);
+	    String ma = model.getValueAt(modelRow, 0).toString();
 
+	    TrangThaiPhieuDat current = TrangThaiPhieuDat.valueOf(
+	        model.getValueAt(modelRow, 5).toString()
+	    );
+
+	    TrangThaiPhieuDat next = null;
+
+	    switch (current) {
+	        case CHO_DUYET:
+	            next = TrangThaiPhieuDat.DANG_XU_LY;
+	            break;
+	        case DANG_XU_LY:
+	            next = TrangThaiPhieuDat.HOAN_TAT;
+	            break;
+	        case HOAN_TAT:
+	        case DA_HUY:
+	            JOptionPane.showMessageDialog(this, "Phiếu này đã kết thúc!");
+	            return;
+	    }
+
+	    int confirm = JOptionPane.showConfirmDialog(this,
+	        "Chuyển từ " + current + " → " + next + "?",
+	        "Xác nhận",
+	        JOptionPane.YES_NO_OPTION
+	    );
+
+	    if (confirm != JOptionPane.YES_OPTION) return;
+
+	    if (pdDao.updateTrangThai(ma, next)) {
+	        JOptionPane.showMessageDialog(this, "Cập nhật thành công!");
+	        loadData();
+	    }
 	}
 
 	private void huyPhieuDat() {
 		int viewRow = table.getSelectedRow();
 		if (viewRow == -1) {
 			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
-
+			return;
 		}
 		int modelRow = table.convertRowIndexToModel(viewRow);
 		String maPhieuDat = model.getValueAt(modelRow, 0).toString();

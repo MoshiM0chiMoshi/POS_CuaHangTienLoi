@@ -215,7 +215,7 @@ public class FrmThemSanPham extends JDialog implements ActionListener {
 				return;
 			}
 
-			if (!txtGia.getText().matches("\\d+")) {
+			if (!txtGia.getText().matches("\\d+(\\.\\d+)?")) {
 				JOptionPane.showMessageDialog(this, "Giá phải là số > 0");
 				txtGia.requestFocus();
 				return;

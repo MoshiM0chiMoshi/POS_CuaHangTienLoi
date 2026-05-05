@@ -299,10 +299,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 		Object o = e.getSource();
 		String cmd = e.getActionCommand();
 		int viewRow = table.getSelectedRow();
-		if (viewRow == -1) {
-			JOptionPane.showMessageDialog(this, "Vui lòng chọn một phiếu đặt!");
-
-		}
+		
 		if (cmd.startsWith("EDIT")) {
 
 			xuLyEdit(viewRow);
@@ -541,5 +538,7 @@ public class FrmSanPham extends JPanel implements ActionListener {
 	public void setProductChangeListener(OnProductChangeListener listener) {
 		this.productChangeListener = listener;
 	}
+	
+	
 
 }

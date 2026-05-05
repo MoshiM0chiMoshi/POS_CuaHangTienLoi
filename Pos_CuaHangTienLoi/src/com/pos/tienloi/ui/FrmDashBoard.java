@@ -341,4 +341,11 @@ public class FrmDashBoard extends JPanel {
 		pnlBanChayList.revalidate();
 		pnlBanChayList.repaint();
 	}
+	
+	// Thêm hàm này vào FrmDashBoard.java
+		public void refreshData() {
+			loadDataHoaDon();
+			loadDataPhieuDat();
+			loadThongKe();
+		}
 }
